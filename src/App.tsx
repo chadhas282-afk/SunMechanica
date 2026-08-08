@@ -88,3 +88,33 @@ export const AxialPistonPumpSim: React.FC<SimulationProps> = ({ angle, load, zoo
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
+    const dpr = window.devicePixelRatio || 1;
+    const rect = canvas.getBoundingClientRect();
+    canvas.width = rect.width * dpr;
+    canvas.height = rect.height * dpr;
+    ctx.scale(dpr, dpr);
+    const width = rect.width;
+    const height = rect.height;
+    ctx.clearRect(0, 0, width, height);
+    const scale = (Math.min(width, height) / 16) * zoom; 
+    const originX = width * 0.45;
+    const originY = height * 0.5;
+    ctx.fillStyle = '#050d1a'; ctx.fillRect(0, 0, width, height);
+    ctx.strokeStyle = '#1e293b'; ctx.lineWidth = 1;
+    for (let i = 0; i < width; i += 40) { ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(i, height); ctx.stroke(); }
+    for (let i = 0; i < height; i += 40) { ctx.beginPath(); ctx.moveTo(0, i); ctx.lineTo(width, i); ctx.stroke(); }
+    const toScreen = (x: number, y: number) => [originX + x * scale, originY - y * scale];
+    const drawRect = (x: number, y: number, w: number, h: number, fill: string, stroke: string) => {
+      const [sx, sy] = toScreen(x, y);
+      ctx.fillStyle = fill; ctx.fillRect(sx, sy, w * scale, h * scale);
+      ctx.strokeStyle = stroke; ctx.lineWidth = 2 * zoom; ctx.strokeRect(sx, sy, w * scale, h * scale);
+    };
+    const loadFactor = load / 100;
+    const maxTilt = Math.PI / 6;
+    const alpha = (loadFactor * 2 - 1) * maxTilt; 
+    const R_pitch = 3.0; 
+    const p1_dx = -R_pitch * Math.tan(alpha) * Math.cos(angle);
+    const p2_dx = -R_pitch * Math.tan(alpha) * Math.cos(angle + Math.PI);
+    const p_length = 4.0;
+    const p_width = 1.6;
+    const cyl_length = 6.0;
