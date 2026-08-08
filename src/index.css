@@ -119,3 +119,31 @@ input[type="range"]::-moz-range-thumb {
   background: var(--cyan);
   box-shadow: 0 0 8px var(--cyan);
   cursor: pointer;
+  border: none;
+}
+
+@keyframes pulse-glow {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+@keyframes scan-line {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(100vh); }
+}
+@keyframes fade-in-up {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes corner-pulse {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 1; }
+}
+
+.fade-in-up {
+  animation: fade-in-up 0.4s ease forwards;
+}
+
+@keyframes fill-up {
+  0% { clip-path: inset(100% 0 0 0); }
+  100% { clip-path: inset(0 0 0 0); }
+}
