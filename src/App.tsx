@@ -148,3 +148,33 @@ export const AxialPistonPumpSim: React.FC<SimulationProps> = ({ angle, load, zoo
       ctx.beginPath();
       ctx.save();
       ctx.translate(sh_x, sh_y);
+      ctx.rotate(alpha);
+      ctx.fillStyle = '#ffb703';
+      ctx.fillRect(-0.2*scale, -0.8*scale, 0.4*scale, 1.6*scale);
+      ctx.restore();
+    };
+    drawPiston(R_pitch, p1_dx, p1_vel);
+    drawPiston(-R_pitch, p2_dx, p2_vel);
+    const vp_x = cyl_x + cyl_length;
+    drawRect(vp_x, R_pitch + 1.2, 0.8, -2*R_pitch - 2.4, '#1e293b', '#94a3b8');
+    ctx.fillStyle = 'rgba(8, 15, 30, 0.85)';
+    ctx.fillRect(30, 150, 240, 110);
+    ctx.strokeStyle = 'rgba(255, 215, 0, 0.3)';
+    ctx.strokeRect(30, 150, 240, 110);
+    const strokeLen = Math.abs(2 * R_pitch * Math.tan(alpha));
+    const flow = strokeLen * 50; 
+    ctx.font = '10px monospace';
+    ctx.fillStyle = '#ffd700'; ctx.fillText('SYS :: AXIAL_PISTON_PUMP', 40, 170);
+    ctx.fillStyle = '#fff'; ctx.fillText(`SWASH ANGLE : ${(alpha * 180 / Math.PI).toFixed(1)}°`, 40, 195);
+    ctx.fillStyle = '#00d4ff'; ctx.fillText(`PISTON DISP : ${strokeLen.toFixed(2)} cm`, 40, 215);
+    ctx.fillStyle = '#ff3366'; ctx.fillText(`OUTPUT FLOW : ${flow.toFixed(1)} L/min`, 40, 235);
+  }, [angle, load, zoom]);
+  return <div style={{ width: '100%', height: '100%' }}><canvas ref={canvasRef} style={{ width: '100%', height: '100%', display: 'block' }} /></div>;
+};
+export const BraytonCycleSim: React.FC<SimulationProps> = ({ angle, load, zoom = 1 }) => {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const particlesRef = useRef<{x: number, y: number, vx: number, color: string, active: boolean}[]>([]);
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
