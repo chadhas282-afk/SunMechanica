@@ -118,3 +118,33 @@ export const AxialPistonPumpSim: React.FC<SimulationProps> = ({ angle, load, zoo
     const p_length = 4.0;
     const p_width = 1.6;
     const cyl_length = 6.0;
+    const cyl_x = 2.0; 
+    const p1_vel = R_pitch * Math.tan(alpha) * Math.sin(angle);
+    const p2_vel = R_pitch * Math.tan(alpha) * Math.sin(angle + Math.PI);
+    const getFluidColor = (vel: number) => {
+      if (Math.abs(vel) < 0.1) return 'rgba(71, 85, 105, 0.5)'; 
+      if (vel > 0) return 'rgba(0, 212, 255, 0.6)'; 
+      return 'rgba(255, 51, 102, 0.8)'; 
+    };
+    ctx.fillStyle = '#94a3b8';
+    const [sx, sy] = toScreen(-5, 0.4);
+    ctx.fillRect(sx, sy, 7 * scale, 0.8 * scale);
+    ctx.strokeStyle = '#475569'; ctx.strokeRect(sx, sy, 7 * scale, 0.8 * scale);
+    ctx.save();
+    const [spx, spy] = toScreen(0, 0);
+    ctx.translate(spx, spy);
+    ctx.rotate(alpha); 
+    ctx.fillStyle = '#1e293b';
+    ctx.fillRect(-0.5 * scale, -4 * scale, 1 * scale, 8 * scale);
+    ctx.strokeStyle = '#ffd700'; ctx.lineWidth = 3 * zoom;
+    ctx.strokeRect(-0.5 * scale, -4 * scale, 1 * scale, 8 * scale);
+    ctx.restore();
+    drawRect(cyl_x, R_pitch + 1.2, cyl_length, -2*R_pitch - 2.4, 'rgba(15, 23, 42, 0.7)', '#334155');
+    const drawPiston = (y: number, dx: number, vel: number) => {
+      drawRect(cyl_x, y + p_width/2, cyl_length, -p_width, getFluidColor(vel), '#475569');
+      const px = p1_dx === dx ? 0 + dx : 0 + dx; 
+      drawRect(px, y + p_width/2 - 0.1, p_length, -p_width + 0.2, '#cbd5e1', '#64748b');
+      const [sh_x, sh_y] = toScreen(px, y);
+      ctx.beginPath();
+      ctx.save();
+      ctx.translate(sh_x, sh_y);
