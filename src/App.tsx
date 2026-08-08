@@ -28,3 +28,33 @@ export const ArchimedesScrewSim: React.FC<SimulationProps> = ({ angle, load , zo
     for (let i = 0; i < height; i += 40) { ctx.beginPath(); ctx.moveTo(0, i); ctx.lineTo(width, i); ctx.stroke(); }
     const toScreen = (x: number, y: number) => [originX + x * scale, originY - y * scale];
     const L = 12.0; 
+    const Rp = 1.5; 
+    const Rs = 0.5; 
+    const pitch = 2.0; 
+    const tilt = -Math.PI / 6; 
+    ctx.save();
+    const [ox, oy] = toScreen(0, 0);
+    ctx.translate(ox, oy);
+    ctx.rotate(-tilt); 
+    ctx.fillStyle = 'rgba(0, 212, 255, 0.3)';
+    ctx.fillRect(-L/2 - 2*scale, 0, 4*scale, 5*scale);
+    ctx.fillStyle = '#0f172a';
+    ctx.fillRect((-L/2) * scale, -Rp * scale, L * scale, 2 * Rp * scale);
+    ctx.strokeStyle = '#334155'; ctx.lineWidth = 4;
+    ctx.strokeRect((-L/2) * scale, -Rp * scale, L * scale, 2 * Rp * scale);
+    ctx.fillStyle = '#1e293b';
+    ctx.fillRect((-L/2) * scale, -Rs * scale, L * scale, 2 * Rs * scale);
+    const k = (2 * Math.PI) / pitch;
+    const phase = -angle;
+    const numPoints = 200;
+    const loadFactor = load / 100;
+    const rC = Math.round(0 + loadFactor * 255);
+    const gC = Math.round(212 - loadFactor * 100);
+    const fluidColor = `rgba(${rC}, ${gC}, 255, 0.6)`;
+    for (let i = 0; i < L/pitch; i++) {
+      let px = (angle - Math.PI/2) / k + i * pitch;
+      px = ((px + L/2) % L) - L/2;
+      if (px > -L/2 && px < L/2) {
+        ctx.beginPath();
+        ctx.arc(px * scale, (Rp - 0.5)*scale, 0.8 * scale, 0, Math.PI, false);
+        ctx.fillStyle = fluidColor;
