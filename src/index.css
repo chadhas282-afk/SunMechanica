@@ -58,3 +58,33 @@ body {
     linear-gradient(90deg, rgba(0,212,255,0.03) 1px, transparent 1px),
     linear-gradient(rgba(0,212,255,0.05) 1px, transparent 1px),
     linear-gradient(90deg, rgba(0,212,255,0.05) 1px, transparent 1px);
+    background-size: 100% 100%, 100% 100%, 24px 24px, 24px 24px, 120px 120px, 120px 120px;
+  animation: grid-pulse 10s ease-in-out infinite alternate;
+}
+
+@keyframes grid-pulse {
+  0% { background-position: 0% 0%, 0% 0%, 0 0, 0 0, 0 0, 0 0; }
+  100% { background-position: 0% 0%, 0% 0%, 12px 12px, 12px 12px, 24px 24px, 24px 24px; }
+}
+
+@keyframes fade-in-up {
+  0% { opacity: 0; transform: translateY(20px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pulse-glow {
+  0% { box-shadow: 0 0 5px currentColor; }
+  50% { box-shadow: 0 0 15px currentColor; }
+  100% { box-shadow: 0 0 5px currentColor; }
+}
+
+.glass-panel {
+  background: rgba(13, 24, 41, 0.65);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+}
+
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
