@@ -28,7 +28,7 @@
   --text-accent: var(--cyan);
   --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
   --font-sans: 'Inter', -apple-system, sans-serif;
-  }
+}
 
 *, *::before, *::after {
   box-sizing: border-box;
@@ -58,7 +58,7 @@ body {
     linear-gradient(90deg, rgba(0,212,255,0.03) 1px, transparent 1px),
     linear-gradient(rgba(0,212,255,0.05) 1px, transparent 1px),
     linear-gradient(90deg, rgba(0,212,255,0.05) 1px, transparent 1px);
-    background-size: 100% 100%, 100% 100%, 24px 24px, 24px 24px, 120px 120px, 120px 120px;
+  background-size: 100% 100%, 100% 100%, 24px 24px, 24px 24px, 120px 120px, 120px 120px;
   animation: grid-pulse 10s ease-in-out infinite alternate;
 }
 
