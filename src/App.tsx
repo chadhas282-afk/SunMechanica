@@ -58,3 +58,33 @@ export const ArchimedesScrewSim: React.FC<SimulationProps> = ({ angle, load , zo
         ctx.beginPath();
         ctx.arc(px * scale, (Rp - 0.5)*scale, 0.8 * scale, 0, Math.PI, false);
         ctx.fillStyle = fluidColor;
+         ctx.fill();
+      }
+    }
+    ctx.beginPath();
+    for (let i = 0; i <= numPoints; i++) {
+      const x = -L/2 + (i / numPoints) * L;
+      const val = Math.sin(k * x + phase);
+      if (val > 0) { 
+        const y = Rp * val;
+        if (i === 0 || Math.sin(k * (-L/2 + ((i-1) / numPoints) * L) + phase) <= 0) {
+          ctx.moveTo(x * scale, y * scale);
+        } else {
+          ctx.lineTo(x * scale, y * scale);
+        }
+      }
+    }
+    ctx.strokeStyle = '#fff';
+    ctx.lineWidth = 4;
+    ctx.stroke();
+    ctx.restore();
+  }, [angle, load]);
+  return <div style={{ width: '100%', height: '100%' }}><canvas ref={canvasRef} style={{ width: '100%', height: '100%', display: 'block' }} /></div>;
+};
+export const AxialPistonPumpSim: React.FC<SimulationProps> = ({ angle, load, zoom = 1 }) => {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
