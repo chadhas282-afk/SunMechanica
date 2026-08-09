@@ -1158,3 +1158,33 @@ export const CheckValvesSim: React.FC<SimulationProps> = ({ angle, load, zoom = 
         x: baseVel > 0 ? -8 : 8,
         y: (Math.random() - 0.5) * 1.5,
         id: Math.random()
+         });
+      particlesRef.current.push({
+        x: baseVel > 0 ? -8 : 8,
+        y: (Math.random() - 0.5) * 1.5 - 4,
+        id: Math.random()
+      });
+    }
+    const nextParticles = [];
+    for (const p of particlesRef.current) {
+      let blocked = false;
+      if (!isOpen) {
+        if (baseVel < 0 && p.x > 0 && p.x + baseVel * 0.5 <= 0) {
+          blocked = true;
+          p.x = 0.2; 
+        } else if (baseVel > 0 && p.x < 0 && p.x + baseVel * 0.5 >= 0) {
+        }
+      }
+      if (!blocked) {
+        p.x += baseVel > 0 ? baseVel * 0.2 : baseVel * 0.2;
+      }
+      if (p.x > -10 && p.x < 10) nextParticles.push(p);
+    }
+    particlesRef.current = nextParticles;
+    const drawPipe = (y: number) => {
+      drawRect(-8, y + 1.0, 16, -2.0, 'rgba(15, 23, 42, 0.5)', '#334155');
+    };
+    drawPipe(4.0);
+    drawPipe(0.0);
+    drawPipe(-4.0);
+    ctx.fillStyle = isOpen ? '#00d4ff' : '#ff3366';
