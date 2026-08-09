@@ -318,3 +318,33 @@ export const BraytonCycleSim: React.FC<SimulationProps> = ({ angle, load, zoom =
       const x = turbStart + (i + 0.5) * ((turbEnd - turbStart)/numTurbStages);
       const h = 1.8 + (i/numTurbStages) * 0.7;
       ctx.strokeStyle = '#00ff88'; ctx.lineWidth = 5 * zoom;
+      const [rx1, ry1] = toScreen(x, h);
+      const [rx2, ry2] = toScreen(x, 0.2);
+      ctx.beginPath(); ctx.moveTo(rx1, ry1); ctx.lineTo(rx2, ry2); ctx.stroke();
+      const [rx3, ry3] = toScreen(x, -h);
+      const [rx4, ry4] = toScreen(x, -0.2);
+      ctx.beginPath(); ctx.moveTo(rx3, ry3); ctx.lineTo(rx4, ry4); ctx.stroke();
+    }
+    ctx.font = `${10*zoom}px monospace`; ctx.fillStyle = '#94a3b8';
+    const [l1x, l1y] = toScreen(-4.5, 3.0); ctx.fillText('COMPRESSOR', l1x, l1y);
+    const [l2x, l2y] = toScreen(0, 3.0); ctx.fillText('COMBUSTOR', l2x, l2y);
+    const [l3x, l3y] = toScreen(4, 3.0); ctx.fillText('TURBINE', l3x, l3y);
+    ctx.fillStyle = 'rgba(8, 15, 30, 0.85)';
+    ctx.fillRect(30, 150, 240, 110);
+    ctx.strokeStyle = 'rgba(255, 51, 102, 0.3)';
+    ctx.strokeRect(30, 150, 240, 110);
+    const rpm = (angle * 180 / Math.PI * 10).toFixed(0);
+    const thrust = (loadFactor * 100).toFixed(1);
+    ctx.font = '10px monospace';
+    ctx.fillStyle = '#ff3366'; ctx.fillText('SYS :: BRAYTON_CYCLE', 40, 170);
+    ctx.fillStyle = '#fff'; ctx.fillText(`SHAFT SPEED : ${rpm} RPM`, 40, 195);
+    ctx.fillStyle = '#f59e0b'; ctx.fillText(`FUEL FLOW   : ${(loadFactor * 100).toFixed(0)} %`, 40, 215);
+    ctx.fillStyle = '#00ff88'; ctx.fillText(`NET THRUST  : ${thrust} kN`, 40, 235);
+  }, [angle, load, zoom]);
+  return <div style={{ width: '100%', height: '100%' }}><canvas ref={canvasRef} style={{ width: '100%', height: '100%', display: 'block' }} /></div>;
+};
+export const CVTTransmissionSim: React.FC<SimulationProps> = ({ angle, load , zoom = 1 }) => {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const lastAngle = useRef(angle);
+  const drivenAngle = useRef(0);
+  useEffect(() => {
