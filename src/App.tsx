@@ -1068,3 +1068,33 @@ export const ChebyshevStraightLineSim: React.FC<SimulationProps> = ({ angle, loa
     }
     const loadFactor = load / 100;
     const offset = 0.5 + (loadFactor - 0.5) * 0.4; 
+     const P = [
+      D[0] + (C[0] - D[0]) * offset,
+      D[1] + (C[1] - D[1]) * offset
+    ];
+    traceRef.current.push({x: P[0], y: P[1]});
+    if (traceRef.current.length > 200) traceRef.current.shift();
+    if (traceRef.current.length > 1) {
+      ctx.beginPath();
+      for (let i = 0; i < traceRef.current.length; i++) {
+        const pt = traceRef.current[i];
+        const [px, py] = toScreen(pt.x, pt.y);
+        if (i === 0) ctx.moveTo(px, py);
+        else ctx.lineTo(px, py);
+      }
+      ctx.strokeStyle = '#ff3366'; ctx.lineWidth = 3 * zoom; ctx.stroke();
+    }
+    drawLine(Pin1[0] - 1, 0, Pin2[0] + 1, 0, '#334155', 4);
+    drawLine(Pin1[0], Pin1[1], D[0], D[1], '#3b82f6', 8); 
+    drawLine(Pin2[0], Pin2[1], C[0], C[1], '#a855f7', 8); 
+    drawLine(D[0], D[1], C[0], C[1], '#00d4ff', 8); 
+    const drawJoint = (x: number, y: number, color: string) => {
+      const [jx, jy] = toScreen(x, y);
+      ctx.beginPath(); ctx.arc(jx, jy, 0.3 * scale, 0, 2*Math.PI);
+      ctx.fillStyle = '#050d1a'; ctx.fill();
+      ctx.strokeStyle = color; ctx.lineWidth = 3 * zoom; ctx.stroke();
+    };
+    drawJoint(Pin1[0], Pin1[1], '#fff');
+    drawJoint(Pin2[0], Pin2[1], '#fff');
+    drawJoint(D[0], D[1], '#3b82f6');
+    drawJoint(C[0], C[1], '#a855f7');
