@@ -738,3 +738,33 @@ export const CarnotCycleSim: React.FC<SimulationProps> = ({ angle, load , zoom =
     ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)';
     ctx.lineWidth = 2;
     ctx.setLineDash([5, 5]);
+    ctx.stroke();
+    ctx.setLineDash([]);
+    const [currX, currY] = mapPV(V, P);
+    ctx.beginPath(); ctx.arc(currX, currY, 4, 0, 2*Math.PI);
+    ctx.fillStyle = '#ff6b35'; ctx.fill();
+    const pWidth = 3.0 * scale;
+    const pHeight = 8.0 * scale;
+    const [cylX, cylY] = toScreen(-5, -4); 
+    ctx.strokeStyle = '#475569';
+    ctx.lineWidth = 4;
+    ctx.strokeRect(cylX, cylY, pWidth, pHeight);
+    const T_norm = (T - TC) / (TH - TC); 
+    const rC = Math.round(100 + T_norm * 155);
+    const bC = Math.round(255 - T_norm * 200);
+    const gasColor = `rgba(${rC}, 50, ${bC}, 0.7)`;
+    const vNorm = V / 6.0; 
+    const currentGasHeight = pHeight * vNorm;
+    ctx.fillStyle = gasColor;
+    ctx.fillRect(cylX + 2, cylY + pHeight - currentGasHeight, pWidth - 4, currentGasHeight);
+    ctx.fillStyle = '#1e293b';
+    ctx.fillRect(cylX, cylY + pHeight - currentGasHeight - 1*scale, pWidth, 1*scale);
+    ctx.strokeRect(cylX, cylY + pHeight - currentGasHeight - 1*scale, pWidth, 1*scale);
+    if (cyclePhase < 0.25) {
+      ctx.fillStyle = '#ef4444';
+      ctx.beginPath(); ctx.moveTo(cylX + pWidth/2, cylY + pHeight + 20); ctx.lineTo(cylX + pWidth/2 - 10, cylY + pHeight + 40); ctx.lineTo(cylX + pWidth/2 + 10, cylY + pHeight + 40); ctx.fill();
+      ctx.fillText("Q in (T_H)", cylX + pWidth/2 + 20, cylY + pHeight + 35);
+    } else if (cyclePhase >= 0.5 && cyclePhase < 0.75) {
+      ctx.fillStyle = '#3b82f6';
+      ctx.beginPath(); ctx.moveTo(cylX + pWidth/2, cylY + pHeight + 40); ctx.lineTo(cylX + pWidth/2 - 10, cylY + pHeight + 20); ctx.lineTo(cylX + pWidth/2 + 10, cylY + pHeight + 20); ctx.fill();
+      ctx.fillText("Q out (T_C)", cylX + pWidth/2 + 20, cylY + pHeight + 35);
