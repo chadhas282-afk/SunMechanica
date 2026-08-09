@@ -918,3 +918,33 @@ export const CentrifugalImpellerSim: React.FC<SimulationProps> = ({ angle, load,
         r: Math.random() * 0.5,
         t: Math.random() * 2 * Math.PI,
         speed: 0.1 + Math.random() * 0.1
+        });
+    }
+    const nextParticles = [];
+    for (const p of particlesRef.current) {
+      if (p.r < R_out) {
+        p.r += 0.05 * (1 + loadFactor);
+        p.t += 0.1 * (1 + loadFactor); 
+      } else {
+        p.t += 0.05 * (1 + loadFactor) * (voluteBase / p.r);
+        p.r += 0.02 * (1 + loadFactor);
+      }
+      let kill = false;
+      if (p.r > voluteBase && Math.sin(p.t) > 0.8 && Math.cos(p.t) > 0) {
+        p.r += 0.2; 
+        if (p.r > 8) kill = true;
+      } else if (p.r > voluteBase * 1.5) {
+        kill = true;
+      }
+      if (!kill) nextParticles.push(p);
+    }
+    particlesRef.current = nextParticles;
+    ctx.beginPath();
+    const cw_x = voluteBase * Math.cos(Math.PI/2 - 0.2);
+    const cw_y = voluteBase * Math.sin(Math.PI/2 - 0.2);
+    const [scw_x, scw_y] = toScreen(cw_x, cw_y);
+    ctx.moveTo(scw_x, scw_y);
+    for(let i=0; i<=100; i++) {
+      const th = Math.PI/2 - 0.2 + (i/100) * 2 * Math.PI;
+      const rad = voluteBase + (i/100) * voluteGrow;
+      const [px, py] = toScreen(rad * Math.cos(th), rad * Math.sin(th));
