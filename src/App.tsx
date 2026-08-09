@@ -948,3 +948,33 @@ export const CentrifugalImpellerSim: React.FC<SimulationProps> = ({ angle, load,
       const th = Math.PI/2 - 0.2 + (i/100) * 2 * Math.PI;
       const rad = voluteBase + (i/100) * voluteGrow;
       const [px, py] = toScreen(rad * Math.cos(th), rad * Math.sin(th));
+       ctx.lineTo(px, py);
+    }
+    const disX_right = voluteBase + voluteGrow;
+    const disY_right = 6.0;
+    const [sdr_x, sdr_y] = toScreen(disX_right, disY_right);
+    ctx.lineTo(sdr_x, sdr_y);
+    const disX_left = voluteBase * 0.8;
+    const disY_left = 6.0;
+    const [sdl_x, sdl_y] = toScreen(disX_left, disY_left);
+    ctx.lineTo(sdl_x, sdl_y);
+    ctx.lineTo(scw_x, scw_y);
+    ctx.fillStyle = 'rgba(15, 23, 42, 0.8)';
+    ctx.fill();
+    ctx.strokeStyle = '#334155'; ctx.lineWidth = 6 * zoom; ctx.stroke();
+    ctx.fillStyle = `rgba(0, 212, 255, ${0.4 + loadFactor*0.4})`;
+    for(const p of particlesRef.current) {
+      const px = p.r * Math.cos(p.t);
+      const py = p.r * Math.sin(p.t);
+      const [spx, spy] = toScreen(px, py);
+      ctx.beginPath(); ctx.arc(spx, spy, 0.1 * scale, 0, 2*Math.PI);
+      ctx.fill();
+    }
+    ctx.save();
+    const [ox, oy] = toScreen(0, 0);
+    ctx.translate(ox, oy);
+    ctx.rotate(-angle);
+    ctx.beginPath(); ctx.arc(0, 0, R_out * scale, 0, 2*Math.PI);
+    ctx.fillStyle = '#1e293b'; ctx.fill();
+    ctx.strokeStyle = '#475569'; ctx.lineWidth = 2 * zoom; ctx.stroke();
+    ctx.strokeStyle = '#00d4ff';
