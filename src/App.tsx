@@ -498,3 +498,33 @@ export const CVTTransmissionSim: React.FC<SimulationProps> = ({ angle, load , zo
       const y = syBot + (i / (numCoils * 2)) * springLen;
       const x = sx + (i % 2 === 0 ? 0 : (i % 4 === 1 ? 15 : -15));
       ctx.lineTo(x, y);
+      }
+    ctx.stroke();
+    ctx.strokeStyle = '#94a3b8';
+    ctx.lineWidth = Math.max(6, scale * 0.15);
+    const [rx, ry1] = toScreen(0, followerY);
+    const [, ry2] = toScreen(0, 5.0);
+    ctx.beginPath(); ctx.moveTo(rx, ry1); ctx.lineTo(rx, ry2); ctx.stroke();
+    ctx.beginPath();
+    ctx.arc(rx, ry1, followerR * scale, 0, Math.PI * 2);
+    ctx.fillStyle = '#0f172a';
+    ctx.fill();
+    ctx.strokeStyle = '#22d3ee';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.arc(rx, ry1, 0.1 * scale, 0, Math.PI * 2);
+    ctx.fillStyle = '#fff';
+    ctx.fill();
+    ctx.beginPath();
+    for (let i = 0; i <= 100; i++) {
+      const theta = (i / 100) * Math.PI * 2;
+      const r = getCamRadius(theta);
+      const worldTheta = theta + angle;
+      const x = r * Math.cos(worldTheta);
+      const y = r * Math.sin(worldTheta);
+      const [cx, cy] = toScreen(x, y);
+      if (i === 0) ctx.moveTo(cx, cy);
+      else ctx.lineTo(cx, cy);
+    }
+    ctx.fillStyle = `rgba(59, 130, 246, ${0.2 + (load/100)*0.2})`;
