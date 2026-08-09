@@ -768,3 +768,33 @@ export const CarnotCycleSim: React.FC<SimulationProps> = ({ angle, load , zoom =
       ctx.fillStyle = '#3b82f6';
       ctx.beginPath(); ctx.moveTo(cylX + pWidth/2, cylY + pHeight + 40); ctx.lineTo(cylX + pWidth/2 - 10, cylY + pHeight + 20); ctx.lineTo(cylX + pWidth/2 + 10, cylY + pHeight + 20); ctx.fill();
       ctx.fillText("Q out (T_C)", cylX + pWidth/2 + 20, cylY + pHeight + 35);
+       }
+    ctx.fillStyle = 'rgba(8, 15, 30, 0.85)';
+    ctx.fillRect(30, 150, 240, 110);
+    ctx.strokeStyle = 'rgba(255, 107, 53, 0.3)';
+    ctx.strokeRect(30, 150, 240, 110);
+    ctx.font = '10px monospace';
+    ctx.fillStyle = '#ff6b35';
+    ctx.fillText('SYS :: CARNOT_HEAT_ENGINE', 40, 170);
+    ctx.fillStyle = '#fff';
+    ctx.fillText(`PHASE : ${phaseName}`, 40, 195);
+    ctx.fillStyle = '#00d4ff';
+    ctx.fillText(`VOLUME: ${V.toFixed(2)} m³`, 40, 215);
+    ctx.fillStyle = `rgb(${rC}, 50, ${bC})`;
+    ctx.fillText(`TEMP  : ${T.toFixed(1)} K`, 40, 235);
+  }, [angle, load]);
+  return <div style={{ width: '100%', height: '100%' }}><canvas ref={canvasRef} style={{ width: '100%', height: '100%', display: 'block' }} /></div>;
+};
+export const CentrifugalGovernorSim: React.FC<SimulationProps> = ({ angle, load , zoom = 1 }) => {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+    const dpr = window.devicePixelRatio || 1;
+    const rect = canvas.getBoundingClientRect();
+    canvas.width = rect.width * dpr;
+    canvas.height = rect.height * dpr;
+    ctx.scale(dpr, dpr);
+    const width = rect.width;
