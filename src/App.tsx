@@ -378,3 +378,33 @@ export const CVTTransmissionSim: React.FC<SimulationProps> = ({ angle, load , zo
     lastAngle.current = angle;
     drivenAngle.current += dAngle * (r1 / r2);
     const drawPulley = (x: number, r: number, rot: number, color: string, isDrive: boolean) => {
+      const [sx, sy] = toScreen(x, 0);
+      ctx.beginPath();
+      ctx.arc(sx, sy, r * scale, 0, 2 * Math.PI);
+      ctx.fillStyle = 'rgba(15, 23, 42, 0.8)'; ctx.fill();
+      ctx.strokeStyle = color; ctx.lineWidth = 4; ctx.stroke();
+      ctx.beginPath();
+      ctx.arc(sx, sy, 4.5 * scale, 0, 2 * Math.PI);
+      ctx.strokeStyle = '#334155'; ctx.lineWidth = 1; ctx.setLineDash([5, 5]); ctx.stroke();
+      ctx.setLineDash([]);
+      ctx.save();
+      ctx.translate(sx, sy);
+      ctx.rotate(-rot);
+      ctx.strokeStyle = color; ctx.lineWidth = 4;
+      for (let i = 0; i < 3; i++) {
+        ctx.beginPath(); ctx.moveTo(0, 0);
+        ctx.lineTo(r * scale * Math.cos(i * 2*Math.PI/3), r * scale * Math.sin(i * 2*Math.PI/3));
+        ctx.stroke();
+      }
+      ctx.restore();
+      ctx.beginPath(); ctx.arc(sx, sy, 0.4 * scale, 0, 2 * Math.PI);
+      ctx.fillStyle = isDrive ? '#3b82f6' : '#00ff88'; ctx.fill();
+    };
+    const sinTheta = (r1 - r2) / d;
+    const theta = Math.asin(sinTheta);
+    const t1x = driveX + r1 * Math.sin(theta);
+    const t1y = r1 * Math.cos(theta); 
+    const t2x = drivenX + r2 * Math.sin(theta);
+    const t2y = r2 * Math.cos(theta);
+    const b1x = driveX - r1 * Math.sin(theta);
+    const b1y = -r1 * Math.cos(theta);
