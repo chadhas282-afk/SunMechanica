@@ -468,3 +468,33 @@ export const CVTTransmissionSim: React.FC<SimulationProps> = ({ angle, load , zo
     ctx.fillStyle = '#ffb703';
     ctx.fillText(`GEAR RATIO : ${(r1/r2).toFixed(2)} : 1`, 40, 235);
   }, [angle, load]);
+  ctx.fillStyle = '#050d1a';
+    ctx.fillRect(0, 0, width, height);
+    ctx.strokeStyle = '#1e293b';
+    ctx.lineWidth = 1;
+    for (let i = 0; i < width; i += 40) {
+      ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(i, height); ctx.stroke();
+    }
+    for (let i = 0; i < height; i += 40) {
+      ctx.beginPath(); ctx.moveTo(0, i); ctx.lineTo(width, i); ctx.stroke();
+    }
+    const toScreen = (x: number, y: number) => [originX + x * scale, originY - y * scale];
+    ctx.strokeStyle = '#38bdf8';
+    ctx.lineWidth = 2;
+    const [gx1, gyBot] = toScreen(-0.6, 2.5);
+    const [, gyTop] = toScreen(-0.6, 5.0);
+    const [gx2] = toScreen(0.6, 2.5);
+    ctx.beginPath(); ctx.moveTo(gx1, gyBot); ctx.lineTo(gx1, gyTop); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(gx2, gyBot); ctx.lineTo(gx2, gyTop); ctx.stroke();
+    const [sx, syBot] = toScreen(0, followerY + 0.5);
+    const [, syTop] = toScreen(0, 4.5);
+    ctx.strokeStyle = '#00ff88';
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.moveTo(sx, syBot);
+    const numCoils = 6;
+    const springLen = syTop - syBot;
+    for (let i = 0; i <= numCoils * 2; i++) {
+      const y = syBot + (i / (numCoils * 2)) * springLen;
+      const x = sx + (i % 2 === 0 ? 0 : (i % 4 === 1 ? 15 : -15));
+      ctx.lineTo(x, y);
