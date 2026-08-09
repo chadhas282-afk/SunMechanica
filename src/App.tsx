@@ -58,7 +58,7 @@ export const ArchimedesScrewSim: React.FC<SimulationProps> = ({ angle, load , zo
         ctx.beginPath();
         ctx.arc(px * scale, (Rp - 0.5)*scale, 0.8 * scale, 0, Math.PI, false);
         ctx.fillStyle = fluidColor;
-         ctx.fill();
+        ctx.fill();
       }
     }
     ctx.beginPath();
@@ -228,7 +228,7 @@ export const BraytonCycleSim: React.FC<SimulationProps> = ({ angle, load, zoom =
         p.vx = 0.2 + (p.color === '#ff3366' ? loadFactor * 0.2 : 0);
       }
       if (p.x >= turbStart) {
-         p.vx = 0.4 + (p.color === '#ff3366' ? loadFactor * 0.4 : 0);
+        p.vx = 0.4 + (p.color === '#ff3366' ? loadFactor * 0.4 : 0);
         p.y *= 1.02;
       }
       p.x += p.vx;
@@ -438,37 +438,37 @@ export const CVTTransmissionSim: React.FC<SimulationProps> = ({ angle, load , zo
     ctx.fillStyle = '#ffb703';
     ctx.fillText(`GEAR RATIO : ${(r1/r2).toFixed(2)} : 1`, 40, 235);
   }, [angle, load]);
-  const b2x = drivenX - r2 * Math.sin(theta);
-    const b2y = -r2 * Math.cos(theta);
-    const [st1x, st1y] = toScreen(t1x, t1y);
-    const [st2x, st2y] = toScreen(t2x, t2y);
-    const [sb1x, sb1y] = toScreen(b1x, b1y);
-    const [sb2x, sb2y] = toScreen(b2x, b2y);
-    ctx.strokeStyle = '#94a3b8';
-    ctx.lineWidth = 6;
-    ctx.lineCap = 'round';
-    ctx.beginPath(); ctx.moveTo(st1x, st1y); ctx.lineTo(st2x, st2y); ctx.stroke();
-    ctx.beginPath(); ctx.moveTo(sb1x, sb1y); ctx.lineTo(sb2x, sb2y); ctx.stroke();
-    const rC = Math.round(loadFactor * 255);
-    const gC = Math.round(255 - loadFactor * 100);
-    const driveColor = `rgb(${rC}, ${gC}, 255)`; 
-    drawPulley(driveX, r1, angle, driveColor, true);
-    drawPulley(drivenX, r2, drivenAngle.current, '#00ff88', false);
-    ctx.fillStyle = 'rgba(8, 15, 30, 0.85)';
-    ctx.fillRect(30, 150, 240, 110);
-    ctx.strokeStyle = 'rgba(0, 255, 136, 0.3)';
-    ctx.strokeRect(30, 150, 240, 110);
-    ctx.font = '10px monospace';
-    ctx.fillStyle = '#00ff88';
-    ctx.fillText('SYS :: CVT_TRANSMISSION', 40, 170);
-    ctx.fillStyle = '#3b82f6';
-    ctx.fillText(`DRIVE RAD  : ${r1.toFixed(2)} cm`, 40, 195);
-    ctx.fillStyle = '#fff';
-    ctx.fillText(`DRIVEN RAD : ${r2.toFixed(2)} cm`, 40, 215);
-    ctx.fillStyle = '#ffb703';
-    ctx.fillText(`GEAR RATIO : ${(r1/r2).toFixed(2)} : 1`, 40, 235);
-  }, [angle, load]);
-  ctx.fillStyle = '#050d1a';
+  return <div style={{ width: '100%', height: '100%' }}><canvas ref={canvasRef} style={{ width: '100%', height: '100%', display: 'block' }} /></div>;
+};
+export const CamFollowerSim: React.FC<SimulationProps> = ({ angle, load , zoom = 1 }) => {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+    const dpr = window.devicePixelRatio || 1;
+    const rect = canvas.getBoundingClientRect();
+    canvas.width = rect.width * dpr;
+    canvas.height = rect.height * dpr;
+    ctx.scale(dpr, dpr);
+    const width = rect.width;
+    const height = rect.height;
+    ctx.clearRect(0, 0, width, height);
+    const scale = (Math.min(width, height) / 10) * zoom; 
+    const originX = width * 0.5;
+    const originY = height * 0.7;
+    const lift = 1.0 + load * 0.01;
+    const getCamRadius = (theta: number) => {
+      const baseR = 1.5;
+      const profile = Math.pow(Math.max(0, Math.cos(theta)), 2.5);
+      return baseR + lift * profile;
+    };
+    const topAngle = Math.PI / 2 - angle;
+    const rAtTop = getCamRadius(topAngle);
+    const followerR = 0.4;
+    const followerY = rAtTop + followerR;
+    ctx.fillStyle = '#050d1a';
     ctx.fillRect(0, 0, width, height);
     ctx.strokeStyle = '#1e293b';
     ctx.lineWidth = 1;
@@ -498,7 +498,7 @@ export const CVTTransmissionSim: React.FC<SimulationProps> = ({ angle, load , zo
       const y = syBot + (i / (numCoils * 2)) * springLen;
       const x = sx + (i % 2 === 0 ? 0 : (i % 4 === 1 ? 15 : -15));
       ctx.lineTo(x, y);
-      }
+    }
     ctx.stroke();
     ctx.strokeStyle = '#94a3b8';
     ctx.lineWidth = Math.max(6, scale * 0.15);
@@ -558,7 +558,7 @@ export const CVTTransmissionSim: React.FC<SimulationProps> = ({ angle, load , zo
     ctx.fillText(`LIFT     : ${(rAtTop - 1.5).toFixed(2)}`, width - 250, 215);
     ctx.fillStyle = '#ff6b35';
     ctx.fillText(`LOAD     : ${load}%`, width - 250, 235);
-    }, [angle, load]);
+  }, [angle, load]);
   return (
     <div style={{ width: '100%', height: '100%' }}>
       <canvas ref={canvasRef} style={{ width: '100%', height: '100%', display: 'block' }} />
@@ -588,7 +588,7 @@ export const CantileverBeamSim: React.FC<SimulationProps> = ({ angle, load , zoo
     for (let i = 0; i < width; i += 40) { ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(i, height); ctx.stroke(); }
     for (let i = 0; i < height; i += 40) { ctx.beginPath(); ctx.moveTo(0, i); ctx.lineTo(width, i); ctx.stroke(); }
     const toScreen = (x: number, y: number) => [originX + x * scale, originY - y * scale];
-     const L = 10.0;
+    const L = 10.0;
     const h = 2.0; 
     const loadFactor = load / 100;
     const dynamicLoad = loadFactor * (1.0 + 0.1 * Math.sin(angle * 8.0));
@@ -648,3 +648,33 @@ export const CantileverBeamSim: React.FC<SimulationProps> = ({ angle, load , zoo
       ctx.lineTo(fx, fy - 20);
       ctx.strokeStyle = '#ef4444';
       ctx.lineWidth = 6;
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(fx, fy - 20);
+      ctx.lineTo(fx - 10, fy - 35);
+      ctx.lineTo(fx + 10, fy - 35);
+      ctx.fillStyle = '#ef4444';
+      ctx.fill();
+    }
+  }, [angle, load]);
+  return <div style={{ width: '100%', height: '100%' }}><canvas ref={canvasRef} style={{ width: '100%', height: '100%', display: 'block' }} /></div>;
+};
+export const CarnotCycleSim: React.FC<SimulationProps> = ({ angle, load , zoom = 1 }) => {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+    const dpr = window.devicePixelRatio || 1;
+    const rect = canvas.getBoundingClientRect();
+    canvas.width = rect.width * dpr;
+    canvas.height = rect.height * dpr;
+    ctx.scale(dpr, dpr);
+    const width = rect.width;
+    const height = rect.height;
+    ctx.clearRect(0, 0, width, height);
+    const scale = (Math.min(width, height) / 16) * zoom; 
+    const originX = width * 0.5;
+    const originY = height * 0.5;
+    ctx.fillStyle = '#050d1a'; ctx.fillRect(0, 0, width, height);
