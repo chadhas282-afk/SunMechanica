@@ -198,3 +198,33 @@ export const BraytonCycleSim: React.FC<SimulationProps> = ({ angle, load, zoom =
     const intakeX = -8;
     const compStart = -6;
     const compEnd = -1;
+    const combStart = -1;
+    const combEnd = 3;
+    const turbStart = 3;
+    const turbEnd = 5;
+    const exhaustX = 8;
+    const loadFactor = load / 100;
+    if (Math.random() < 0.8) {
+      particlesRef.current.push({
+        x: intakeX,
+        y: (Math.random() - 0.5) * 4,
+        vx: 0.1,
+        color: '#00d4ff',
+        active: true
+      });
+    }
+    const nextParticles = [];
+    for (const p of particlesRef.current) {
+      if (!p.active) continue;
+      if (p.x >= compStart && p.x <= compEnd) {
+        p.vx = 0.15;
+        p.y *= 0.99;
+      }
+      if (p.x >= combStart && p.x <= combEnd) {
+        if (load > 10 && Math.random() < loadFactor) {
+          p.color = '#ff3366';
+        }
+        p.y *= 1.01;
+        p.vx = 0.2 + (p.color === '#ff3366' ? loadFactor * 0.2 : 0);
+      }
+      if (p.x >= turbStart) {
