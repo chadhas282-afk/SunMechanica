@@ -619,3 +619,32 @@ export const CantileverBeamSim: React.FC<SimulationProps> = ({ angle, load , zoo
     grad.addColorStop(0.5, '#94a3b8'); 
     grad.addColorStop(1, `rgb(${148 + rC}, ${163 - rC/2}, ${184 - rC/2})`); 
     ctx.beginPath();
+    topPoints.forEach((pt, i) => {
+      const [px, py] = toScreen(pt[0], pt[1]);
+      if (i === 0) ctx.moveTo(px, py);
+      else ctx.lineTo(px, py);
+    });
+    for (let i = numPoints; i >= 0; i--) {
+      const pt = botPoints[i];
+      const [px, py] = toScreen(pt[0], pt[1]);
+      ctx.lineTo(px, py);
+    }
+    ctx.closePath();
+    ctx.fillStyle = grad;
+    if (loadFactor > 0.5) {
+      ctx.shadowBlur = (loadFactor - 0.5) * 30;
+      ctx.shadowColor = `rgb(${rC}, 0, ${bC})`;
+    }
+    ctx.fill();
+    ctx.strokeStyle = '#1e293b';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+    ctx.shadowBlur = 0;
+    if (loadFactor > 0) {
+      const [fx, fy] = toScreen(L, -maxDeflect + (h/2));
+      const arrowLen = 20 + loadFactor * 80;
+      ctx.beginPath();
+      ctx.moveTo(fx, fy - arrowLen - 20); 
+      ctx.lineTo(fx, fy - 20);
+      ctx.strokeStyle = '#ef4444';
+      ctx.lineWidth = 6;
