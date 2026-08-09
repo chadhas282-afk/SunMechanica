@@ -828,3 +828,33 @@ export const CentrifugalGovernorSim: React.FC<SimulationProps> = ({ angle, load 
     const rCurrent = L * Math.sin(theta);
     const mY = topY - L * Math.cos(theta);
     const collarY = topY - 2 * L * Math.cos(theta);
+    const m1X = rCurrent * Math.cos(rot);
+    const m1Z = rCurrent * Math.sin(rot);
+    const m2X = rCurrent * Math.cos(rot + Math.PI);
+    const m2Z = rCurrent * Math.sin(rot + Math.PI);
+    const masses = [
+      { x: m1X, z: m1Z, isFront: m1Z > 0 },
+      { x: m2X, z: m2Z, isFront: m2Z > 0 }
+    ];
+    masses.sort((a, b) => a.z - b.z);
+    drawLine(0, 0, 0, topY + 1.0, '#334155', 12);
+    drawLine(0, 0, 0, topY + 1.0, '#475569', 6);
+    drawCircle(0, topY, 0.4, '#1e293b', true);
+    drawCircle(0, topY, 0.2, '#fff', true);
+    const drawArmMass = (m: any) => {
+      const color = m.isFront ? '#ff3366' : '#9f1239'; 
+      const armColor = m.isFront ? '#cbd5e1' : '#64748b';
+      drawLine(0, topY, m.x, mY, armColor, m.isFront ? 6 : 4);
+      drawLine(m.x, mY, 0, collarY, armColor, m.isFront ? 6 : 4);
+      ctx.beginPath();
+      const [sx, sy] = toScreen(m.x, mY);
+      const radius = (0.8 + m.z * 0.1) * scale;
+      ctx.arc(sx, sy, radius, 0, 2*Math.PI);
+      ctx.fillStyle = color; ctx.fill();
+      if (m.isFront && load > 50) {
+        ctx.shadowBlur = (load - 50) * 0.4;
+        ctx.shadowColor = '#ff3366';
+        ctx.stroke(); ctx.shadowBlur = 0;
+      }
+    };
+    drawArmMass(masses[0]);
