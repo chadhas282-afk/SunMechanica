@@ -858,3 +858,33 @@ export const CentrifugalGovernorSim: React.FC<SimulationProps> = ({ angle, load 
       }
     };
     drawArmMass(masses[0]);
+    const [cx, cy] = toScreen(0, collarY);
+    ctx.fillStyle = '#0f172a';
+    ctx.fillRect(cx - 1*scale, cy - 0.5*scale, 2*scale, 1*scale);
+    ctx.strokeStyle = '#3b82f6'; ctx.lineWidth = 3;
+    ctx.strokeRect(cx - 1*scale, cy - 0.5*scale, 2*scale, 1*scale);
+    drawLine(-1.0, collarY, -4.0, collarY, '#94a3b8', 4);
+    drawLine(-4.0, collarY, -4.0, collarY - 3.0, '#94a3b8', 4);
+    drawArmMass(masses[1]);
+    ctx.fillStyle = 'rgba(8, 15, 30, 0.85)';
+    ctx.fillRect(30, 150, 240, 110);
+    ctx.strokeStyle = 'rgba(255, 51, 102, 0.3)';
+    ctx.strokeRect(30, 150, 240, 110);
+    ctx.font = '10px monospace';
+    ctx.fillStyle = '#ff3366';
+    ctx.fillText('SYS :: CENTRIFUGAL_GOVERNOR', 40, 170);
+    ctx.fillStyle = '#fff';
+    ctx.fillText(`SYSTEM RPM : ${(rpmFactor * 1200).toFixed(0)}`, 40, 195);
+    ctx.fillStyle = '#00d4ff';
+    ctx.fillText(`COLLAR LIFT: ${(collarY - (topY - 2*L)).toFixed(2)} cm`, 40, 215);
+    ctx.fillStyle = '#ffb703';
+    ctx.fillText(`THROTTLE % : ${(rpmFactor * 100).toFixed(1)}%`, 40, 235);
+  }, [angle, load]);
+  return <div style={{ width: '100%', height: '100%' }}><canvas ref={canvasRef} style={{ width: '100%', height: '100%', display: 'block' }} /></div>;
+};
+export const CentrifugalImpellerSim: React.FC<SimulationProps> = ({ angle, load, zoom = 1 }) => {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const particlesRef = useRef<{r: number, t: number, speed: number}[]>([]);
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
