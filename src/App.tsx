@@ -678,3 +678,33 @@ export const CarnotCycleSim: React.FC<SimulationProps> = ({ angle, load , zoom =
     const originX = width * 0.5;
     const originY = height * 0.5;
     ctx.fillStyle = '#050d1a'; ctx.fillRect(0, 0, width, height);
+    ctx.strokeStyle = '#1e293b'; ctx.lineWidth = 1;
+    for (let i = 0; i < width; i += 40) { ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(i, height); ctx.stroke(); }
+    for (let i = 0; i < height; i += 40) { ctx.beginPath(); ctx.moveTo(0, i); ctx.lineTo(width, i); ctx.stroke(); }
+    const toScreen = (x: number, y: number) => [originX + x * scale, originY - y * scale];
+    const cyclePhase = ((angle / 4.0) % 1.0 + 1.0) % 1.0; 
+    const g = 1.4; 
+    const V1 = 1.5, P1 = 120.0, TH = P1 * V1;
+    const V2 = 3.0, P2 = TH / V2;
+    const V3 = 6.0, P3 = P2 * Math.pow(V2/V3, g), TC = P3 * V3;
+    const V4 = 3.0, P4 = TC / V4;
+    let V = 0, P = 0, T = 0;
+    let phaseName = "";
+    if (cyclePhase < 0.25) {
+      phaseName = "ISOTHERMAL EXPANSION";
+      const t = cyclePhase / 0.25;
+      V = V1 + t * (V2 - V1);
+      T = TH;
+      P = T / V;
+    } else if (cyclePhase < 0.5) {
+      phaseName = "ADIABATIC EXPANSION";
+      const t = (cyclePhase - 0.25) / 0.25;
+      V = V2 + t * (V3 - V2);
+      P = P2 * Math.pow(V2 / V, g);
+      T = P * V;
+    } else if (cyclePhase < 0.75) {
+      phaseName = "ISOTHERMAL COMPRESSION";
+      const t = (cyclePhase - 0.5) / 0.25;
+      V = V3 + t * (V4 - V3);
+      T = TC;
+      P = T / V;
