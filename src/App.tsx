@@ -978,3 +978,33 @@ export const CentrifugalImpellerSim: React.FC<SimulationProps> = ({ angle, load,
     ctx.fillStyle = '#1e293b'; ctx.fill();
     ctx.strokeStyle = '#475569'; ctx.lineWidth = 2 * zoom; ctx.stroke();
     ctx.strokeStyle = '#00d4ff';
+    ctx.lineWidth = 5 * zoom;
+    ctx.lineCap = 'round';
+    if (load > 50) {
+      ctx.shadowBlur = (load - 50) * 0.3;
+      ctx.shadowColor = '#00d4ff';
+    }
+    for(let i=0; i<numBlades; i++) {
+      const baseAng = i * (2*Math.PI/numBlades);
+      ctx.beginPath();
+      for(let r=R_in; r<=R_out; r+=0.2) {
+        const bend = baseAng + 0.5 * (r - R_in); 
+        const px = r * scale * Math.cos(bend);
+        const py = -r * scale * Math.sin(bend);
+        if (r === R_in) ctx.moveTo(px, py);
+        else ctx.lineTo(px, py);
+      }
+      ctx.stroke();
+    }
+    ctx.shadowBlur = 0;
+    ctx.beginPath(); ctx.arc(0, 0, R_in * scale, 0, 2*Math.PI);
+    ctx.fillStyle = '#3b82f6'; ctx.fill(); ctx.stroke();
+    ctx.beginPath(); ctx.arc(0, 0, 0.3 * scale, 0, 2*Math.PI);
+    ctx.fillStyle = '#fff'; ctx.fill();
+    ctx.restore();
+    ctx.fillStyle = 'rgba(8, 15, 30, 0.85)';
+    ctx.fillRect(30, 150, 240, 110);
+    ctx.strokeStyle = 'rgba(0, 212, 255, 0.3)';
+    ctx.strokeRect(30, 150, 240, 110);
+    const pressure = 14.7 + loadFactor * 80;
+    ctx.font = '10px monospace';
