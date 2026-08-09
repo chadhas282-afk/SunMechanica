@@ -528,3 +528,33 @@ export const CVTTransmissionSim: React.FC<SimulationProps> = ({ angle, load , zo
       else ctx.lineTo(cx, cy);
     }
     ctx.fillStyle = `rgba(59, 130, 246, ${0.2 + (load/100)*0.2})`;
+    ctx.fill();
+    ctx.strokeStyle = load > 70 ? '#ef4444' : '#3b82f6';
+    ctx.lineWidth = 3 + (load/100)*2;
+    if (load > 60) {
+      ctx.shadowBlur = load - 60;
+      ctx.shadowColor = '#ef4444';
+    }
+    ctx.stroke();
+    ctx.shadowBlur = 0;
+    ctx.beginPath();
+    ctx.arc(originX, originY, 0.3 * scale, 0, Math.PI * 2);
+    ctx.fillStyle = '#1e3a8a';
+    ctx.fill();
+    ctx.strokeStyle = '#fff';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+    ctx.fillStyle = 'rgba(8, 15, 30, 0.85)';
+    ctx.fillRect(width - 260, 150, 200, 110);
+    ctx.strokeStyle = 'rgba(255, 107, 53, 0.3)';
+    ctx.strokeRect(width - 260, 150, 200, 110);
+    ctx.font = '10px monospace';
+    ctx.fillStyle = '#ff6b35';
+    ctx.fillText('SYS :: CAM_FOLLOWER', width - 250, 170);
+    ctx.fillStyle = '#fff';
+    const normAngle = ((angle * 180 / Math.PI) % 360 + 360) % 360;
+    ctx.fillText(`CAM ANGLE: ${normAngle.toFixed(1)}°`, width - 250, 195);
+    ctx.fillStyle = '#00ff88';
+    ctx.fillText(`LIFT     : ${(rAtTop - 1.5).toFixed(2)}`, width - 250, 215);
+    ctx.fillStyle = '#ff6b35';
+    ctx.fillText(`LOAD     : ${load}%`, width - 250, 235);
