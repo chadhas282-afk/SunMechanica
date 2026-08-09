@@ -1038,3 +1038,33 @@ export const ChebyshevStraightLineSim: React.FC<SimulationProps> = ({ angle, loa
     ctx.strokeStyle = '#1e293b'; ctx.lineWidth = 1;
     for (let i = 0; i < width; i += 40) { ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(i, height); ctx.stroke(); }
     for (let i = 0; i < height; i += 40) { ctx.beginPath(); ctx.moveTo(0, i); ctx.lineTo(width, i); ctx.stroke(); }
+    const toScreen = (x: number, y: number) => [originX + x * scale, originY - y * scale];
+    const drawLine = (x1: number, y1: number, x2: number, y2: number, color: string, w: number) => {
+      ctx.beginPath();
+      const [sx1, sy1] = toScreen(x1, y1); const [sx2, sy2] = toScreen(x2, y2);
+      ctx.moveTo(sx1, sy1); ctx.lineTo(sx2, sy2);
+      ctx.strokeStyle = color; ctx.lineWidth = w * zoom; ctx.lineCap = 'round'; ctx.stroke();
+    };
+    const A = 2.0; 
+    const Pin1 = [-A, 0]; 
+    const Pin2 = [A, 0];  
+    const rCrank = 1.0 * A;
+    const lCoupler = 2.5 * A;
+    const lRocker = 2.5 * A;
+    const D = [Pin1[0] + rCrank * Math.cos(angle), Pin1[1] + rCrank * Math.sin(angle)];
+    const dx = Pin2[0] - D[0];
+    const dy = Pin2[1] - D[1];
+    const d = Math.hypot(dx, dy);
+    let C = [0, 0];
+    if (d <= lCoupler + lRocker && d >= Math.abs(lCoupler - lRocker)) {
+      const a = (lCoupler*lCoupler - lRocker*lRocker + d*d) / (2*d);
+      const h = Math.sqrt(Math.max(0, lCoupler*lCoupler - a*a));
+      const px = D[0] + a * dx / d;
+      const py = D[1] + a * dy / d;
+      C = [
+        px - h * dy / d,
+        py + h * dx / d
+      ];
+    }
+    const loadFactor = load / 100;
+    const offset = 0.5 + (loadFactor - 0.5) * 0.4; 
