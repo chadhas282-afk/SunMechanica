@@ -1098,3 +1098,33 @@ export const ChebyshevStraightLineSim: React.FC<SimulationProps> = ({ angle, loa
     drawJoint(Pin2[0], Pin2[1], '#fff');
     drawJoint(D[0], D[1], '#3b82f6');
     drawJoint(C[0], C[1], '#a855f7');
+    const [penX, penY] = toScreen(P[0], P[1]);
+    ctx.beginPath(); ctx.arc(penX, penY, 0.4 * scale, 0, 2*Math.PI);
+    ctx.fillStyle = '#ff3366'; ctx.fill();
+    ctx.shadowBlur = 10; ctx.shadowColor = '#ff3366'; ctx.fill(); ctx.shadowBlur = 0;
+    ctx.fillStyle = 'rgba(8, 15, 30, 0.85)';
+    ctx.fillRect(30, 150, 260, 110);
+    ctx.strokeStyle = 'rgba(255, 51, 102, 0.3)';
+    ctx.strokeRect(30, 150, 260, 110);
+    ctx.font = '10px monospace';
+    ctx.fillStyle = '#ff3366'; ctx.fillText('SYS :: CHEBYSHEV_STRAIGHT_LINE', 40, 170);
+    ctx.fillStyle = '#fff'; ctx.fillText(`CRANK ANGLE : ${(angle * 180 / Math.PI % 360).toFixed(1)}°`, 40, 195);
+    ctx.fillStyle = '#00d4ff'; ctx.fillText(`PEN OFFSET  : ${(offset * 100).toFixed(0)}% ALONG COUPLER`, 40, 215);
+    ctx.fillStyle = '#a855f7'; ctx.fillText(`PEN HEIGHT  : ${P[1].toFixed(2)} cm`, 40, 235);
+  }, [angle, load, zoom]);
+  return <div style={{ width: '100%', height: '100%' }}><canvas ref={canvasRef} style={{ width: '100%', height: '100%', display: 'block' }} /></div>;
+};
+export const CheckValvesSim: React.FC<SimulationProps> = ({ angle, load, zoom = 1 }) => {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const particlesRef = useRef<{x: number, y: number, id: number}[]>([]);
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+    const dpr = window.devicePixelRatio || 1;
+    const rect = canvas.getBoundingClientRect();
+    canvas.width = rect.width * dpr;
+    canvas.height = rect.height * dpr;
+    ctx.scale(dpr, dpr);
+    const width = rect.width;
