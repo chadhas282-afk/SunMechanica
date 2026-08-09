@@ -588,3 +588,34 @@ export const CantileverBeamSim: React.FC<SimulationProps> = ({ angle, load , zoo
     for (let i = 0; i < width; i += 40) { ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(i, height); ctx.stroke(); }
     for (let i = 0; i < height; i += 40) { ctx.beginPath(); ctx.moveTo(0, i); ctx.lineTo(width, i); ctx.stroke(); }
     const toScreen = (x: number, y: number) => [originX + x * scale, originY - y * scale];
+     const L = 10.0;
+    const h = 2.0; 
+    const loadFactor = load / 100;
+    const dynamicLoad = loadFactor * (1.0 + 0.1 * Math.sin(angle * 8.0));
+    const maxDeflect = 4.0 * dynamicLoad; 
+    const numPoints = 100;
+    const topPoints = [];
+    const botPoints = [];
+    for (let i = 0; i <= numPoints; i++) {
+      const x = (i / numPoints) * L;
+      const xL = x / L;
+      const y0 = -maxDeflect * xL * xL * (3 - xL) / 2;
+      const slope = -maxDeflect * (6 * L * x - 3 * x * x) / (2 * L * L * L);
+      const theta = Math.atan(slope);
+      const xt = x - (h/2) * Math.sin(theta);
+      const yt = y0 + (h/2) * Math.cos(theta);
+      const xb = x + (h/2) * Math.sin(theta);
+      const yb = y0 - (h/2) * Math.cos(theta);
+      topPoints.push([xt, yt]);
+      botPoints.push([xb, yb]);
+    }
+    ctx.fillStyle = '#475569';
+    const [wx, wy] = toScreen(0, 0);
+    ctx.fillRect(wx - 40, wy - 4 * scale, 40, 8 * scale);
+    const grad = ctx.createLinearGradient(0, wy - (h/2)*scale, 0, wy + (h/2)*scale);
+    const rC = Math.round(255 * loadFactor);
+    const bC = Math.round(255 * loadFactor);
+    grad.addColorStop(0, `rgb(${148 - bC/2}, ${163}, ${184 + bC})`); 
+    grad.addColorStop(0.5, '#94a3b8'); 
+    grad.addColorStop(1, `rgb(${148 + rC}, ${163 - rC/2}, ${184 - rC/2})`); 
+    ctx.beginPath();
