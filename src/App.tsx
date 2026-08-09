@@ -228,3 +228,33 @@ export const BraytonCycleSim: React.FC<SimulationProps> = ({ angle, load, zoom =
         p.vx = 0.2 + (p.color === '#ff3366' ? loadFactor * 0.2 : 0);
       }
       if (p.x >= turbStart) {
+         p.vx = 0.4 + (p.color === '#ff3366' ? loadFactor * 0.4 : 0);
+        p.y *= 1.02;
+      }
+      p.x += p.vx;
+      if (p.x < exhaustX + 2) nextParticles.push(p);
+    }
+    particlesRef.current = nextParticles;
+    ctx.beginPath();
+    const [c1tx, c1ty] = toScreen(intakeX, 2.5);
+    ctx.moveTo(c1tx, c1ty);
+    const [c2tx, c2ty] = toScreen(compStart, 2.5);
+    ctx.lineTo(c2tx, c2ty);
+    const [c3tx, c3ty] = toScreen(compEnd, 1.5);
+    ctx.lineTo(c3tx, c3ty);
+    const [c4tx, c4ty] = toScreen(combEnd, 1.5);
+    ctx.lineTo(c4tx, c4ty);
+    const [c5tx, c5ty] = toScreen(turbEnd, 2.5);
+    ctx.lineTo(c5tx, c5ty);
+    const [c6tx, c6ty] = toScreen(exhaustX, 2.0);
+    ctx.lineTo(c6tx, c6ty);
+    ctx.strokeStyle = '#475569'; ctx.lineWidth = 4 * zoom; ctx.stroke();
+    ctx.beginPath();
+    const [c1bx, c1by] = toScreen(intakeX, -2.5);
+    ctx.moveTo(c1bx, c1by);
+    const [c2bx, c2by] = toScreen(compStart, -2.5);
+    ctx.lineTo(c2bx, c2by);
+    const [c3bx, c3by] = toScreen(compEnd, -1.5);
+    ctx.lineTo(c3bx, c3by);
+    const [c4bx, c4by] = toScreen(combEnd, -1.5);
+    ctx.lineTo(c4bx, c4by);
