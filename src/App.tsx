@@ -258,3 +258,33 @@ export const BraytonCycleSim: React.FC<SimulationProps> = ({ angle, load, zoom =
     ctx.lineTo(c3bx, c3by);
     const [c4bx, c4by] = toScreen(combEnd, -1.5);
     ctx.lineTo(c4bx, c4by);
+    const [c5bx, c5by] = toScreen(turbEnd, -2.5);
+    ctx.lineTo(c5bx, c5by);
+    const [c6bx, c6by] = toScreen(exhaustX, -2.0);
+    ctx.lineTo(c6bx, c6by);
+    ctx.stroke();
+    for(const p of particlesRef.current) {
+      const [px, py] = toScreen(p.x, p.y);
+      ctx.beginPath(); ctx.arc(px, py, 0.1 * scale, 0, 2*Math.PI);
+      ctx.fillStyle = p.color; ctx.fill();
+    }
+    ctx.beginPath();
+    const [s1x, s1y] = toScreen(compStart, 0.2);
+    const [s2x, s2y] = toScreen(turbEnd, 0.2);
+    const [s3x, s3y] = toScreen(turbEnd, -0.2);
+    const [s4x, s4y] = toScreen(compStart, -0.2);
+    ctx.moveTo(s1x, s1y); ctx.lineTo(s2x, s2y); ctx.lineTo(s3x, s3y); ctx.lineTo(s4x, s4y); ctx.closePath();
+    ctx.fillStyle = '#94a3b8'; ctx.fill();
+    ctx.strokeStyle = '#334155'; ctx.lineWidth = 2 * zoom; ctx.stroke();
+    const numCompStages = 5;
+    for(let i=0; i<numCompStages; i++) {
+      const x = compStart + (i + 0.5) * ((compEnd - compStart)/numCompStages);
+      const h = 2.5 - (i/numCompStages) * 1.0;
+      ctx.strokeStyle = '#3b82f6'; ctx.lineWidth = 3 * zoom;
+      const [rx1, ry1] = toScreen(x, h);
+      const [rx2, ry2] = toScreen(x, 0.2);
+      ctx.beginPath(); ctx.moveTo(rx1, ry1); ctx.lineTo(rx2, ry2); ctx.stroke();
+      const [rx3, ry3] = toScreen(x, -h);
+      const [rx4, ry4] = toScreen(x, -0.2);
+      ctx.beginPath(); ctx.moveTo(rx3, ry3); ctx.lineTo(rx4, ry4); ctx.stroke();
+      const sx = x + 0.3;
