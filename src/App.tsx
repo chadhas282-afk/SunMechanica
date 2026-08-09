@@ -1188,3 +1188,33 @@ export const CheckValvesSim: React.FC<SimulationProps> = ({ angle, load, zoom = 
     drawPipe(0.0);
     drawPipe(-4.0);
     ctx.fillStyle = isOpen ? '#00d4ff' : '#ff3366';
+     for (const p of particlesRef.current) {
+      const [px, py] = toScreen(p.x, p.y);
+      ctx.beginPath(); ctx.arc(px, py, 0.08 * scale, 0, 2*Math.PI); ctx.fill();
+    }
+    const stressColor = isOpen ? '#00ff88' : '#ff3366';
+    ctx.save();
+    const [bvx, bvy] = toScreen(0, 4);
+    ctx.translate(bvx, bvy);
+    ctx.fillStyle = '#1e293b'; ctx.beginPath();
+    ctx.moveTo(-1*scale, -1*scale); ctx.lineTo(-0.2*scale, -1*scale); ctx.lineTo(-0.2*scale, -0.6*scale); ctx.lineTo(-0.8*scale, -0.6*scale); ctx.closePath(); ctx.fill(); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(-1*scale, 1*scale); ctx.lineTo(-0.2*scale, 1*scale); ctx.lineTo(-0.2*scale, 0.6*scale); ctx.lineTo(-0.8*scale, 0.6*scale); ctx.closePath(); ctx.fill(); ctx.stroke();
+    const ballX = isOpen ? valvePos * 1.0 : 0;
+    ctx.beginPath(); ctx.arc(ballX * scale, 0, 0.6 * scale, 0, 2*Math.PI);
+    ctx.fillStyle = '#cbd5e1'; ctx.fill();
+    ctx.strokeStyle = stressColor; ctx.lineWidth = 3 * zoom;
+    if (!isOpen && load > 10) { ctx.shadowBlur = 10; ctx.shadowColor = stressColor; }
+    ctx.stroke(); ctx.shadowBlur = 0;
+    ctx.strokeStyle = '#475569'; ctx.beginPath(); ctx.moveTo(1*scale, -1*scale); ctx.lineTo(1*scale, 1*scale); ctx.stroke();
+    ctx.restore();
+    ctx.save();
+    const [svx, svy] = toScreen(0, 0);
+    ctx.translate(svx, svy);
+    ctx.fillStyle = '#1e293b';
+    ctx.fillRect(-0.4*scale, -1*scale, 0.2*scale, 2*scale);
+    ctx.strokeStyle = '#334155'; ctx.strokeRect(-0.4*scale, -1*scale, 0.2*scale, 2*scale);
+    const swingAngle = isOpen ? valvePos * (-Math.PI/3) : 0;
+    ctx.translate(-0.2*scale, -1.0*scale);
+    ctx.rotate(swingAngle);
+    ctx.fillStyle = '#94a3b8';
+    ctx.fillRect(0, 0, 0.2*scale, 2.0*scale);
