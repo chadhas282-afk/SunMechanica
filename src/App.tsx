@@ -708,3 +708,33 @@ export const CarnotCycleSim: React.FC<SimulationProps> = ({ angle, load , zoom =
       V = V3 + t * (V4 - V3);
       T = TC;
       P = T / V;
+       } else {
+      phaseName = "ADIABATIC COMPRESSION";
+      const t = (cyclePhase - 0.75) / 0.25;
+      V = V4 + t * (V1 - V4);
+      P = P4 * Math.pow(V4 / V, g);
+      T = P * V;
+    }
+    const graphOriginX = originX + 2 * scale;
+    const graphOriginY = originY + 4 * scale;
+    ctx.beginPath();
+    ctx.moveTo(graphOriginX, graphOriginY - 8 * scale);
+    ctx.lineTo(graphOriginX, graphOriginY);
+    ctx.lineTo(graphOriginX + 6 * scale, graphOriginY);
+    ctx.strokeStyle = '#94a3b8'; ctx.lineWidth = 2; ctx.stroke();
+    ctx.beginPath();
+    const mapPV = (v: number, p: number) => [graphOriginX + (v/8) * 6 * scale, graphOriginY - (p/130) * 8 * scale];
+    for (let i = 0; i <= 100; i++) {
+      const cP = i / 100;
+      let vT = 0, pT = 0;
+      if (cP < 0.25) { vT = V1 + (cP/0.25)*(V2-V1); pT = TH / vT; }
+      else if (cP < 0.5) { vT = V2 + ((cP-0.25)/0.25)*(V3-V2); pT = P2 * Math.pow(V2/vT, g); }
+      else if (cP < 0.75) { vT = V3 + ((cP-0.5)/0.25)*(V4-V3); pT = TC / vT; }
+      else { vT = V4 + ((cP-0.75)/0.25)*(V1-V4); pT = P4 * Math.pow(V4/vT, g); }
+      const [gx, gy] = mapPV(vT, pT);
+      if (i === 0) ctx.moveTo(gx, gy); else ctx.lineTo(gx, gy);
+    }
+    ctx.closePath();
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)';
+    ctx.lineWidth = 2;
+    ctx.setLineDash([5, 5]);
