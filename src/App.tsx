@@ -288,3 +288,33 @@ export const BraytonCycleSim: React.FC<SimulationProps> = ({ angle, load, zoom =
       const [rx4, ry4] = toScreen(x, -0.2);
       ctx.beginPath(); ctx.moveTo(rx3, ry3); ctx.lineTo(rx4, ry4); ctx.stroke();
       const sx = x + 0.3;
+      ctx.strokeStyle = '#cbd5e1'; ctx.lineWidth = 2 * zoom;
+      const [st1x, st1y] = toScreen(sx, h - 0.1);
+      const [st2x, st2y] = toScreen(sx, 0.3);
+      ctx.beginPath(); ctx.moveTo(st1x, st1y); ctx.lineTo(st2x, st2y); ctx.stroke();
+      const [st3x, st3y] = toScreen(sx, -h + 0.1);
+      const [st4x, st4y] = toScreen(sx, -0.3);
+      ctx.beginPath(); ctx.moveTo(st3x, st3y); ctx.lineTo(st4x, st4y); ctx.stroke();
+    }
+    const drawInjector = (y: number) => {
+      const [ix, iy] = toScreen(combStart + 0.5, y);
+      ctx.fillStyle = '#f59e0b';
+      ctx.fillRect(ix - 0.1*scale, iy - 0.2*scale, 0.4*scale, 0.4*scale);
+      if (load > 10) {
+        ctx.beginPath();
+        ctx.moveTo(ix + 0.3*scale, iy);
+        ctx.lineTo(ix + 1.5*scale + Math.random()*scale, iy - 0.3*scale);
+        ctx.lineTo(ix + 2.0*scale + Math.random()*scale, iy);
+        ctx.lineTo(ix + 1.5*scale + Math.random()*scale, iy + 0.3*scale);
+        ctx.fillStyle = `rgba(255, 51, 102, ${0.5 * loadFactor})`;
+        ctx.fill();
+        ctx.shadowBlur = 10; ctx.shadowColor = '#ff3366'; ctx.fill(); ctx.shadowBlur = 0;
+      }
+    };
+    drawInjector(0.8);
+    drawInjector(-0.8);
+    const numTurbStages = 2;
+    for(let i=0; i<numTurbStages; i++) {
+      const x = turbStart + (i + 0.5) * ((turbEnd - turbStart)/numTurbStages);
+      const h = 1.8 + (i/numTurbStages) * 0.7;
+      ctx.strokeStyle = '#00ff88'; ctx.lineWidth = 5 * zoom;
