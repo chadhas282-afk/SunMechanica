@@ -1418,3 +1418,33 @@ export const DifferentialGearSim: React.FC<SimulationProps> = ({ angle, load, zo
         const rOuter = r * scale;
         const rInner = (r - 0.2) * scale;
         if (i===0) ctx.moveTo(rOuter * Math.cos(th), rOuter * Math.sin(th));
+         else ctx.lineTo(rOuter * Math.cos(th), rOuter * Math.sin(th));
+        ctx.lineTo(rInner * Math.cos(nextTh), rInner * Math.sin(nextTh));
+      }
+      ctx.closePath();
+      ctx.fillStyle = innerRing ? 'rgba(15, 23, 42, 0.3)' : 'rgba(15, 23, 42, 0.8)';
+      ctx.fill();
+      ctx.strokeStyle = color; ctx.lineWidth = 2 * zoom; ctx.stroke();
+      if (innerRing) {
+        ctx.beginPath(); ctx.arc(0, 0, (r - 0.6) * scale, 0, 2*Math.PI);
+        ctx.stroke();
+      }
+      ctx.restore();
+    };
+    ctx.fillStyle = '#1e293b'; ctx.strokeStyle = '#00d4ff'; ctx.lineWidth = 2 * zoom;
+    const [lx, ly] = toScreen(-7, -0.4); ctx.fillRect(lx, ly, 5*scale, 0.8*scale); ctx.strokeRect(lx, ly, 5*scale, 0.8*scale);
+    const [rx, ry] = toScreen(2, -0.4); ctx.fillRect(rx, ry, 5*scale, 0.8*scale);
+    ctx.strokeStyle = '#a855f7'; ctx.strokeRect(rx, ry, 5*scale, 0.8*scale);
+    ctx.fillStyle = '#1e293b'; ctx.strokeStyle = '#ffb703';
+    const [px, py] = toScreen(-0.4, R_ring + 0.5); ctx.fillRect(px, py, 0.8*scale, 4*scale); ctx.strokeRect(px, py, 0.8*scale, 4*scale);
+    drawGear(0, R_ring + 0.5, R_pinion, 12, -w_in, '#ffb703');
+    drawGear(0, 0, R_ring, 48, w_ring, '#64748b', true);
+    ctx.save();
+    const [cx, cy] = toScreen(0, 0);
+    ctx.translate(cx, cy);
+    ctx.rotate(w_ring);
+    ctx.fillStyle = 'rgba(71, 85, 105, 0.5)';
+    ctx.fillRect(-1*scale, -2.5*scale, 2*scale, 5*scale);
+    ctx.strokeStyle = '#94a3b8'; ctx.lineWidth = 2 * zoom;
+    ctx.strokeRect(-1*scale, -2.5*scale, 2*scale, 5*scale);
+    ctx.beginPath(); ctx.moveTo(0, -R_ring * scale); ctx.lineTo(0, R_ring * scale);
