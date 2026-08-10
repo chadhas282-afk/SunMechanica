@@ -2158,3 +2158,33 @@ export const ExternalGearPumpSim: React.FC<SimulationProps> = ({ angle, load , z
         const startAngle = side === 0 ? -Math.PI/2 : -Math.PI/2; 
         particlesRef.current.push({
           id: nextId.current++,
+          g: side,
+          a: startAngle,
+          r: R + (Math.random() * 0.8 - 0.4) * toothDepth 
+        });
+      }
+    }
+    const speed = 0.05; 
+    const activeParticles = [];
+    ctx.save();
+    for (let i = 0; i < particlesRef.current.length; i++) {
+      const p = particlesRef.current[i];
+      if (p.g === 0) {
+        p.a += speed; 
+        p.a -= speed;
+      } else {
+        p.a += speed;
+      }
+      let px, py;
+      if (p.g === 0) {
+        px = g1x + p.r * Math.cos(p.a);
+        py = g1y + p.r * Math.sin(p.a);
+      } else {
+        px = g2x + p.r * Math.cos(p.a);
+        py = g2y + p.r * Math.sin(p.a);
+      }
+      if (py > R) {
+        py += (Math.abs(p.a) > Math.PI ? 0.5 : 0.5); 
+        if (p.g === 0) px += 0.1; else px -= 0.1;
+      }
+      if (py < R + 4) { 
