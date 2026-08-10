@@ -1738,3 +1738,33 @@ export const EpicyclicVibrationSim: React.FC<SimulationProps> = ({ angle, load ,
     const dpr = window.devicePixelRatio || 1;
     const rect = canvas.getBoundingClientRect();
     canvas.width = rect.width * dpr;
+    canvas.height = rect.height * dpr;
+    ctx.scale(dpr, dpr);
+    const width = rect.width;
+    const height = rect.height;
+    ctx.clearRect(0, 0, width, height);
+    const scale = (Math.min(width, height) / 16) * zoom; 
+    const originX = width * 0.4;
+    const originY = height * 0.5;
+    ctx.fillStyle = '#050d1a'; ctx.fillRect(0, 0, width, height);
+    ctx.strokeStyle = '#1e293b'; ctx.lineWidth = 1;
+    for (let i = 0; i < width; i += 40) { ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(i, height); ctx.stroke(); }
+    for (let i = 0; i < height; i += 40) { ctx.beginPath(); ctx.moveTo(0, i); ctx.lineTo(width, i); ctx.stroke(); }
+    const toScreen = (x: number, y: number) => [originX + x * scale, originY - y * scale];
+    const loadFactor = load / 100;
+    const vibrationAmp = loadFactor * 0.2; 
+    const freq = 12.0; 
+    const carrierAngle = angle + vibrationAmp * Math.sin(angle * freq);
+    const pendulumSwing = -vibrationAmp * 2.5 * Math.sin(angle * freq);
+    const numPendulums = 4;
+    const R_mount = 3.5; 
+    const L_pend = 1.5;  
+    ctx.save();
+    const [cx, cy] = toScreen(0, 0);
+    ctx.translate(cx, cy);
+    ctx.rotate(-carrierAngle); 
+    ctx.beginPath();
+    ctx.arc(0, 0, R_mount * scale, 0, 2 * Math.PI);
+    ctx.fillStyle = '#0f172a'; ctx.fill();
+    ctx.strokeStyle = '#475569'; ctx.lineWidth = 6; ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(-R_mount*scale, 0); ctx.lineTo(R_mount*scale, 0); ctx.stroke();
