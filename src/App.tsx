@@ -1448,3 +1448,33 @@ export const DifferentialGearSim: React.FC<SimulationProps> = ({ angle, load, zo
     ctx.strokeStyle = '#94a3b8'; ctx.lineWidth = 2 * zoom;
     ctx.strokeRect(-1*scale, -2.5*scale, 2*scale, 5*scale);
     ctx.beginPath(); ctx.moveTo(0, -R_ring * scale); ctx.lineTo(0, R_ring * scale);
+    ctx.strokeStyle = '#cbd5e1'; ctx.lineWidth = 4 * zoom; ctx.stroke();
+    const spiderR = 1.0;
+    const drawSpider = (yPos: number) => {
+      ctx.save();
+      ctx.translate(0, yPos * scale);
+      ctx.fillStyle = '#334155';
+      ctx.fillRect(-0.4*scale, -spiderR*scale, 0.8*scale, 2*spiderR*scale);
+      ctx.strokeStyle = '#fff'; ctx.lineWidth = 1 * zoom;
+      const numSpiderTeeth = 8;
+      for(let i=0; i<numSpiderTeeth; i++) {
+        const offset = ((theta_spider + i * (Math.PI/numSpiderTeeth)) % Math.PI) - Math.PI/2;
+        const yLine = Math.sin(offset) * spiderR * scale;
+        ctx.beginPath(); ctx.moveTo(-0.4*scale, yLine); ctx.lineTo(0.4*scale, yLine); ctx.stroke();
+      }
+      ctx.restore();
+    };
+    drawSpider(-2.0);
+    drawSpider(2.0);
+    ctx.restore();
+    const sideR = 1.5;
+    const drawSideGear = (xPos: number, rot: number, color: string) => {
+      ctx.save();
+      const [sgx, sgy] = toScreen(xPos, 0);
+      ctx.translate(sgx, sgy);
+      ctx.fillStyle = 'rgba(15, 23, 42, 0.9)';
+      ctx.fillRect(-0.5*scale, -sideR*scale, 1.0*scale, 2*sideR*scale);
+      ctx.strokeStyle = color; ctx.lineWidth = 2 * zoom;
+      ctx.strokeRect(-0.5*scale, -sideR*scale, 1.0*scale, 2*sideR*scale);
+      ctx.strokeStyle = color; ctx.lineWidth = 1.5 * zoom;
+      const numSideTeeth = 12;
