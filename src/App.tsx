@@ -2218,3 +2218,33 @@ export const ExternalGearPumpSim: React.FC<SimulationProps> = ({ angle, load , z
         const px = tr * scale * Math.cos(a);
         const py = tr * scale * Math.sin(a);
         if (i === 0) ctx.moveTo(px, py);
+         else ctx.lineTo(px, py);
+      }
+      ctx.closePath();
+      ctx.fillStyle = '#1e293b';
+      ctx.fill();
+      ctx.strokeStyle = color;
+      ctx.lineWidth = 3;
+      if (load > 50) {
+        ctx.shadowBlur = (load - 50) * 0.4;
+        ctx.shadowColor = color;
+      }
+      ctx.stroke();
+      ctx.shadowBlur = 0;
+      ctx.beginPath();
+      ctx.arc(0, 0, 0.4 * scale, 0, 2 * Math.PI);
+      ctx.fillStyle = '#0f172a'; ctx.fill();
+      ctx.strokeStyle = '#fff'; ctx.lineWidth = 2; ctx.stroke();
+      ctx.fillStyle = '#fff';
+      ctx.fillRect(-0.1 * scale, -0.5 * scale, 0.2 * scale, 0.2 * scale);
+      ctx.restore();
+    };
+    drawGear(g1x, g1y, rot1, '#3b82f6'); 
+    drawGear(g2x, g2y, rot2, '#94a3b8'); 
+    ctx.fillStyle = 'rgba(8, 15, 30, 0.85)';
+    ctx.fillRect(30, 150, 240, 110);
+    ctx.strokeStyle = 'rgba(0, 255, 136, 0.3)';
+    ctx.strokeRect(30, 150, 240, 110);
+    ctx.font = '10px monospace';
+    ctx.fillStyle = '#00ff88';
+    ctx.fillText('SYS :: EXTERNAL_GEAR_PUMP', 40, 170);
