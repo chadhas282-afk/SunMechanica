@@ -2128,3 +2128,33 @@ export const ExternalGearPumpSim: React.FC<SimulationProps> = ({ angle, load , z
     const pitchAngle = (2 * Math.PI) / numTeeth;
     const rot1 = -angle;
     const rot2 = angle + pitchAngle / 2;
+    const loadFactor = load / 100;
+    const intakeColor = '#00d4ff';
+    const rC = Math.round(0 + loadFactor * 255);
+    const gC = Math.round(255 - loadFactor * 100); 
+    const dischargeColor = `rgb(${rC}, ${gC}, 0)`;
+    const casingR = R + toothDepth / 2 + casingClearance;
+    ctx.fillStyle = '#0f172a';
+    ctx.beginPath();
+    const [c1x, c1y] = toScreen(g1x, g1y);
+    const [c2x, c2y] = toScreen(g2x, g2y);
+    const openAngle = Math.PI / 6; 
+    ctx.arc(c1x, c1y, casingR * scale, -Math.PI/2 - openAngle, Math.PI/2 + openAngle, true);
+    ctx.arc(c2x, c2y, casingR * scale, Math.PI/2 - openAngle, -Math.PI/2 + openAngle, true);
+    ctx.fill();
+    ctx.strokeStyle = '#475569';
+    ctx.lineWidth = 6;
+    ctx.stroke();
+    ctx.fillStyle = '#0f172a';
+    const [px1, py1] = toScreen(-1.5, -casingR * 0.8);
+    ctx.fillRect(px1, py1, 3.0 * scale, -3.0 * scale); 
+    ctx.strokeRect(px1, py1, 3.0 * scale, -3.0 * scale);
+    const [px2, py2] = toScreen(-1.5, casingR * 0.8);
+    ctx.fillRect(px2, py2, 3.0 * scale, 3.0 * scale); 
+    ctx.strokeRect(px2, py2, 3.0 * scale, 3.0 * scale);
+    for (let i = 0; i < 3; i++) {
+      if (Math.random() > 0.3) {
+        const side = Math.random() > 0.5 ? 0 : 1; 
+        const startAngle = side === 0 ? -Math.PI/2 : -Math.PI/2; 
+        particlesRef.current.push({
+          id: nextId.current++,
