@@ -1888,3 +1888,33 @@ export const EscapementSim: React.FC<SimulationProps> = ({ angle, load , zoom = 
       const p1x = wheelRadius * Math.cos(a1);
       const p1y = wheelRadius * Math.sin(a1);
       const p2x = rInner * Math.cos(a2);
+      const p2y = rInner * Math.sin(a2);
+      const p3x = rInner * Math.cos(a3);
+      const p3y = rInner * Math.sin(a3);
+      if (i === 0) ctx.moveTo(p1x * scale, p1y * scale);
+      else ctx.lineTo(p1x * scale, p1y * scale);
+      ctx.lineTo(p2x * scale, p2y * scale);
+      ctx.lineTo(p3x * scale, p3y * scale);
+    }
+    ctx.closePath();
+    ctx.fillStyle = stressColor;
+    ctx.fill();
+    ctx.strokeStyle = strokeColor;
+    ctx.lineWidth = 2 + loadFactor * 2;
+    if (load > 60) {
+      ctx.shadowBlur = (load - 60) * 0.3;
+      ctx.shadowColor = strokeColor;
+    }
+    ctx.stroke();
+    ctx.shadowBlur = 0;
+    ctx.beginPath(); ctx.arc(0, 0, 0.4 * scale, 0, 2*Math.PI);
+    ctx.fillStyle = '#1e293b'; ctx.fill();
+    ctx.strokeStyle = '#94a3b8'; ctx.lineWidth = 2; ctx.stroke();
+    ctx.beginPath(); ctx.arc(0, 0, 0.1 * scale, 0, 2*Math.PI);
+    ctx.fillStyle = '#fff'; ctx.fill();
+    ctx.restore();
+    ctx.save();
+    const [ax, ay] = toScreen(0, anchorCenterY);
+    ctx.translate(ax, ay);
+    ctx.rotate(-pendulumAngle); 
+    ctx.beginPath();
