@@ -2248,3 +2248,53 @@ export const ExternalGearPumpSim: React.FC<SimulationProps> = ({ angle, load , z
     ctx.font = '10px monospace';
     ctx.fillStyle = '#00ff88';
     ctx.fillText('SYS :: EXTERNAL_GEAR_PUMP', 40, 170);
+    ctx.fillStyle = intakeColor;
+    ctx.fillText(`INTAKE FLOW : ${(Math.abs(speed) * 100).toFixed(1)} L/m`, 40, 195);
+    ctx.fillStyle = dischargeColor;
+    ctx.fillText(`HEAD PRESS  : ${(loadFactor * 300).toFixed(0)} PSI`, 40, 215);
+    ctx.fillStyle = '#fff';
+    ctx.fillText(`DISP VOL    : 14.2 cc/rev`, 40, 235);
+  }, [angle, load]);
+  return (
+    <div style={{ width: '100%', height: '100%' }}>
+      <canvas ref={canvasRef} style={{ width: '100%', height: '100%', display: 'block' }} />
+    </div>
+  );
+};
+export const FluidFilmCavitationSim: React.FC<SimulationProps> = ({ angle, load, zoom = 1 }) => {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const bubblesRef = useRef<{a: number, r: number, size: number, life: number}[]>([]);
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+    const dpr = window.devicePixelRatio || 1;
+    const rect = canvas.getBoundingClientRect();
+    canvas.width = rect.width * dpr;
+    canvas.height = rect.height * dpr;
+    ctx.scale(dpr, dpr);
+    const width = rect.width;
+    const height = rect.height;
+    ctx.clearRect(0, 0, width, height);
+    const scale = (Math.min(width, height) / 16) * zoom; 
+    const originX = width * 0.5;
+    const originY = height * 0.5;
+    ctx.fillStyle = '#050d1a'; ctx.fillRect(0, 0, width, height);
+    ctx.strokeStyle = '#1e293b'; ctx.lineWidth = 1;
+    for (let i = 0; i < width; i += 40) { ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(i, height); ctx.stroke(); }
+    for (let i = 0; i < height; i += 40) { ctx.beginPath(); ctx.moveTo(0, i); ctx.lineTo(width, i); ctx.stroke(); }
+    const toScreen = (x: number, y: number) => [originX + x * scale, originY - y * scale];
+    const R_bearing = 5.0; 
+    const clearance = 0.5; 
+    const R_journal = R_bearing - clearance; 
+    const loadFactor = load / 100;
+    const ecc = 0.9 * clearance * loadFactor;
+    const phi = -Math.PI / 4;
+    const jx = ecc * Math.cos(phi);
+    const jy = ecc * Math.sin(phi);
+    const [bx, by] = toScreen(0, 0);
+    ctx.beginPath(); ctx.arc(bx, by, (R_bearing + 1.0) * scale, 0, 2*Math.PI);
+    ctx.fillStyle = 'rgba(15, 23, 42, 0.8)'; ctx.fill();
+    ctx.strokeStyle = '#334155'; ctx.lineWidth = 6 * zoom; ctx.stroke();
+    ctx.beginPath(); ctx.arc(bx, by, R_bearing * scale, 0, 2*Math.PI);
