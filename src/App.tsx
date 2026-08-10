@@ -1678,3 +1678,33 @@ export const EllipticalTrammelSim: React.FC<SimulationProps> = ({ angle, load, z
     const stressColor = '#ff3366';
     traceRef.current.push({ x: Cx, y: Cy });
     if (traceRef.current.length > 300) traceRef.current.shift();
+     if (traceRef.current.length > 1) {
+      ctx.beginPath();
+      for (let i = 0; i < traceRef.current.length; i++) {
+        const pt = traceRef.current[i];
+        const [px, py] = toScreen(pt.x, pt.y);
+        if (i === 0) ctx.moveTo(px, py);
+        else ctx.lineTo(px, py);
+      }
+      ctx.strokeStyle = `rgba(255, 51, 102, ${0.5 + 0.5 * loadFactor})`;
+      ctx.lineWidth = 3 * zoom;
+      ctx.stroke();
+    }
+    const [tx, ty] = toScreen(tailX, tailY);
+    const [cx, cy] = toScreen(Cx, Cy);
+    ctx.beginPath();
+    ctx.moveTo(tx, ty); ctx.lineTo(cx, cy);
+    ctx.strokeStyle = '#cbd5e1'; ctx.lineWidth = 10 * zoom; ctx.stroke();
+    const drawPin = (x: number, y: number, color: string) => {
+      const [px, py] = toScreen(x, y);
+      ctx.beginPath();
+      ctx.fillStyle = '#1e293b';
+      ctx.fillRect(px - 0.4*scale, py - 0.4*scale, 0.8*scale, 0.8*scale);
+      ctx.strokeStyle = color; ctx.lineWidth = 2 * zoom;
+      ctx.strokeRect(px - 0.4*scale, py - 0.4*scale, 0.8*scale, 0.8*scale);
+      ctx.beginPath(); ctx.arc(px, py, 0.2*scale, 0, 2*Math.PI);
+      ctx.fillStyle = '#fff'; ctx.fill();
+    };
+    drawPin(Ax, Ay, '#00d4ff');
+    drawPin(Bx, By, '#3b82f6');
+    ctx.beginPath(); ctx.arc(cx, cy, 0.3*scale, 0, 2*Math.PI);
