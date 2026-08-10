@@ -1388,3 +1388,33 @@ export const DifferentialGearSim: React.FC<SimulationProps> = ({ angle, load, zo
     ctx.fillStyle = '#050d1a'; ctx.fillRect(0, 0, width, height);
     ctx.strokeStyle = '#1e293b'; ctx.lineWidth = 1;
     for (let i = 0; i < width; i += 40) { ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(i, height); ctx.stroke(); }
+     for (let i = 0; i < height; i += 40) { ctx.beginPath(); ctx.moveTo(0, i); ctx.lineTo(width, i); ctx.stroke(); }
+    const toScreen = (x: number, y: number) => [originX + x * scale, originY - y * scale];
+    const drawLine = (x1: number, y1: number, x2: number, y2: number, color: string, w: number) => {
+      ctx.beginPath();
+      const [sx1, sy1] = toScreen(x1, y1); const [sx2, sy2] = toScreen(x2, y2);
+      ctx.moveTo(sx1, sy1); ctx.lineTo(sx2, sy2);
+      ctx.strokeStyle = color; ctx.lineWidth = w * zoom; ctx.lineCap = 'round'; ctx.stroke();
+    };
+    const R_ring = 4.0;
+    const R_pinion = 1.0;
+    const w_in = angle * 2;
+    const w_ring = w_in * (R_pinion / R_ring); 
+    const turnFactor = (load - 50) / 50; 
+    const w_diff = turnFactor * 1.5; 
+    const w_left = w_ring + w_diff;
+    const w_right = w_ring - w_diff;
+    const w_spider = (w_left - w_right) / 2;
+    const theta_spider = w_spider * 5; 
+    const drawGear = (x: number, y: number, r: number, numTeeth: number, rot: number, color: string, innerRing = false) => {
+      ctx.save();
+      const [gx, gy] = toScreen(x, y);
+      ctx.translate(gx, gy);
+      ctx.rotate(rot);
+      ctx.beginPath();
+      for(let i=0; i<numTeeth; i++) {
+        const th = i * (2*Math.PI/numTeeth);
+        const nextTh = (i+0.5) * (2*Math.PI/numTeeth);
+        const rOuter = r * scale;
+        const rInner = (r - 0.2) * scale;
+        if (i===0) ctx.moveTo(rOuter * Math.cos(th), rOuter * Math.sin(th));
