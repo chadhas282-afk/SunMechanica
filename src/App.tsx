@@ -1618,3 +1618,33 @@ export const DoublePendulumSim: React.FC<SimulationProps> = ({ angle, load, zoom
     const ke = 0.5 * m1 * Math.pow(stateRef.current.w1 * L1, 2) + 0.5 * m2 * (Math.pow(stateRef.current.w1 * L1 * Math.cos(th1) + stateRef.current.w2 * L2 * Math.cos(th2), 2) + Math.pow(stateRef.current.w1 * L1 * Math.sin(th1) + stateRef.current.w2 * L2 * Math.sin(th2), 2));
     ctx.font = '10px monospace';
     ctx.fillStyle = '#ff3366'; ctx.fillText('SYS :: DOUBLE_PENDULUM', 40, 170);
+    ctx.fillStyle = '#fff'; ctx.fillText(`GRAVITY (G) : ${g.toFixed(1)} m/s²`, 40, 195);
+    ctx.fillStyle = '#00d4ff'; ctx.fillText(`KIN ENERGY  : ${ke.toFixed(1)} J`, 40, 215);
+    ctx.fillStyle = '#a855f7'; ctx.fillText(`LYAPUNOV    : CHAOTIC`, 40, 235);
+  }, [angle, load, zoom]);
+  return <div style={{ width: '100%', height: '100%' }}><canvas ref={canvasRef} style={{ width: '100%', height: '100%', display: 'block' }} /></div>;
+};
+export const EllipticalTrammelSim: React.FC<SimulationProps> = ({ angle, load, zoom = 1 }) => {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const traceRef = useRef<{x: number, y: number}[]>([]);
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+    const dpr = window.devicePixelRatio || 1;
+    const rect = canvas.getBoundingClientRect();
+    canvas.width = rect.width * dpr;
+    canvas.height = rect.height * dpr;
+    ctx.scale(dpr, dpr);
+    const width = rect.width;
+    const height = rect.height;
+    ctx.clearRect(0, 0, width, height);
+    const scale = (Math.min(width, height) / 16) * zoom; 
+    const originX = width * 0.5;
+    const originY = height * 0.5;
+    ctx.fillStyle = '#050d1a'; ctx.fillRect(0, 0, width, height);
+    ctx.strokeStyle = '#1e293b'; ctx.lineWidth = 1;
+    for (let i = 0; i < width; i += 40) { ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(i, height); ctx.stroke(); }
+    for (let i = 0; i < height; i += 40) { ctx.beginPath(); ctx.moveTo(0, i); ctx.lineTo(width, i); ctx.stroke(); }
+    const toScreen = (x: number, y: number) => [originX + x * scale, originY - y * scale];
