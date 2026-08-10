@@ -1478,3 +1478,34 @@ export const DifferentialGearSim: React.FC<SimulationProps> = ({ angle, load, zo
       ctx.strokeRect(-0.5*scale, -sideR*scale, 1.0*scale, 2*sideR*scale);
       ctx.strokeStyle = color; ctx.lineWidth = 1.5 * zoom;
       const numSideTeeth = 12;
+      for(let i=0; i<numSideTeeth; i++) {
+        const offset = ((rot + i * (Math.PI/numSideTeeth)) % Math.PI) - Math.PI/2;
+        const yLine = Math.sin(offset) * sideR * scale;
+        ctx.beginPath(); ctx.moveTo(-0.5*scale, yLine); ctx.lineTo(0.5*scale, yLine); ctx.stroke();
+      }
+      ctx.restore();
+    };
+    drawSideGear(-1.5, w_left, '#00d4ff'); 
+    drawSideGear(1.5, w_right, '#a855f7'); 
+    const vecY = -4.5;
+    const vScale = 1.5;
+    const leftV = w_left * vScale;
+    const rightV = w_right * vScale;
+    drawLine(-4, vecY, -4, vecY - leftV, '#00d4ff', 4);
+    const [lahX, lahY] = toScreen(-4, vecY - leftV);
+    ctx.beginPath(); ctx.arc(lahX, lahY, 4*zoom, 0, 2*Math.PI); ctx.fillStyle = '#00d4ff'; ctx.fill();
+    drawLine(4, vecY, 4, vecY - rightV, '#a855f7', 4);
+    const [rahX, rahY] = toScreen(4, vecY - rightV);
+    ctx.beginPath(); ctx.arc(rahX, rahY, 4*zoom, 0, 2*Math.PI); ctx.fillStyle = '#a855f7'; ctx.fill();
+    drawLine(-4, vecY - leftV, 4, vecY - rightV, 'rgba(255, 255, 255, 0.4)', 2);
+    const avgV = (leftV + rightV) / 2;
+    const [cahX, cahY] = toScreen(0, vecY - avgV);
+    ctx.beginPath(); ctx.arc(cahX, cahY, 5*zoom, 0, 2*Math.PI); ctx.fillStyle = '#64748b'; ctx.fill();
+    ctx.fillStyle = 'rgba(8, 15, 30, 0.85)';
+    ctx.fillRect(30, 150, 240, 110);
+    ctx.strokeStyle = 'rgba(100, 116, 139, 0.3)';
+    ctx.strokeRect(30, 150, 240, 110);
+    ctx.font = '10px monospace';
+    ctx.fillStyle = '#64748b'; ctx.fillText('SYS :: DIFFERENTIAL_GEAR', 40, 170);
+    ctx.fillStyle = '#ffb703'; ctx.fillText(`DRIVESHAFT  : ${(w_in * 180 / Math.PI).toFixed(0)} RPM`, 40, 195);
+    ctx.fillStyle = '#00d4ff'; ctx.fillText(`LEFT WHEEL  : ${(w_left * 180 / Math.PI).toFixed(0)} RPM`, 40, 215);
