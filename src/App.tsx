@@ -2008,3 +2008,33 @@ export const EulerBucklingSim: React.FC<SimulationProps> = ({ angle, load , zoom
     ctx.fillStyle = '#050d1a'; ctx.fillRect(0, 0, width, height);
     ctx.strokeStyle = '#1e293b'; ctx.lineWidth = 1;
     for (let i = 0; i < width; i += 40) { ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(i, height); ctx.stroke(); }
+    for (let i = 0; i < height; i += 40) { ctx.beginPath(); ctx.moveTo(0, i); ctx.lineTo(width, i); ctx.stroke(); }
+    const toScreen = (x: number, y: number) => [originX + x * scale, originY - y * scale];
+    const L = 10.0;
+    const h = 0.6; 
+    const P_crit = 50;
+    let delta = 0;
+    if (load > P_crit) {
+      const overload = load - P_crit;
+      delta = (overload / 50) * 3.0; 
+      delta += 0.1 * overload/50 * Math.sin(angle * 15.0);
+    }
+    const topY = L - (delta * delta * Math.PI * Math.PI) / (4 * L);
+    const numPoints = 100;
+    const topPoints = [];
+    const botPoints = [];
+    for (let i = 0; i <= numPoints; i++) {
+      const y = (i / numPoints) * topY;
+      const x0 = delta * Math.sin(Math.PI * (y / topY));
+      const slope = delta * (Math.PI / topY) * Math.cos(Math.PI * (y / topY));
+      const theta = Math.atan(slope); 
+      const xLeft = x0 - (h/2) * Math.cos(theta);
+      const yLeft = y + (h/2) * Math.sin(theta);
+      const xRight = x0 + (h/2) * Math.cos(theta);
+      const yRight = y - (h/2) * Math.sin(theta);
+      topPoints.push([xLeft, yLeft]);
+      botPoints.push([xRight, yRight]);
+    }
+    const loadFactor = load / 100;
+    const rC = Math.round(148 + loadFactor * 107);
+    const gC = Math.round(163 - loadFactor * 163);
