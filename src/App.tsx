@@ -1328,3 +1328,33 @@ export const CrankshaftSim: React.FC<SimulationProps> = ({ angle, load , zoom = 
     const [cylEndX, cylBotY] = toScreen(R + L + 2.0, -pistonH/2 - 0.1);
     ctx.beginPath(); ctx.moveTo(cylStartX, cylTopY); ctx.lineTo(cylEndX, cylTopY); ctx.stroke();
     ctx.beginPath(); ctx.moveTo(cylStartX, cylBotY); ctx.lineTo(cylEndX, cylBotY); ctx.stroke();
+    drawLine(0, 0, crankX, crankY, '#3b82f6', Math.max(8, scale * 0.2));
+    drawCircle(0, 0, 0.2, '#fff', true); 
+    const stressColor = load > 50 
+      ? `rgb(${148 + ((load-50)/50)*91}, ${163 - ((load-50)/50)*95}, ${184 - ((load-50)/50)*116})` 
+      : '#94a3b8';
+    drawLine(crankX, crankY, pistonX, 0, stressColor, Math.max(6, scale * 0.15));
+    drawCircle(crankX, crankY, 0.15, '#22d3ee', true); 
+    const [px, py] = toScreen(pistonX, 0);
+    const pw = pistonW * scale;
+    const ph = pistonH * scale;
+    ctx.fillStyle = '#0f172a';
+    ctx.fillRect(px - pw/2, py - ph/2, pw, ph);
+    ctx.strokeStyle = '#22d3ee';
+    ctx.lineWidth = 2;
+    ctx.strokeRect(px - pw/2, py - ph/2, pw, ph);
+    ctx.beginPath(); ctx.moveTo(px + pw/2 - pw*0.2, py - ph/2); ctx.lineTo(px + pw/2 - pw*0.2, py + ph/2); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(px + pw/2 - pw*0.35, py - ph/2); ctx.lineTo(px + pw/2 - pw*0.35, py + ph/2); ctx.stroke();
+    drawCircle(pistonX, 0, 0.12, '#fff', true); 
+    ctx.fillStyle = 'rgba(8, 15, 30, 0.85)';
+    ctx.fillRect(width - 260, 150, 200, 110);
+    ctx.strokeStyle = 'rgba(0, 212, 255, 0.3)';
+    ctx.strokeRect(width - 260, 150, 200, 110);
+    ctx.font = '10px monospace';
+    ctx.fillStyle = '#00d4ff';
+    ctx.fillText('SYS :: CRANKSHAFT_TELEMETRY', width - 250, 170);
+    ctx.fillStyle = '#fff';
+    const normAngle = ((angle * 180 / Math.PI) % 360 + 360) % 360;
+    ctx.fillText(`ANGLE  : ${normAngle.toFixed(1)}°`, width - 250, 195);
+    ctx.fillStyle = '#00ff88';
+    ctx.fillText(`STROKE : ${(pistonX - (R + L - R)).toFixed(2)}`, width - 250, 215);
