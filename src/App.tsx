@@ -1558,3 +1558,33 @@ export const DoublePendulumSim: React.FC<SimulationProps> = ({ angle, load, zoom
       const dt = dt_total / steps;
       for(let i=0; i<steps; i++) {
         const { th1, th2, w1, w2 } = stateRef.current;
+        const dTheta = th1 - th2;
+        const num1 = -g * (2 * m1 + m2) * Math.sin(th1) - m2 * g * Math.sin(th1 - 2 * th2);
+        const num2 = -2 * Math.sin(dTheta) * m2 * (w2 * w2 * L2 + w1 * w1 * L1 * Math.cos(dTheta));
+        const den = L1 * (2 * m1 + m2 - m2 * Math.cos(2 * th1 - 2 * th2));
+        const a1 = (num1 + num2) / den;
+        const num3 = 2 * Math.sin(dTheta) * (w1 * w1 * L1 * (m1 + m2) + g * (m1 + m2) * Math.cos(th1) + w2 * w2 * L2 * m2 * Math.cos(dTheta));
+        const a2 = num3 / (L2 * (2 * m1 + m2 - m2 * Math.cos(2 * th1 - 2 * th2)));
+        const damping = 0.001;
+        stateRef.current.w1 += (a1 - w1 * damping) * dt;
+        stateRef.current.w2 += (a2 - w2 * damping) * dt;
+        stateRef.current.th1 += stateRef.current.w1 * dt;
+        stateRef.current.th2 += stateRef.current.w2 * dt;
+      }
+    }
+    const { th1, th2 } = stateRef.current;
+    const x1 = L1 * Math.sin(th1);
+    const y1 = -L1 * Math.cos(th1); 
+    const x2 = x1 + L2 * Math.sin(th2);
+    const y2 = y1 - L2 * Math.cos(th2);
+    traceRef.current.push({ x: x2, y: y2 });
+    if (traceRef.current.length > 300) traceRef.current.shift();
+    if (traceRef.current.length > 1) {
+      ctx.beginPath();
+      for (let i = 0; i < traceRef.current.length; i++) {
+        const pt = traceRef.current[i];
+        const [px, py] = toScreen(pt.x, pt.y);
+        if (i === 0) ctx.moveTo(px, py);
+        else ctx.lineTo(px, py);
+      }
+      ctx.strokeStyle = `rgba(255, 51, 102, ${0.4 + loadFactor*0.6})`;
