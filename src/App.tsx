@@ -1648,3 +1648,33 @@ export const EllipticalTrammelSim: React.FC<SimulationProps> = ({ angle, load, z
     for (let i = 0; i < width; i += 40) { ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(i, height); ctx.stroke(); }
     for (let i = 0; i < height; i += 40) { ctx.beginPath(); ctx.moveTo(0, i); ctx.lineTo(width, i); ctx.stroke(); }
     const toScreen = (x: number, y: number) => [originX + x * scale, originY - y * scale];
+    const trackLen = 10;
+    ctx.beginPath();
+    const [hL] = toScreen(-trackLen/2, 0); const [hR] = toScreen(trackLen/2, 0);
+    const [, vT] = toScreen(0, trackLen/2); const [, vB] = toScreen(0, -trackLen/2);
+    const midX = originX; const midY = originY;
+    ctx.moveTo(hL, midY); ctx.lineTo(hR, midY);
+    ctx.moveTo(midX, vT); ctx.lineTo(midX, vB);
+    ctx.strokeStyle = 'rgba(15, 23, 42, 0.8)';
+    ctx.lineWidth = 1.2 * scale; ctx.lineCap = 'round';
+    ctx.stroke();
+    ctx.strokeStyle = '#334155'; ctx.lineWidth = 0.8 * scale; ctx.stroke();
+    const theta = -angle; 
+    const D = 3.0; 
+    const loadFactor = load / 100; 
+    const E = 1.0 + loadFactor * 3.0; 
+    const Ax = 0;
+    const Ay = D * Math.sin(theta);
+    const Bx = D * Math.cos(theta);
+    const By = 0;
+    const vx = Bx - Ax;
+    const vy = By - Ay;
+    const ux = vx / D;
+    const uy = vy / D;
+    const Cx = Bx + E * ux;
+    const Cy = By + E * uy;
+    const tailX = Ax - 1.0 * ux;
+    const tailY = Ay - 1.0 * uy;
+    const stressColor = '#ff3366';
+    traceRef.current.push({ x: Cx, y: Cy });
+    if (traceRef.current.length > 300) traceRef.current.shift();
