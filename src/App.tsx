@@ -1588,3 +1588,33 @@ export const DoublePendulumSim: React.FC<SimulationProps> = ({ angle, load, zoom
         else ctx.lineTo(px, py);
       }
       ctx.strokeStyle = `rgba(255, 51, 102, ${0.4 + loadFactor*0.6})`;
+       ctx.lineWidth = 2 * zoom; ctx.stroke();
+    }
+    const [px, py] = toScreen(0, 0);
+    ctx.beginPath(); ctx.arc(px, py, 0.4 * scale, 0, 2*Math.PI);
+    ctx.fillStyle = '#1e293b'; ctx.fill();
+    ctx.strokeStyle = '#fff'; ctx.lineWidth = 2 * zoom; ctx.stroke();
+    const [p1x, p1y] = toScreen(x1, y1);
+    const [p2x, p2y] = toScreen(x2, y2);
+    ctx.beginPath(); ctx.moveTo(px, py); ctx.lineTo(p1x, p1y);
+    ctx.strokeStyle = '#3b82f6'; ctx.lineWidth = 6 * zoom; ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(p1x, p1y); ctx.lineTo(p2x, p2y);
+    ctx.strokeStyle = '#00d4ff'; ctx.lineWidth = 6 * zoom; ctx.stroke();
+    ctx.beginPath(); ctx.arc(p1x, p1y, 0.5 * scale, 0, 2*Math.PI);
+    ctx.fillStyle = '#0f172a'; ctx.fill();
+    ctx.strokeStyle = '#3b82f6'; ctx.lineWidth = 3 * zoom; ctx.stroke();
+    ctx.beginPath(); ctx.arc(p2x, p2y, 0.5 * scale, 0, 2*Math.PI);
+    ctx.fillStyle = '#0f172a'; ctx.fill();
+    ctx.strokeStyle = '#ff3366'; ctx.lineWidth = 3 * zoom; ctx.stroke();
+    if (load > 20) {
+      ctx.shadowBlur = loadFactor * 20;
+      ctx.shadowColor = '#ff3366';
+      ctx.stroke(); ctx.shadowBlur = 0;
+    }
+    ctx.fillStyle = 'rgba(8, 15, 30, 0.85)';
+    ctx.fillRect(30, 150, 240, 110);
+    ctx.strokeStyle = 'rgba(255, 51, 102, 0.3)';
+    ctx.strokeRect(30, 150, 240, 110);
+    const ke = 0.5 * m1 * Math.pow(stateRef.current.w1 * L1, 2) + 0.5 * m2 * (Math.pow(stateRef.current.w1 * L1 * Math.cos(th1) + stateRef.current.w2 * L2 * Math.cos(th2), 2) + Math.pow(stateRef.current.w1 * L1 * Math.sin(th1) + stateRef.current.w2 * L2 * Math.sin(th2), 2));
+    ctx.font = '10px monospace';
+    ctx.fillStyle = '#ff3366'; ctx.fillText('SYS :: DOUBLE_PENDULUM', 40, 170);
