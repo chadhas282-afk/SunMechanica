@@ -1798,3 +1798,33 @@ export const EpicyclicVibrationSim: React.FC<SimulationProps> = ({ angle, load ,
     const graphY = 150;
     traceRef.current.push({ t: angle, carrier: vibrationAmp * Math.sin(angle * freq), pend: pendulumSwing });
     if (traceRef.current.length > 100) traceRef.current.shift();
+     ctx.fillStyle = 'rgba(8, 15, 30, 0.85)';
+    ctx.fillRect(graphX - 20, graphY - 100, 200, 200);
+    ctx.strokeStyle = '#475569'; ctx.strokeRect(graphX - 20, graphY - 100, 200, 200);
+    ctx.beginPath(); ctx.moveTo(graphX - 20, graphY); ctx.lineTo(graphX + 180, graphY); ctx.strokeStyle = '#334155'; ctx.stroke();
+    if (traceRef.current.length > 1) {
+      ctx.beginPath();
+      for (let i = 0; i < traceRef.current.length; i++) {
+        const pt = traceRef.current[i];
+        const gx = graphX + (i / 100) * 160;
+        const gy = graphY - pt.carrier * 200;
+        if (i === 0) ctx.moveTo(gx, gy); else ctx.lineTo(gx, gy);
+      }
+      ctx.strokeStyle = '#ef4444'; ctx.lineWidth = 2; ctx.stroke();
+      ctx.beginPath();
+      for (let i = 0; i < traceRef.current.length; i++) {
+        const pt = traceRef.current[i];
+        const gx = graphX + (i / 100) * 160;
+        const gy = graphY - pt.pend * 80;
+        if (i === 0) ctx.moveTo(gx, gy); else ctx.lineTo(gx, gy);
+      }
+      ctx.strokeStyle = stressColor; ctx.lineWidth = 2; ctx.stroke();
+    }
+    ctx.font = '10px monospace';
+    ctx.fillStyle = '#ef4444'; ctx.fillText('ROTOR VIBRATION', graphX, graphY - 80);
+    ctx.fillStyle = stressColor; ctx.fillText('ABSORBER SWING', graphX, graphY + 80);
+  }, [angle, load]);
+  return <div style={{ width: '100%', height: '100%' }}><canvas ref={canvasRef} style={{ width: '100%', height: '100%', display: 'block' }} /></div>;
+};
+export const EscapementSim: React.FC<SimulationProps> = ({ angle, load , zoom = 1 }) => {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
