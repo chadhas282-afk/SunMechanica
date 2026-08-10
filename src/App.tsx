@@ -2188,3 +2188,33 @@ export const ExternalGearPumpSim: React.FC<SimulationProps> = ({ angle, load , z
         if (p.g === 0) px += 0.1; else px -= 0.1;
       }
       if (py < R + 4) { 
+        activeParticles.push(p);
+        const [spx, spy] = toScreen(px, py);
+        const progress = Math.max(0, Math.min(1, (py + casingR) / (2 * casingR)));
+        ctx.fillStyle = progress > 0.7 ? dischargeColor : intakeColor;
+        ctx.beginPath();
+        ctx.arc(spx, spy, 2, 0, 2 * Math.PI);
+        ctx.fill();
+      }
+    }
+    particlesRef.current = activeParticles;
+    ctx.restore();
+    const drawGear = (cx: number, cy: number, rot: number, color: string) => {
+      ctx.save();
+      const [sx, sy] = toScreen(cx, cy);
+      ctx.translate(sx, sy);
+      ctx.rotate(-rot); 
+      ctx.beginPath();
+      const numPoints = numTeeth * 4;
+      for (let i = 0; i <= numPoints; i++) {
+        const a = (i / numPoints) * Math.PI * 2;
+        let tr = R;
+        const toothPhase = (a * numTeeth) % (Math.PI * 2);
+        if (toothPhase < Math.PI * 0.4) tr = R + toothDepth/2;
+        else if (toothPhase < Math.PI * 0.6) tr = R + toothDepth/2 - (toothPhase - Math.PI*0.4)*toothDepth/(Math.PI*0.2);
+        else if (toothPhase < Math.PI * 1.4) tr = R - toothDepth/2;
+        else if (toothPhase < Math.PI * 1.6) tr = R - toothDepth/2 + (toothPhase - Math.PI*1.4)*toothDepth/(Math.PI*0.2);
+        else tr = R + toothDepth/2;
+        const px = tr * scale * Math.cos(a);
+        const py = tr * scale * Math.sin(a);
+        if (i === 0) ctx.moveTo(px, py);
