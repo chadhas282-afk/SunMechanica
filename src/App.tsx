@@ -1858,3 +1858,33 @@ export const EscapementSim: React.FC<SimulationProps> = ({ angle, load , zoom = 
     const numTeeth = 30;
     const toothPitch = (Math.PI * 2) / numTeeth;
     const wheelRadius = 2.5;
+    const anchorCenterY = wheelRadius + 1.2; 
+    const t = angle;
+    const freq = 4.0;
+    const maxSwing = 0.2; 
+    const pendulumAngle = maxSwing * Math.sin(t * freq);
+    const cycle = t * freq / Math.PI;
+    const stepIndex = Math.floor(cycle - 0.5); 
+    const phase = cycle - 0.5 - stepIndex; 
+    let tickEase = 0;
+    if (phase < 0.1) {
+      tickEase = Math.sin((phase / 0.1) * (Math.PI / 2));
+    } else {
+      tickEase = 1.0;
+    }
+    const wheelAngle = (stepIndex + tickEase) * (toothPitch / 2);
+    const loadFactor = load / 100;
+    const stressColor = `rgba(255, 215, 0, ${0.2 + loadFactor * 0.3})`;
+    const strokeColor = load > 50 ? '#ff4444' : '#ffd700';
+    ctx.save();
+    ctx.translate(originX, originY);
+    ctx.rotate(wheelAngle); 
+    ctx.beginPath();
+    for (let i = 0; i < numTeeth; i++) {
+      const a1 = i * toothPitch;
+      const a2 = a1 + toothPitch * 0.7; 
+      const a3 = a1 + toothPitch; 
+      const rInner = wheelRadius * 0.8;
+      const p1x = wheelRadius * Math.cos(a1);
+      const p1y = wheelRadius * Math.sin(a1);
+      const p2x = rInner * Math.cos(a2);
