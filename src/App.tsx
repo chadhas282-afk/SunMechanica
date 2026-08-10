@@ -1768,3 +1768,33 @@ export const EpicyclicVibrationSim: React.FC<SimulationProps> = ({ angle, load ,
     ctx.fillStyle = '#0f172a'; ctx.fill();
     ctx.strokeStyle = '#475569'; ctx.lineWidth = 6; ctx.stroke();
     ctx.beginPath(); ctx.moveTo(-R_mount*scale, 0); ctx.lineTo(R_mount*scale, 0); ctx.stroke();
+     ctx.beginPath(); ctx.moveTo(0, -R_mount*scale); ctx.lineTo(0, R_mount*scale); ctx.stroke();
+    ctx.beginPath(); ctx.arc(0, 0, 0.5 * scale, 0, 2*Math.PI); ctx.fillStyle = '#1e293b'; ctx.fill(); ctx.stroke();
+    const rC = Math.round(168 + loadFactor * 87);
+    const stressColor = `rgb(${rC}, 85, 247)`;
+    for (let i = 0; i < numPendulums; i++) {
+      ctx.save();
+      const mountAngle = i * (Math.PI / 2);
+      ctx.rotate(-mountAngle);
+      const px = R_mount * scale;
+      const py = 0;
+      ctx.beginPath(); ctx.arc(px, py, 6, 0, 2*Math.PI); ctx.fillStyle = '#fff'; ctx.fill();
+      ctx.translate(px, py);
+      ctx.rotate(-pendulumSwing); 
+      ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(L_pend * scale, 0);
+      ctx.strokeStyle = stressColor; ctx.lineWidth = 8; ctx.stroke();
+      ctx.beginPath(); ctx.arc(L_pend * scale, 0, 0.8 * scale, 0, 2*Math.PI);
+      ctx.fillStyle = '#1e293b'; ctx.fill();
+      ctx.strokeStyle = stressColor; ctx.lineWidth = 4;
+      if (load > 50) {
+        ctx.shadowBlur = (load - 50) * 0.4;
+        ctx.shadowColor = stressColor;
+      }
+      ctx.stroke(); ctx.shadowBlur = 0;
+      ctx.restore();
+    }
+    ctx.restore();
+    const graphX = width - 200;
+    const graphY = 150;
+    traceRef.current.push({ t: angle, carrier: vibrationAmp * Math.sin(angle * freq), pend: pendulumSwing });
+    if (traceRef.current.length > 100) traceRef.current.shift();
