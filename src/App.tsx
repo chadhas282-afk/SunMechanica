@@ -1918,3 +1918,32 @@ export const EscapementSim: React.FC<SimulationProps> = ({ angle, load , zoom = 
     ctx.translate(ax, ay);
     ctx.rotate(-pendulumAngle); 
     ctx.beginPath();
+    const anchorR = anchorCenterY;
+    const spanAngle = Math.PI / 4; 
+    ctx.arc(0, 0, anchorR * scale, Math.PI/2 - spanAngle, Math.PI/2 + spanAngle);
+    ctx.strokeStyle = '#0ea5e9';
+    ctx.lineWidth = 8;
+    ctx.stroke();
+    const drawPallet = (angleOffset: number, isEntry: boolean) => {
+      ctx.save();
+      ctx.rotate(Math.PI/2 + angleOffset);
+      ctx.translate(anchorR * scale, 0);
+      ctx.beginPath();
+      ctx.moveTo(-5, -10);
+      ctx.lineTo(15, isEntry ? -15 : 15);
+      ctx.lineTo(5, 10);
+      ctx.closePath();
+      const isStriking = isEntry ? (phase < 0.15 && Math.sin(cycle*Math.PI) > 0) : (phase < 0.15 && Math.sin(cycle*Math.PI) < 0);
+      ctx.fillStyle = isStriking ? '#fff' : '#0284c7';
+      ctx.fill();
+      ctx.strokeStyle = '#38bdf8';
+      ctx.lineWidth = 2;
+      ctx.stroke();
+      if (isStriking) {
+        ctx.beginPath();
+        ctx.arc(15, isEntry ? -15 : 15, 10, 0, 2*Math.PI);
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
+        ctx.fill();
+      }
+      ctx.restore();
+    };
