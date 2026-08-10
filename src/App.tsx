@@ -1298,3 +1298,33 @@ export const CrankshaftSim: React.FC<SimulationProps> = ({ angle, load , zoom = 
     ctx.fillRect(0, 0, width, height);
     ctx.strokeStyle = '#1e293b';
     ctx.lineWidth = 1;
+     for (let i = 0; i < width; i += 40) {
+      ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(i, height); ctx.stroke();
+    }
+    for (let i = 0; i < height; i += 40) {
+      ctx.beginPath(); ctx.moveTo(0, i); ctx.lineTo(width, i); ctx.stroke();
+    }
+    const toScreen = (x: number, y: number) => [originX + x * scale, originY - y * scale];
+    const drawLine = (x1: number, y1: number, x2: number, y2: number, color: string, w: number) => {
+      ctx.beginPath();
+      const [sx1, sy1] = toScreen(x1, y1);
+      const [sx2, sy2] = toScreen(x2, y2);
+      ctx.moveTo(sx1, sy1); ctx.lineTo(sx2, sy2);
+      ctx.strokeStyle = color; ctx.lineWidth = w; ctx.stroke();
+    };
+    const drawCircle = (x: number, y: number, r: number, color: string, fill = false) => {
+      ctx.beginPath();
+      const [sx, sy] = toScreen(x, y);
+      ctx.arc(sx, sy, r * scale, 0, 2 * Math.PI);
+      ctx.strokeStyle = color; ctx.lineWidth = 2; ctx.stroke();
+      if (fill) { ctx.fillStyle = color; ctx.fill(); }
+    };
+    ctx.setLineDash([5, 5]);
+    drawCircle(0, 0, R, '#1e3a8a');
+    ctx.setLineDash([]);
+    ctx.strokeStyle = '#38bdf8';
+    ctx.lineWidth = 2;
+    const [cylStartX, cylTopY] = toScreen(R + L - 2.0, pistonH/2 + 0.1);
+    const [cylEndX, cylBotY] = toScreen(R + L + 2.0, -pistonH/2 - 0.1);
+    ctx.beginPath(); ctx.moveTo(cylStartX, cylTopY); ctx.lineTo(cylEndX, cylTopY); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(cylStartX, cylBotY); ctx.lineTo(cylEndX, cylBotY); ctx.stroke();
