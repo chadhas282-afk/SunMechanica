@@ -1708,3 +1708,33 @@ export const EllipticalTrammelSim: React.FC<SimulationProps> = ({ angle, load, z
     drawPin(Ax, Ay, '#00d4ff');
     drawPin(Bx, By, '#3b82f6');
     ctx.beginPath(); ctx.arc(cx, cy, 0.3*scale, 0, 2*Math.PI);
+    ctx.fillStyle = stressColor; ctx.fill();
+    if (load > 0) {
+      ctx.shadowBlur = 10; ctx.shadowColor = stressColor; ctx.stroke(); ctx.shadowBlur = 0;
+    }
+    ctx.fillStyle = 'rgba(8, 15, 30, 0.85)';
+    ctx.fillRect(30, 150, 250, 110);
+    ctx.strokeStyle = 'rgba(255, 51, 102, 0.3)';
+    ctx.strokeRect(30, 150, 250, 110);
+    const semiMajor = D + E;
+    const semiMinor = Math.abs(E);
+    ctx.font = '10px monospace';
+    ctx.fillStyle = '#ff3366'; ctx.fillText('SYS :: ELLIPTICAL_TRAMMEL', 40, 170);
+    ctx.fillStyle = '#00d4ff'; ctx.fillText(`PIN DISTANCE : ${D.toFixed(1)} cm`, 40, 195);
+    ctx.fillStyle = '#fff'; ctx.fillText(`PEN OFFSET   : ${E.toFixed(1)} cm`, 40, 215);
+    ctx.fillStyle = '#ffb703'; 
+    ctx.fillText(`ELLIPSE AXES : ${semiMajor.toFixed(1)} x ${semiMinor.toFixed(1)}`, 40, 235);
+  }, [angle, load, zoom]);
+  return <div style={{ width: '100%', height: '100%' }}><canvas ref={canvasRef} style={{ width: '100%', height: '100%', display: 'block' }} /></div>;
+};
+export const EpicyclicVibrationSim: React.FC<SimulationProps> = ({ angle, load , zoom = 1 }) => {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const traceRef = useRef<{t: number, carrier: number, pend: number}[]>([]);
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+    const dpr = window.devicePixelRatio || 1;
+    const rect = canvas.getBoundingClientRect();
+    canvas.width = rect.width * dpr;
