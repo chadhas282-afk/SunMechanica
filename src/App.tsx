@@ -2068,3 +2068,33 @@ export const EulerBucklingSim: React.FC<SimulationProps> = ({ angle, load , zoom
     const [tx, ty] = toScreen(0, topY);
     ctx.fillStyle = '#0f172a';
     ctx.fillRect(tx - 2*scale, ty - 0.4*scale, 4*scale, 0.4*scale);
+    ctx.strokeStyle = '#94a3b8';
+    ctx.strokeRect(tx - 2*scale, ty - 0.4*scale, 4*scale, 0.4*scale);
+    if (loadFactor > 0) {
+      const arrowLen = 20 + loadFactor * 80;
+      ctx.beginPath();
+      ctx.moveTo(tx, ty - arrowLen - 20);
+      ctx.lineTo(tx, ty - 10);
+      ctx.strokeStyle = '#ef4444';
+      ctx.lineWidth = 6;
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(tx, ty - 10);
+      ctx.lineTo(tx - 10, ty - 25);
+      ctx.lineTo(tx + 10, ty - 25);
+      ctx.fillStyle = '#ef4444';
+      ctx.fill();
+    }
+  }, [angle, load]);
+  return <div style={{ width: '100%', height: '100%' }}><canvas ref={canvasRef} style={{ width: '100%', height: '100%', display: 'block' }} /></div>;
+};
+export const ExternalGearPumpSim: React.FC<SimulationProps> = ({ angle, load , zoom = 1 }) => {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const particlesRef = useRef<{a: number, g: number, r: number, id: number}[]>([]);
+  const nextId = useRef(0);
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+    const dpr = window.devicePixelRatio || 1;
