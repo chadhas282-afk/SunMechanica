@@ -1978,3 +1978,33 @@ export const EscapementSim: React.FC<SimulationProps> = ({ angle, load , zoom = 
     ctx.fillText(`BEAT RATE  : ${(freq * 30 / Math.PI).toFixed(0)} BPM`, 40, 195);
     ctx.fillStyle = '#00ff88';
     ctx.fillText(`SWING ANG  : ${(pendulumAngle * 180 / Math.PI).toFixed(1)}°`, 40, 215);
+    ctx.fillStyle = '#a855f7';
+    ctx.fillText(`WHEEL STEP : ${Math.floor(cycle)}`, 40, 235);
+  }, [angle, load]);
+  return (
+    <div style={{ width: '100%', height: '100%' }}>
+      <canvas ref={canvasRef} style={{ width: '100%', height: '100%', display: 'block' }} />
+    </div>
+  );
+};
+export const EulerBucklingSim: React.FC<SimulationProps> = ({ angle, load , zoom = 1 }) => {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+    const dpr = window.devicePixelRatio || 1;
+    const rect = canvas.getBoundingClientRect();
+    canvas.width = rect.width * dpr;
+    canvas.height = rect.height * dpr;
+    ctx.scale(dpr, dpr);
+    const width = rect.width;
+    const height = rect.height;
+    ctx.clearRect(0, 0, width, height);
+    const scale = (Math.min(width, height) / 16) * zoom; 
+    const originX = width * 0.5;
+    const originY = height * 0.85; 
+    ctx.fillStyle = '#050d1a'; ctx.fillRect(0, 0, width, height);
+    ctx.strokeStyle = '#1e293b'; ctx.lineWidth = 1;
+    for (let i = 0; i < width; i += 40) { ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(i, height); ctx.stroke(); }
