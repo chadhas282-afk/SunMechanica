@@ -2038,3 +2038,33 @@ export const EulerBucklingSim: React.FC<SimulationProps> = ({ angle, load , zoom
     const loadFactor = load / 100;
     const rC = Math.round(148 + loadFactor * 107);
     const gC = Math.round(163 - loadFactor * 163);
+     const bC = Math.round(184 - loadFactor * 184);
+    const stressColor = `rgb(${rC}, ${gC}, ${bC})`;
+    ctx.beginPath();
+    topPoints.forEach((pt, i) => {
+      const [px, py] = toScreen(pt[0], pt[1]);
+      if (i === 0) ctx.moveTo(px, py);
+      else ctx.lineTo(px, py);
+    });
+    for (let i = numPoints; i >= 0; i--) {
+      const pt = botPoints[i];
+      const [px, py] = toScreen(pt[0], pt[1]);
+      ctx.lineTo(px, py);
+    }
+    ctx.closePath();
+    ctx.fillStyle = stressColor;
+    if (load > P_crit) {
+      ctx.shadowBlur = (load - P_crit) * 0.4;
+      ctx.shadowColor = stressColor;
+    }
+    ctx.fill();
+    ctx.strokeStyle = '#1e293b';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+    ctx.shadowBlur = 0;
+    ctx.fillStyle = '#475569';
+    const [bx, by] = toScreen(0, 0);
+    ctx.beginPath(); ctx.moveTo(bx, by); ctx.lineTo(bx - 15, by + 20); ctx.lineTo(bx + 15, by + 20); ctx.fill();
+    const [tx, ty] = toScreen(0, topY);
+    ctx.fillStyle = '#0f172a';
+    ctx.fillRect(tx - 2*scale, ty - 0.4*scale, 4*scale, 0.4*scale);
