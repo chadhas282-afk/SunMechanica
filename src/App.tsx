@@ -3098,3 +3098,33 @@ export const IBeamStressSim: React.FC<SimulationProps> = ({ angle, load , zoom =
     for (let i = 0; i < segments; i++) {
       const x1 = -L/2 + i * dx;
       const x2 = x1 + dx;
+       const y1_mid = getDeflection(x1);
+      const y2_mid = getDeflection(x2);
+      const [sx1, sy1_mid] = toScreen(x1, y1_mid);
+      const [sx2, sy2_mid] = toScreen(x2, y2_mid);
+      const hScreen = H * scale;
+      const nx1 = Math.abs(x1) / (L/2); 
+      const moment = (1 - nx1) * Math.abs(oscillatingForce);
+      const topColor = oscillatingForce > 0 
+        ? `rgb(${255 * moment}, ${100 - 100*moment}, ${255 - 200*moment})` 
+        : `rgb(${50 + 50*moment}, ${150 + 105*moment}, 255)`; 
+      ctx.beginPath();
+      ctx.moveTo(sx1, sy1_mid - hScreen/2);
+      ctx.lineTo(sx2, sy2_mid - hScreen/2);
+      ctx.lineTo(sx2, sy2_mid - hScreen/2 + hScreen*0.2);
+      ctx.lineTo(sx1, sy1_mid - hScreen/2 + hScreen*0.2);
+      ctx.fillStyle = topColor; ctx.fill();
+      const botColor = oscillatingForce < 0 
+        ? `rgb(${255 * moment}, ${100 - 100*moment}, ${255 - 200*moment})` 
+        : `rgb(${50 + 50*moment}, ${150 + 105*moment}, 255)`; 
+      ctx.beginPath();
+      ctx.moveTo(sx1, sy1_mid + hScreen/2);
+      ctx.lineTo(sx2, sy2_mid + hScreen/2);
+      ctx.lineTo(sx2, sy2_mid + hScreen/2 - hScreen*0.2);
+      ctx.lineTo(sx1, sy1_mid + hScreen/2 - hScreen*0.2);
+      ctx.fillStyle = botColor; ctx.fill();
+      ctx.beginPath();
+      ctx.moveTo(sx1, sy1_mid - hScreen/2 + hScreen*0.2);
+      ctx.lineTo(sx2, sy2_mid - hScreen/2 + hScreen*0.2);
+      ctx.lineTo(sx2, sy2_mid + hScreen/2 - hScreen*0.2);
+      ctx.lineTo(sx1, sy1_mid + hScreen/2 - hScreen*0.2);
