@@ -3068,3 +3068,33 @@ export const IBeamStressSim: React.FC<SimulationProps> = ({ angle, load , zoom =
       const nx = (x + L/2) / L;
       return maxDeflection * Math.sin(nx * Math.PI);
     };
+     ctx.fillStyle = '#050d1a';
+    ctx.fillRect(0, 0, width, height);
+    ctx.strokeStyle = '#1e293b';
+    ctx.lineWidth = 1;
+    for (let i = 0; i < width; i += 40) {
+      ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(i, height); ctx.stroke();
+    }
+    for (let i = 0; i < height; i += 40) {
+      ctx.beginPath(); ctx.moveTo(0, i); ctx.lineTo(width, i); ctx.stroke();
+    }
+    const toScreen = (x: number, y: number) => [originX + x * scale, originY - y * scale];
+    const drawSupport = (x: number, y: number) => {
+      const [sx, sy] = toScreen(x, y);
+      ctx.beginPath();
+      ctx.moveTo(sx, sy);
+      ctx.lineTo(sx - 20, sy + 30);
+      ctx.lineTo(sx + 20, sy + 30);
+      ctx.closePath();
+      ctx.fillStyle = '#64748b'; ctx.fill();
+      ctx.strokeStyle = '#94a3b8'; ctx.lineWidth = 2; ctx.stroke();
+      ctx.beginPath(); ctx.arc(sx - 10, sy + 35, 5, 0, 2*Math.PI); ctx.stroke();
+      ctx.beginPath(); ctx.arc(sx + 10, sy + 35, 5, 0, 2*Math.PI); ctx.stroke();
+    };
+    drawSupport(-L/2, -H/2);
+    drawSupport(L/2, -H/2);
+    const segments = 40;
+    const dx = L / segments;
+    for (let i = 0; i < segments; i++) {
+      const x1 = -L/2 + i * dx;
+      const x2 = x1 + dx;
