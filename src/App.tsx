@@ -2388,3 +2388,32 @@ export const FluidFilmCavitationSim: React.FC<SimulationProps> = ({ angle, load,
       ctx.lineTo(fx - 0.3*scale, fy + 1*scale + fMag*scale - 0.4*scale);
       ctx.lineTo(fx + 0.3*scale, fy + 1*scale + fMag*scale - 0.4*scale);
       ctx.fillStyle = '#ff3366'; ctx.fill();
+      }
+    ctx.fillStyle = 'rgba(8, 15, 30, 0.85)';
+    ctx.fillRect(30, 150, 250, 110);
+    ctx.strokeStyle = 'rgba(0, 212, 255, 0.3)';
+    ctx.strokeRect(30, 150, 250, 110);
+    const minH = clearance - ecc; 
+    ctx.font = '10px monospace';
+    ctx.fillStyle = '#00d4ff'; ctx.fillText('SYS :: FLUID_FILM_CAVITATION', 40, 170);
+    ctx.fillStyle = '#ffb703'; ctx.fillText(`JOURNAL RPM : ${(angle * 180 / Math.PI).toFixed(0)}`, 40, 195);
+    ctx.fillStyle = '#fff'; ctx.fillText(`ECCENTRICITY: ${(ecc / clearance).toFixed(2)} ε`, 40, 215);
+    ctx.fillStyle = minH < 0.05 ? '#ff3366' : '#00ff88'; 
+    ctx.fillText(`MIN FILM    : ${minH.toFixed(3)} mm`, 40, 235);
+  }, [angle, load, zoom]);
+  return <div style={{ width: '100%', height: '100%' }}><canvas ref={canvasRef} style={{ width: '100%', height: '100%', display: 'block' }} /></div>;
+};
+export const FourBarLinkageSim: React.FC<SimulationProps> = ({ angle, load , zoom = 1 }) => {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const traceRef = useRef<{x: number, y: number}[]>([]);
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+    const dpr = window.devicePixelRatio || 1;
+    const rect = canvas.getBoundingClientRect();
+    canvas.width = rect.width * dpr;
+    canvas.height = rect.height * dpr;
+    ctx.scale(dpr, dpr);
+    const width = rect.width;
