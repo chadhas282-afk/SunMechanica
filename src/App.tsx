@@ -2778,3 +2778,33 @@ export const HarmonicDriveSim: React.FC<SimulationProps> = ({ angle, load , zoom
     ctx.fill();
     ctx.strokeStyle = `rgb(${wgR}, ${wgG}, ${wgB})`;
     ctx.lineWidth = 3 + (load/100)*2;
+    if (load > 60) {
+      ctx.shadowBlur = load - 60;
+      ctx.shadowColor = `rgb(${wgR}, ${wgG}, ${wgB})`;
+    }
+    ctx.stroke();
+    ctx.shadowBlur = 0;
+    ctx.beginPath();
+    ctx.arc(0, 0, 0.3 * scale, 0, Math.PI * 2);
+    ctx.fillStyle = '#be185d';
+    ctx.fill();
+    ctx.strokeStyle = '#fff';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+    ctx.restore();
+    ctx.fillStyle = 'rgba(8, 15, 30, 0.85)';
+    ctx.fillRect(30, 150, 260, 110);
+    ctx.strokeStyle = 'rgba(236, 72, 153, 0.3)';
+    ctx.strokeRect(30, 150, 260, 110);
+    ctx.font = '10px monospace';
+    ctx.fillStyle = '#ec4899';
+    ctx.fillText('SYS :: HARMONIC_DRIVE', 40, 170);
+    ctx.fillStyle = '#fff';
+    const normInput = ((angle * 180 / Math.PI) % 360 + 360) % 360;
+    const normOutput = ((outputAngle * 180 / Math.PI) % 360 + 360) % 360;
+    ctx.fillText(`INPUT (WAVE GEN) : ${normInput.toFixed(1)}°`, 40, 195);
+    ctx.fillStyle = '#a855f7';
+    ctx.fillText(`OUT (FLEX SPLINE): ${normOutput.toFixed(1)}°`, 40, 215);
+    ctx.fillStyle = '#38bdf8';
+    ctx.fillText(`REDUCTION RATIO  : 1 : ${Math.abs(Math.round(1/ratio))}`, 40, 235);
+  }, [angle, load]);
