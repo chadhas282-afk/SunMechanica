@@ -2948,3 +2948,33 @@ export const HookesJointSim: React.FC<SimulationProps> = ({ angle, load, zoom = 
       const transformed = pts.map(p => {
         let px = p.x; let py = p.y; let pz = p.z;
         if (!isInput) {
+           px = -px;
+          const nx = px * Math.cos(shaftAngle) - py * Math.sin(shaftAngle);
+          const ny = px * Math.sin(shaftAngle) + py * Math.cos(shaftAngle);
+          return {x: nx, y: ny, z: pz};
+        }
+        return p;
+      });
+      const screenPts = transformed.map(p => project(p.x, p.y, p.z));
+      ctx.beginPath();
+      ctx.moveTo(screenPts[0][0], screenPts[0][1]);
+      ctx.lineTo(screenPts[1][0], screenPts[1][1]);
+      ctx.strokeStyle = color; ctx.lineWidth = 12 * zoom; ctx.lineCap = 'round'; ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(screenPts[2][0], screenPts[2][1]);
+      ctx.lineTo(screenPts[4][0], screenPts[4][1]);
+      ctx.lineWidth = 10 * zoom; ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(screenPts[2][0], screenPts[2][1]);
+      ctx.lineTo(screenPts[3][0], screenPts[3][1]);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(screenPts[4][0], screenPts[4][1]);
+      ctx.lineTo(screenPts[5][0], screenPts[5][1]);
+      ctx.stroke();
+      ctx.restore();
+    };
+    const drawCross = (alpha: number, gamma: number, beta: number) => {
+      const cr = yokeRadius;
+      const c1 = {x: 0, y: cr * Math.cos(alpha), z: cr * Math.sin(alpha)};
+      const c2 = {x: 0, y: -cr * Math.cos(alpha), z: -cr * Math.sin(alpha)};
