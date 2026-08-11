@@ -2658,3 +2658,33 @@ export const GenevaDriveSim: React.FC<SimulationProps> = ({ angle, load , zoom =
     ctx.fillStyle = '#a855f7';
     ctx.fillText('SYS :: GENEVA_DRIVE', 40, 170);
     ctx.fillStyle = '#fff';
+    const normAngle = ((angle * 180 / Math.PI) % 360 + 360) % 360;
+    ctx.fillText(`DRIVE ANGLE  : ${normAngle.toFixed(1)}°`, 40, 195);
+    ctx.fillStyle = isEngaged ? '#00ff88' : '#38bdf8';
+    ctx.fillText(`STATE        : ${isEngaged ? 'ENGAGED' : 'LOCKED'}`, 40, 215);
+    ctx.fillStyle = '#ff6b35';
+    ctx.fillText(`DRIVEN ANGLE : ${(totalDriven * 180 / Math.PI).toFixed(1)}°`, 40, 235);
+  }, [angle, load]);
+  return (
+    <div style={{ width: '100%', height: '100%' }}>
+      <canvas ref={canvasRef} style={{ width: '100%', height: '100%', display: 'block' }} />
+    </div>
+  );
+};
+export const HarmonicDriveSim: React.FC<SimulationProps> = ({ angle, load , zoom = 1 }) => {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+    const dpr = window.devicePixelRatio || 1;
+    const rect = canvas.getBoundingClientRect();
+    canvas.width = rect.width * dpr;
+    canvas.height = rect.height * dpr;
+    ctx.scale(dpr, dpr);
+    const width = rect.width;
+    const height = rect.height;
+    ctx.clearRect(0, 0, width, height);
+    const scale = (Math.min(width, height) / 8) * zoom; 
+    const originX = width * 0.5;
