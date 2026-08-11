@@ -2508,3 +2508,33 @@ export const FourBarLinkageSim: React.FC<SimulationProps> = ({ angle, load , zoo
     ctx.fillStyle = '#00d4ff';
     ctx.fillText('SYS :: FOUR_BAR_LINKAGE', width - 250, 170);
     ctx.fillStyle = '#fff';
+     const outAngle = Math.atan2(Cy - Dy, Cx - Dx);
+    const normOut = ((outAngle * 180 / Math.PI) % 360 + 360) % 360;
+    ctx.fillText(`OUTPUT ANG : ${normOut.toFixed(1)}°`, width - 250, 195);
+    ctx.fillStyle = '#00ff88';
+    ctx.fillText(`TRACER Y   : ${Ey.toFixed(2)}`, width - 250, 215);
+  }, [angle, load]);
+  return (
+    <div style={{ width: '100%', height: '100%' }}>
+      <canvas ref={canvasRef} style={{ width: '100%', height: '100%', display: 'block' }} />
+    </div>
+  );
+};
+export const GenevaDriveSim: React.FC<SimulationProps> = ({ angle, load , zoom = 1 }) => {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const revCount = useRef(0);
+  const lastTheta = useRef(0);
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+    const dpr = window.devicePixelRatio || 1;
+    const rect = canvas.getBoundingClientRect();
+    canvas.width = rect.width * dpr;
+    canvas.height = rect.height * dpr;
+    ctx.scale(dpr, dpr);
+    const width = rect.width;
+    const height = rect.height;
+    ctx.clearRect(0, 0, width, height);
+    const scale = (Math.min(width, height) / 10) * zoom; 
