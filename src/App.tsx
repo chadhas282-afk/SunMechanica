@@ -3008,3 +3008,33 @@ export const HookesJointSim: React.FC<SimulationProps> = ({ angle, load, zoom = 
       ctx.arc(center[0], center[1], 8 * zoom, 0, 2*Math.PI);
       ctx.fillStyle = stressColor; ctx.fill();
     };
+    if (Math.sin(alpha) > 0) {
+      drawYoke(gamma + Math.PI/2, beta, '#00d4ff', false); 
+      drawCross(alpha, gamma, beta);
+      drawYoke(alpha, 0, '#3b82f6', true); 
+    } else {
+      drawYoke(alpha, 0, '#3b82f6', true); 
+      drawCross(alpha, gamma, beta);
+      drawYoke(gamma + Math.PI/2, beta, '#00d4ff', false); 
+    }
+    const graphX = width - 260;
+    const graphY = 150;
+    traceRef.current.push({ t: angle, speed: speedRatio });
+    if (traceRef.current.length > 100) traceRef.current.shift();
+    ctx.fillStyle = 'rgba(8, 15, 30, 0.85)';
+    ctx.fillRect(graphX - 20, graphY - 100, 260, 200);
+    ctx.strokeStyle = '#475569'; ctx.strokeRect(graphX - 20, graphY - 100, 260, 200);
+    ctx.beginPath(); ctx.moveTo(graphX - 20, graphY); ctx.lineTo(graphX + 240, graphY); ctx.strokeStyle = '#334155'; ctx.stroke();
+    if (traceRef.current.length > 1) {
+      ctx.beginPath();
+      for (let i = 0; i < traceRef.current.length; i++) {
+        const pt = traceRef.current[i];
+        const gx = graphX + (i / 100) * 220;
+        const gy = graphY - (pt.speed - 1) * 80;
+        if (i === 0) ctx.moveTo(gx, gy); else ctx.lineTo(gx, gy);
+      }
+      ctx.strokeStyle = '#00d4ff'; ctx.lineWidth = 2; ctx.stroke();
+    }
+    ctx.font = '10px monospace';
+    ctx.fillStyle = '#fff'; ctx.fillText('SPEED RATIO (OUT/IN)', graphX, graphY - 80);
+    ctx.fillStyle = '#00d4ff'; ctx.fillText(`RATIO: ${speedRatio.toFixed(3)}`, graphX, graphY + 80);
