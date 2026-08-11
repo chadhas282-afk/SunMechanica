@@ -2598,3 +2598,33 @@ export const GenevaDriveSim: React.FC<SimulationProps> = ({ angle, load , zoom =
     ctx.strokeStyle = '#a855f7';
     ctx.lineWidth = 3;
     ctx.stroke();
+    ctx.beginPath(); ctx.arc(0, 0, 0.3 * scale, 0, 2 * Math.PI);
+    ctx.fillStyle = '#6b21a8'; ctx.fill();
+    ctx.strokeStyle = '#fff'; ctx.stroke();
+    ctx.restore();
+    ctx.save();
+    const [cx, cy] = toScreen(0, 0);
+    ctx.translate(cx, cy);
+    ctx.rotate(-angle);
+    ctx.beginPath();
+    ctx.arc(0, 0, R * 0.9 * scale, 0, 2 * Math.PI);
+    ctx.fillStyle = 'rgba(59, 130, 246, 0.15)';
+    ctx.fill();
+    ctx.strokeStyle = '#3b82f6';
+    ctx.lineWidth = 3;
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.arc(-R * 0.4 * scale, 0, R * 0.7 * scale, Math.PI / 4, -Math.PI / 4, true);
+    ctx.strokeStyle = !isEngaged && load > 60 ? '#fca5a5' : '#38bdf8';
+    ctx.lineWidth = 6;
+    if (!isEngaged && load > 60) {
+      ctx.shadowBlur = (load - 60) * 0.5;
+      ctx.shadowColor = '#ef4444';
+    }
+    ctx.stroke();
+    ctx.shadowBlur = 0;
+    ctx.beginPath();
+    ctx.moveTo(0, 0);
+    ctx.lineTo(R * scale, 0);
+    ctx.strokeStyle = '#60a5fa';
+    ctx.lineWidth = Math.max(6, scale * 0.2);
