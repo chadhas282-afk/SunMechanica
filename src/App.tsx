@@ -2448,3 +2448,33 @@ export const FourBarLinkageSim: React.FC<SimulationProps> = ({ angle, load , zoo
       if (fill) { ctx.fillStyle = color; ctx.fill(); }
     };
     const a = 2.0; 
+     const b = 6.0; 
+    const c = 5.0; 
+    const d = 5.5; 
+    const Ax = 0; const Ay = 0;
+    const Dx = d; const Dy = 0;
+    const Bx = a * Math.cos(angle);
+    const By = a * Math.sin(angle);
+    const L_BD = Math.hypot(Bx - Dx, By - Dy);
+    let Cx = 0; let Cy = 0;
+    if (L_BD <= b + c && L_BD >= Math.abs(b - c)) {
+      const alpha = Math.acos((b * b + L_BD * L_BD - c * c) / (2 * b * L_BD));
+      const phi = Math.atan2(Dy - By, Dx - Bx);
+      Cx = Bx + b * Math.cos(phi - alpha);
+      Cy = By + b * Math.sin(phi - alpha);
+    } else {
+      Cx = Bx; Cy = By; 
+    }
+    const L_ext = 2.0;
+    const angleBC = Math.atan2(Cy - By, Cx - Bx);
+    const Ex = Cx + L_ext * Math.cos(angleBC);
+    const Ey = Cy + L_ext * Math.sin(angleBC);
+    traceRef.current.push({ x: Ex, y: Ey });
+    if (traceRef.current.length > 150) traceRef.current.shift();
+    if (traceRef.current.length > 1) {
+      ctx.beginPath();
+      for (let i = 0; i < traceRef.current.length; i++) {
+        const pt = traceRef.current[i];
+        const [sx, sy] = toScreen(pt.x, pt.y);
+        if (i === 0) ctx.moveTo(sx, sy);
+        else ctx.lineTo(sx, sy);
