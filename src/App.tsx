@@ -2748,3 +2748,33 @@ export const HarmonicDriveSim: React.FC<SimulationProps> = ({ angle, load , zoom
       '#0ea5e9',
       true,
       'rgba(14, 165, 233, 0.1)'
+      );
+    const flexSplineShape = (theta: number) => {
+      const globalTheta = theta + outputAngle;
+      const relToWaveGen = globalTheta - angle;
+      return R_circ - flex_deformation * Math.sin(relToWaveGen) * Math.sin(relToWaveGen);
+    };
+    drawGear(
+      N_flex,
+      outputAngle,
+      flexSplineShape,
+      '#a855f7',
+      false,
+      'rgba(168, 85, 247, 0.2)'
+    );
+    ctx.beginPath();
+    ctx.arc(originX, originY, 1.2 * scale, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(168, 85, 247, 0.2)'; ctx.fill();
+    ctx.strokeStyle = '#c084fc'; ctx.lineWidth = 1; ctx.stroke();
+    ctx.save();
+    ctx.translate(originX, originY);
+    ctx.rotate(-angle); 
+    const wgR = Math.round(236 + (load/100)*19);
+    const wgG = Math.round(72 - (load/100)*72);
+    const wgB = Math.round(153 - (load/100)*153);
+    ctx.beginPath();
+    ctx.ellipse(0, 0, (R_circ - flex_deformation * 0.1) * scale, (R_circ - flex_deformation * 1.5) * scale, 0, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(${wgR}, ${wgG}, ${wgB}, ${0.3 + (load/100)*0.2})`;
+    ctx.fill();
+    ctx.strokeStyle = `rgb(${wgR}, ${wgG}, ${wgB})`;
+    ctx.lineWidth = 3 + (load/100)*2;
