@@ -3248,3 +3248,53 @@ export const InvertedPendulumSim: React.FC<SimulationProps> = ({ angle, load , z
     ctx.beginPath();
     ctx.moveTo(cx, cy);
     const [px, py] = toScreen(bobX, bobY);
+     ctx.lineTo(px, py);
+    ctx.strokeStyle = stressColor;
+    ctx.lineWidth = 8;
+    if (effort > 0.5) {
+      ctx.shadowBlur = effort * 20;
+      ctx.shadowColor = stressColor;
+    }
+    ctx.stroke();
+    ctx.shadowBlur = 0;
+    drawCircle(bobX, bobY, 0.8, '#1e293b', true);
+    drawCircle(bobX, bobY, 0.8, stressColor, false);
+    drawCircle(cartX, cartY, 0.2, '#fff', true);
+    if (Math.abs(theta) > 0.01) {
+      ctx.beginPath();
+      const thrustDir = theta > 0 ? 1 : -1;
+      const [tx, ty] = toScreen(cartX - thrustDir * 1.5, cartY);
+      ctx.moveTo(tx, ty);
+      ctx.lineTo(tx - thrustDir * 1.5 * effort, ty - 10);
+      ctx.lineTo(tx - thrustDir * 1.5 * effort, ty + 10);
+      ctx.closePath();
+      ctx.fillStyle = 'rgba(255, 51, 102, 0.8)';
+      ctx.fill();
+    }
+    ctx.fillStyle = 'rgba(8, 15, 30, 0.85)';
+    ctx.fillRect(30, 150, 240, 110);
+    ctx.strokeStyle = 'rgba(255, 51, 102, 0.3)';
+    ctx.strokeRect(30, 150, 240, 110);
+    ctx.font = '10px monospace';
+    ctx.fillStyle = '#ff3366';
+    ctx.fillText('SYS :: INVERTED_PENDULUM', 40, 170);
+    ctx.fillStyle = '#fff';
+    ctx.fillText(`THETA ERR : ${(theta * 180 / Math.PI).toFixed(2)}°`, 40, 195);
+    ctx.fillStyle = '#3b82f6';
+    ctx.fillText(`CART POS  : ${cartX.toFixed(2)} m`, 40, 215);
+    ctx.fillStyle = stressColor;
+    ctx.fillText(`PID EFFORT: ${(effort * 100).toFixed(0)}%`, 40, 235);
+  }, [angle, load]);
+  return (
+    <div style={{ width: '100%', height: '100%' }}>
+      <canvas ref={canvasRef} style={{ width: '100%', height: '100%', display: 'block' }} />
+    </div>
+  );
+};
+export const JournalBearingSim: React.FC<SimulationProps> = ({ angle, load , zoom = 1 }) => {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
