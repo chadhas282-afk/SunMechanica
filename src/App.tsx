@@ -2328,3 +2328,33 @@ export const FluidFilmCavitationSim: React.FC<SimulationProps> = ({ angle, load,
       ctx.lineTo(nextJSurfX, nextJSurfY);
       ctx.closePath();
       ctx.fillStyle = pColor; ctx.fill();
+      }
+    ctx.restore();
+    if (load > 30) {
+      for(let i=0; i<loadFactor * 5; i++) {
+        const spawnAng = phi + Math.PI/4 + Math.random() * (Math.PI/2);
+        const h = clearance - ecc * Math.cos(spawnAng - phi);
+        const rSpawn = R_journal + Math.random() * h;
+        bubblesRef.current.push({
+          a: spawnAng,
+          r: rSpawn,
+          size: 0.05 + Math.random() * 0.1,
+          life: 1.0
+        });
+      }
+    }
+    const nextBubbles = [];
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+    for(const b of bubblesRef.current) {
+      b.a -= 0.05; 
+      b.life -= 0.02;
+      b.size += 0.01; 
+      if (b.life > 0) {
+        const bx_pos = jx + b.r * Math.cos(b.a);
+        const by_pos = jy + b.r * Math.sin(b.a);
+        const [sbx, sby] = toScreen(bx_pos, by_pos);
+        ctx.beginPath(); ctx.arc(sbx, sby, b.size * scale, 0, 2*Math.PI);
+        ctx.fill();
+        nextBubbles.push(b);
+      } else {
+        const bx_pos = jx + b.r * Math.cos(b.a);
