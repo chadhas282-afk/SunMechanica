@@ -2908,3 +2908,43 @@ export const HookesJointSim: React.FC<SimulationProps> = ({ angle, load, zoom = 
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+    const dpr = window.devicePixelRatio || 1;
+    const rect = canvas.getBoundingClientRect();
+    canvas.width = rect.width * dpr;
+    canvas.height = rect.height * dpr;
+    ctx.scale(dpr, dpr);
+    const width = rect.width;
+    const height = rect.height;
+    ctx.clearRect(0, 0, width, height);
+    const scale = (Math.min(width, height) / 16) * zoom; 
+    const originX = width * 0.4;
+    const originY = height * 0.5;
+    ctx.fillStyle = '#050d1a'; ctx.fillRect(0, 0, width, height);
+    ctx.strokeStyle = '#1e293b'; ctx.lineWidth = 1;
+    for (let i = 0; i < width; i += 40) { ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(i, height); ctx.stroke(); }
+    for (let i = 0; i < height; i += 40) { ctx.beginPath(); ctx.moveTo(0, i); ctx.lineTo(width, i); ctx.stroke(); }
+    const toScreen = (x: number, y: number) => [originX + x * scale, originY - y * scale];
+    const loadFactor = load / 100;
+    const beta = loadFactor * (Math.PI / 3); 
+    const alpha = angle;
+    const gamma = Math.atan2(Math.sin(alpha) * Math.cos(beta), Math.cos(alpha));
+    const speedRatio = Math.cos(beta) / (1 - Math.pow(Math.sin(alpha) * Math.sin(beta), 2));
+    const project = (x: number, y: number, z: number) => {
+      return toScreen(x + z * 0.3, y - z * 0.2);
+    };
+    const yokeRadius = 1.5;
+    const yokeLength = 2.0;
+    const drawYoke = (rot: number, shaftAngle: number, color: string, isInput: boolean) => {
+      ctx.save();
+      const pts = [
+        {x: -6, y: 0, z: 0},
+        {x: -yokeLength, y: 0, z: 0},
+        {x: -yokeLength, y: yokeRadius * Math.cos(rot), z: yokeRadius * Math.sin(rot)},
+        {x: 0, y: yokeRadius * Math.cos(rot), z: yokeRadius * Math.sin(rot)},
+        {x: -yokeLength, y: -yokeRadius * Math.cos(rot), z: -yokeRadius * Math.sin(rot)},
+        {x: 0, y: -yokeRadius * Math.cos(rot), z: -yokeRadius * Math.sin(rot)},
+      ];
+      const transformed = pts.map(p => {
+        let px = p.x; let py = p.y; let pz = p.z;
+        if (!isInput) {
