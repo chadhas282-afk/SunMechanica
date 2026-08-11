@@ -2358,3 +2358,33 @@ export const FluidFilmCavitationSim: React.FC<SimulationProps> = ({ angle, load,
         nextBubbles.push(b);
       } else {
         const bx_pos = jx + b.r * Math.cos(b.a);
+        const by_pos = jy + b.r * Math.sin(b.a);
+        const [sbx, sby] = toScreen(bx_pos, by_pos);
+        ctx.beginPath(); ctx.arc(sbx, sby, (b.size + 0.1) * scale, 0, 2*Math.PI);
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.4)'; ctx.lineWidth = 2*zoom; ctx.stroke();
+      }
+    }
+    bubblesRef.current = nextBubbles;
+    const [sjx, sjy] = toScreen(jx, jy);
+    ctx.beginPath(); ctx.arc(sjx, sjy, R_journal * scale, 0, 2*Math.PI);
+    ctx.fillStyle = '#1e293b'; ctx.fill();
+    ctx.strokeStyle = '#64748b'; ctx.lineWidth = 4 * zoom; ctx.stroke();
+    ctx.beginPath(); ctx.arc(sjx, sjy, 0.1 * scale, 0, 2*Math.PI);
+    ctx.fillStyle = '#fff'; ctx.fill();
+    ctx.save();
+    ctx.translate(sjx, sjy);
+    ctx.rotate(-angle);
+    ctx.beginPath(); ctx.moveTo(-R_journal*scale, 0); ctx.lineTo(R_journal*scale, 0); ctx.strokeStyle = '#334155'; ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(0, -R_journal*scale); ctx.lineTo(0, R_journal*scale); ctx.stroke();
+    ctx.restore();
+    const [fx, fy] = toScreen(0, 0);
+    const fMag = loadFactor * 3.0;
+    if (fMag > 0.1) {
+      ctx.beginPath();
+      ctx.moveTo(fx, fy + 1*scale); ctx.lineTo(fx, fy + 1*scale + fMag*scale);
+      ctx.strokeStyle = '#ff3366'; ctx.lineWidth = 4 * zoom; ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(fx, fy + 1*scale + fMag*scale);
+      ctx.lineTo(fx - 0.3*scale, fy + 1*scale + fMag*scale - 0.4*scale);
+      ctx.lineTo(fx + 0.3*scale, fy + 1*scale + fMag*scale - 0.4*scale);
+      ctx.fillStyle = '#ff3366'; ctx.fill();
