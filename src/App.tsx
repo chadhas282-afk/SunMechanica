@@ -3038,3 +3038,33 @@ export const HookesJointSim: React.FC<SimulationProps> = ({ angle, load, zoom = 
     ctx.font = '10px monospace';
     ctx.fillStyle = '#fff'; ctx.fillText('SPEED RATIO (OUT/IN)', graphX, graphY - 80);
     ctx.fillStyle = '#00d4ff'; ctx.fillText(`RATIO: ${speedRatio.toFixed(3)}`, graphX, graphY + 80);
+     ctx.fillStyle = '#ffb703'; ctx.fillText(`DEFLECTION: ${(beta * 180 / Math.PI).toFixed(1)}°`, graphX, graphY + 60);
+  }, [angle, load, zoom]);
+  return <div style={{ width: '100%', height: '100%' }}><canvas ref={canvasRef} style={{ width: '100%', height: '100%', display: 'block' }} /></div>;
+};
+export const IBeamStressSim: React.FC<SimulationProps> = ({ angle, load , zoom = 1 }) => {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+    const dpr = window.devicePixelRatio || 1;
+    const rect = canvas.getBoundingClientRect();
+    canvas.width = rect.width * dpr;
+    canvas.height = rect.height * dpr;
+    ctx.scale(dpr, dpr);
+    const width = rect.width;
+    const height = rect.height;
+    ctx.clearRect(0, 0, width, height);
+    const scale = (Math.min(width, height) / 10) * zoom; 
+    const originX = width * 0.5;
+    const originY = height * 0.5;
+    const oscillatingForce = Math.sin(angle) * (load / 100);
+    const L = 8.0; 
+    const H = 1.0; 
+    const maxDeflection = oscillatingForce * 1.5; 
+    const getDeflection = (x: number) => {
+      const nx = (x + L/2) / L;
+      return maxDeflection * Math.sin(nx * Math.PI);
+    };
