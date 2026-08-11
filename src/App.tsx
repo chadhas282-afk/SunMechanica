@@ -3158,3 +3158,33 @@ export const IBeamStressSim: React.FC<SimulationProps> = ({ angle, load , zoom =
     ctx.lineTo(fx - 10, fyBase - 15 * arrowDir);
     ctx.lineTo(fx + 10, fyBase - 15 * arrowDir);
     ctx.fillStyle = '#f97316';
+     ctx.fill();
+    ctx.fillStyle = 'rgba(8, 15, 30, 0.85)';
+    ctx.fillRect(width - 260, 150, 220, 110);
+    ctx.strokeStyle = 'rgba(249, 115, 22, 0.3)';
+    ctx.strokeRect(width - 260, 150, 220, 110);
+    ctx.font = '10px monospace';
+    ctx.fillStyle = '#f97316';
+    ctx.fillText('SYS :: BEAM_STRESS_ANALYSIS', width - 250, 170);
+    ctx.fillStyle = '#fff';
+    ctx.fillText(`APPLIED FORCE: ${(oscillatingForce * 1000).toFixed(0)} N`, width - 250, 195);
+    ctx.fillStyle = Math.abs(oscillatingForce) > 0.5 ? '#ff4444' : '#00ff88';
+    ctx.fillText(`MAX STRESS   : ${(Math.abs(oscillatingForce) * 250).toFixed(1)} MPa`, width - 250, 215);
+    ctx.fillStyle = '#38bdf8';
+    ctx.fillText(`DEFLECTION   : ${(maxDeflection * 10).toFixed(2)} mm`, width - 250, 235);
+  }, [angle, load]);
+  return (
+    <div style={{ width: '100%', height: '100%' }}>
+      <canvas ref={canvasRef} style={{ width: '100%', height: '100%', display: 'block' }} />
+    </div>
+  );
+};
+export const InvertedPendulumSim: React.FC<SimulationProps> = ({ angle, load , zoom = 1 }) => {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+    const dpr = window.devicePixelRatio || 1;
+    const rect = canvas.getBoundingClientRect();
