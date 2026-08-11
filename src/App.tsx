@@ -3128,3 +3128,33 @@ export const IBeamStressSim: React.FC<SimulationProps> = ({ angle, load , zoom =
       ctx.lineTo(sx2, sy2_mid - hScreen/2 + hScreen*0.2);
       ctx.lineTo(sx2, sy2_mid + hScreen/2 - hScreen*0.2);
       ctx.lineTo(sx1, sy1_mid + hScreen/2 - hScreen*0.2);
+      ctx.fillStyle = '#475569'; ctx.fill();
+    }
+    ctx.beginPath();
+    for (let i = 0; i <= segments; i++) {
+      const x = -L/2 + i * dx;
+      const [sx, sy] = toScreen(x, getDeflection(x) + H/2);
+      if (i === 0) ctx.moveTo(sx, sy); else ctx.lineTo(sx, sy);
+    }
+    ctx.strokeStyle = '#fff'; ctx.lineWidth = 1; ctx.stroke();
+    ctx.beginPath();
+    for (let i = 0; i <= segments; i++) {
+      const x = -L/2 + i * dx;
+      const [sx, sy] = toScreen(x, getDeflection(x) - H/2);
+      if (i === 0) ctx.moveTo(sx, sy); else ctx.lineTo(sx, sy);
+    }
+    ctx.stroke();
+    const [fx, fyBase] = toScreen(0, getDeflection(0) + H/2 + 0.5 * Math.sign(oscillatingForce));
+    const arrowLen = 50 * Math.abs(oscillatingForce) + 20;
+    const arrowDir = oscillatingForce > 0 ? -1 : 1;
+    ctx.beginPath();
+    ctx.moveTo(fx, fyBase);
+    ctx.lineTo(fx, fyBase - arrowLen * arrowDir);
+    ctx.strokeStyle = '#f97316';
+    ctx.lineWidth = 4;
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(fx, fyBase);
+    ctx.lineTo(fx - 10, fyBase - 15 * arrowDir);
+    ctx.lineTo(fx + 10, fyBase - 15 * arrowDir);
+    ctx.fillStyle = '#f97316';
