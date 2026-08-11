@@ -2478,3 +2478,33 @@ export const FourBarLinkageSim: React.FC<SimulationProps> = ({ angle, load , zoo
         const [sx, sy] = toScreen(pt.x, pt.y);
         if (i === 0) ctx.moveTo(sx, sy);
         else ctx.lineTo(sx, sy);
+        }
+      ctx.strokeStyle = 'rgba(0, 212, 255, 0.4)';
+      ctx.lineWidth = 3;
+      ctx.stroke();
+    }
+    const loadFactor = load / 100;
+    const stressColor = `rgb(${loadFactor * 255}, ${212 - loadFactor * 100}, 255)`;
+    drawLine(Ax, Ay, Dx, Dy, '#1e293b', 14);
+    drawCircle(Ax, Ay, 0.4, '#475569', true);
+    drawCircle(Dx, Dy, 0.4, '#475569', true);
+    drawLine(Ax, Ay, Bx, By, '#3b82f6', 10);
+    drawLine(Dx, Dy, Cx, Cy, '#94a3b8', 10);
+    drawLine(Bx, By, Ex, Ey, stressColor, 8);
+    if (load > 60) {
+      ctx.shadowBlur = (load - 60) * 0.4;
+      ctx.shadowColor = stressColor;
+      ctx.stroke();
+      ctx.shadowBlur = 0;
+    }
+    drawCircle(Bx, By, 0.25, '#fff', true);
+    drawCircle(Cx, Cy, 0.25, '#fff', true);
+    drawCircle(Ex, Ey, 0.2, '#00d4ff', true);
+    ctx.fillStyle = 'rgba(8, 15, 30, 0.85)';
+    ctx.fillRect(width - 260, 150, 220, 110);
+    ctx.strokeStyle = 'rgba(0, 212, 255, 0.3)';
+    ctx.strokeRect(width - 260, 150, 220, 110);
+    ctx.font = '10px monospace';
+    ctx.fillStyle = '#00d4ff';
+    ctx.fillText('SYS :: FOUR_BAR_LINKAGE', width - 250, 170);
+    ctx.fillStyle = '#fff';
