@@ -2718,3 +2718,33 @@ export const HarmonicDriveSim: React.FC<SimulationProps> = ({ angle, load , zoom
         const a = (i / (numTeeth * 4)) * Math.PI * 2;
         const toothPhase = i % 4;
         const baseR = radiusFunc(a);
+         const teethDepth = 0.08;
+        let r = baseR;
+        if (internal) {
+          if (toothPhase === 1 || toothPhase === 2) r = baseR - teethDepth;
+          if (toothPhase === 3 || toothPhase === 0) r = baseR + teethDepth;
+        } else {
+          if (toothPhase === 1 || toothPhase === 2) r = baseR + teethDepth;
+          if (toothPhase === 3 || toothPhase === 0) r = baseR - teethDepth;
+        }
+        const px = r * Math.cos(a + rot) * scale;
+        const py = r * Math.sin(a + rot) * scale;
+        if (i === 0) ctx.moveTo(originX + px, originY - py);
+        else ctx.lineTo(originX + px, originY - py);
+      }
+      ctx.closePath();
+      if (fillColor) {
+        ctx.fillStyle = fillColor;
+        ctx.fill();
+      }
+      ctx.strokeStyle = color;
+      ctx.lineWidth = 2;
+      ctx.stroke();
+    };
+    drawGear(
+      N_circ,
+      0, 
+      () => R_circ,
+      '#0ea5e9',
+      true,
+      'rgba(14, 165, 233, 0.1)'
