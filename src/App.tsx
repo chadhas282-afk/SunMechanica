@@ -2628,3 +2628,33 @@ export const GenevaDriveSim: React.FC<SimulationProps> = ({ angle, load , zoom =
     ctx.lineTo(R * scale, 0);
     ctx.strokeStyle = '#60a5fa';
     ctx.lineWidth = Math.max(6, scale * 0.2);
+     ctx.stroke();
+    ctx.beginPath();
+    ctx.arc(R * scale, 0, 0.18 * scale, 0, 2 * Math.PI);
+    ctx.fillStyle = isEngaged ? (load > 60 ? '#fca5a5' : '#fff') : '#00d4ff';
+    ctx.fill();
+    if (isEngaged) {
+      ctx.shadowBlur = 15 + (load / 100) * 20;
+      ctx.shadowColor = load > 60 ? '#ef4444' : '#00d4ff';
+      ctx.strokeStyle = load > 60 ? '#ef4444' : '#00d4ff';
+      ctx.stroke();
+      ctx.shadowBlur = 0;
+    } else {
+      ctx.strokeStyle = '#00d4ff';
+      ctx.stroke();
+    }
+    ctx.beginPath(); ctx.arc(0, 0, 0.2 * scale, 0, 2 * Math.PI);
+    ctx.fillStyle = '#1d4ed8'; ctx.fill();
+    ctx.strokeStyle = '#fff'; ctx.lineWidth = 2; ctx.stroke();
+    ctx.restore();
+    ctx.setLineDash([4, 4]);
+    drawCircle(0, 0, R, 'rgba(0, 212, 255, 0.3)');
+    ctx.setLineDash([]);
+    ctx.fillStyle = 'rgba(8, 15, 30, 0.85)';
+    ctx.fillRect(30, 150, 220, 110);
+    ctx.strokeStyle = 'rgba(168, 85, 247, 0.3)';
+    ctx.strokeRect(30, 150, 220, 110);
+    ctx.font = '10px monospace';
+    ctx.fillStyle = '#a855f7';
+    ctx.fillText('SYS :: GENEVA_DRIVE', 40, 170);
+    ctx.fillStyle = '#fff';
