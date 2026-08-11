@@ -2538,3 +2538,33 @@ export const GenevaDriveSim: React.FC<SimulationProps> = ({ angle, load , zoom =
     const height = rect.height;
     ctx.clearRect(0, 0, width, height);
     const scale = (Math.min(width, height) / 10) * zoom; 
+    const originX = width * 0.5;
+    const originY = height * 0.5;
+    const N = 6; 
+    const CENTER_DIST = 2.4; 
+    const R = 1.6; 
+    const slotDepth = 1.2;
+    const theta = angle % (Math.PI * 2);
+    let normalized = theta;
+    if (normalized < 0) normalized += Math.PI * 2;
+    let shiftedTheta = normalized > Math.PI ? normalized - Math.PI * 2 : normalized;
+    if (lastTheta.current > Math.PI * 1.5 && shiftedTheta < -Math.PI * 0.5) revCount.current += 1;
+    if (lastTheta.current < -Math.PI * 1.5 && shiftedTheta > Math.PI * 0.5) revCount.current -= 1;
+    lastTheta.current = shiftedTheta;
+    let drivenAngle = 0;
+    let isEngaged = false;
+    if (shiftedTheta > -Math.PI / N && shiftedTheta < Math.PI / N) {
+      isEngaged = true;
+      drivenAngle = Math.atan2(Math.sin(shiftedTheta), Math.sqrt(2) - Math.cos(shiftedTheta));
+    } else {
+      const sector = Math.round(normalized / (Math.PI * 2 / N));
+      drivenAngle = (sector * Math.PI * 2) / N / N;
+    }
+    const totalDriven = drivenAngle - revCount.current * (Math.PI * 2 / N);
+    ctx.fillStyle = '#050d1a';
+    ctx.fillRect(0, 0, width, height);
+    ctx.strokeStyle = '#1e293b';
+    ctx.lineWidth = 1;
+    for (let i = 0; i < width; i += 40) {
+      ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(i, height); ctx.stroke();
+    }
