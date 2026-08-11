@@ -2978,3 +2978,33 @@ export const HookesJointSim: React.FC<SimulationProps> = ({ angle, load, zoom = 
       const cr = yokeRadius;
       const c1 = {x: 0, y: cr * Math.cos(alpha), z: cr * Math.sin(alpha)};
       const c2 = {x: 0, y: -cr * Math.cos(alpha), z: -cr * Math.sin(alpha)};
+       const out_rot = gamma + Math.PI/2;
+      const c3_pre = {x: 0, y: cr * Math.cos(out_rot), z: cr * Math.sin(out_rot)};
+      const c4_pre = {x: 0, y: -cr * Math.cos(out_rot), z: -cr * Math.sin(out_rot)};
+      const c3 = {
+        x: c3_pre.x * Math.cos(beta) - c3_pre.y * Math.sin(beta),
+        y: c3_pre.x * Math.sin(beta) + c3_pre.y * Math.cos(beta),
+        z: c3_pre.z
+      };
+      const c4 = {
+        x: c4_pre.x * Math.cos(beta) - c4_pre.y * Math.sin(beta),
+        y: c4_pre.x * Math.sin(beta) + c4_pre.y * Math.cos(beta),
+        z: c4_pre.z
+      };
+      const s1 = project(c1.x, c1.y, c1.z);
+      const s2 = project(c2.x, c2.y, c2.z);
+      const s3 = project(c3.x, c3.y, c3.z);
+      const s4 = project(c4.x, c4.y, c4.z);
+      ctx.beginPath();
+      ctx.moveTo(s1[0], s1[1]); ctx.lineTo(s2[0], s2[1]);
+      ctx.strokeStyle = '#ffd700'; ctx.lineWidth = 8 * zoom; ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(s3[0], s3[1]); ctx.lineTo(s4[0], s4[1]);
+      ctx.stroke();
+      const rC = Math.round(168 + loadFactor * 87);
+      const stressColor = `rgb(${rC}, 85, 247)`;
+      ctx.beginPath();
+      const center = project(0, 0, 0);
+      ctx.arc(center[0], center[1], 8 * zoom, 0, 2*Math.PI);
+      ctx.fillStyle = stressColor; ctx.fill();
+    };
