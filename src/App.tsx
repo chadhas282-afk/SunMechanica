@@ -2688,3 +2688,33 @@ export const HarmonicDriveSim: React.FC<SimulationProps> = ({ angle, load , zoom
     ctx.clearRect(0, 0, width, height);
     const scale = (Math.min(width, height) / 8) * zoom; 
     const originX = width * 0.5;
+    const originY = height * 0.5;
+    const N_circ = 60;
+    const N_flex = 58;
+    const ratio = (N_flex - N_circ) / N_flex; 
+    const outputAngle = angle * ratio;
+    const R_circ = 2.0;
+    const flex_deformation = 0.15; 
+    ctx.fillStyle = '#050d1a';
+    ctx.fillRect(0, 0, width, height);
+    ctx.strokeStyle = '#1e293b';
+    ctx.lineWidth = 1;
+    for (let i = 0; i < width; i += 40) {
+      ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(i, height); ctx.stroke();
+    }
+    for (let i = 0; i < height; i += 40) {
+      ctx.beginPath(); ctx.moveTo(0, i); ctx.lineTo(width, i); ctx.stroke();
+    }
+    const drawGear = (
+      numTeeth: number,
+      rot: number,
+      radiusFunc: (theta: number) => number,
+      color: string,
+      internal: boolean,
+      fillColor?: string
+    ) => {
+      ctx.beginPath();
+      for (let i = 0; i <= numTeeth * 4; i++) {
+        const a = (i / (numTeeth * 4)) * Math.PI * 2;
+        const toothPhase = i % 4;
+        const baseR = radiusFunc(a);
