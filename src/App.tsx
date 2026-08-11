@@ -2298,3 +2298,33 @@ export const FluidFilmCavitationSim: React.FC<SimulationProps> = ({ angle, load,
     ctx.fillStyle = 'rgba(15, 23, 42, 0.8)'; ctx.fill();
     ctx.strokeStyle = '#334155'; ctx.lineWidth = 6 * zoom; ctx.stroke();
     ctx.beginPath(); ctx.arc(bx, by, R_bearing * scale, 0, 2*Math.PI);
+    ctx.fillStyle = '#050d1a'; ctx.fill(); 
+    ctx.save();
+    ctx.translate(bx, by);
+    for(let i=0; i<360; i++) {
+      const th = i * (Math.PI / 180);
+      const nextTh = (i+1) * (Math.PI / 180);
+      const dh_dth = ecc * Math.sin(th - phi);
+      let pColor = 'rgba(71, 85, 105, 0.4)'; 
+      if (dh_dth < -0.05) { 
+        const pLevel = Math.min(1.0, (-dh_dth) / clearance * 3);
+        pColor = `rgba(255, 51, 102, ${0.4 + pLevel * 0.6})`;
+      } else if (dh_dth > 0.05 && loadFactor > 0.3) { 
+        const cLevel = Math.min(1.0, (dh_dth) / clearance * 3);
+        pColor = `rgba(0, 212, 255, ${0.4 + cLevel * 0.4})`;
+      }
+      ctx.beginPath();
+      const jSurfX = jx * scale + (R_journal) * scale * Math.cos(th);
+      const jSurfY = -(jy * scale + (R_journal) * scale * Math.sin(th));
+      const bSurfX = R_bearing * scale * Math.cos(th);
+      const bSurfY = -R_bearing * scale * Math.sin(th);
+      const nextJSurfX = jx * scale + (R_journal) * scale * Math.cos(nextTh);
+      const nextJSurfY = -(jy * scale + (R_journal) * scale * Math.sin(nextTh));
+      const nextBSurfX = R_bearing * scale * Math.cos(nextTh);
+      const nextBSurfY = -R_bearing * scale * Math.sin(nextTh);
+      ctx.moveTo(jSurfX, jSurfY);
+      ctx.lineTo(bSurfX, bSurfY);
+      ctx.lineTo(nextBSurfX, nextBSurfY);
+      ctx.lineTo(nextJSurfX, nextJSurfY);
+      ctx.closePath();
+      ctx.fillStyle = pColor; ctx.fill();
