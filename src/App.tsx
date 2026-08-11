@@ -2568,3 +2568,33 @@ export const GenevaDriveSim: React.FC<SimulationProps> = ({ angle, load , zoom =
     for (let i = 0; i < width; i += 40) {
       ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(i, height); ctx.stroke();
     }
+    for (let i = 0; i < height; i += 40) {
+      ctx.beginPath(); ctx.moveTo(0, i); ctx.lineTo(width, i); ctx.stroke();
+    }
+    const toScreen = (x: number, y: number) => [originX + x * scale, originY - y * scale];
+    const drawCircle = (cx: number, cy: number, r: number, color: string, fill = false) => {
+      ctx.beginPath();
+      const [sx, sy] = toScreen(cx, cy);
+      ctx.arc(sx, sy, r * scale, 0, 2 * Math.PI);
+      ctx.strokeStyle = color; ctx.lineWidth = 2; ctx.stroke();
+      if (fill) { ctx.fillStyle = color; ctx.fill(); }
+    };
+    ctx.save();
+    const [dx, dy] = toScreen(CENTER_DIST, 0);
+    ctx.translate(dx, dy);
+    ctx.rotate(-totalDriven);
+    const drivenR = 2.0;
+    ctx.beginPath();
+    for (let i = 0; i < N; i++) {
+      const aCenter = (i * Math.PI * 2) / N;
+      ctx.arc(0, 0, drivenR * scale, -aCenter - 0.2, -aCenter + 0.2);
+      const slotX = (drivenR - slotDepth) * scale;
+      ctx.lineTo(slotX * Math.cos(-aCenter + 0.05), -slotX * Math.sin(-aCenter + 0.05));
+      ctx.lineTo(slotX * Math.cos(-aCenter - 0.05), -slotX * Math.sin(-aCenter - 0.05));
+    }
+    ctx.closePath();
+    ctx.fillStyle = 'rgba(168, 85, 247, 0.15)';
+    ctx.fill();
+    ctx.strokeStyle = '#a855f7';
+    ctx.lineWidth = 3;
+    ctx.stroke();
