@@ -2878,3 +2878,33 @@ export const HobermanSphereSim: React.FC<SimulationProps> = ({ angle, load, zoom
       ctx.fillStyle = '#1e293b'; ctx.fill(); ctx.strokeStyle = '#00d4ff'; ctx.lineWidth = 2*zoom; ctx.stroke();
       const [six, siy] = toScreen(p1_in_x, p1_in_y);
       ctx.beginPath(); ctx.arc(six, siy, 0.1 * scale, 0, 2*Math.PI);
+      ctx.fillStyle = '#1e293b'; ctx.fill(); ctx.strokeStyle = '#a855f7'; ctx.lineWidth = 2*zoom; ctx.stroke();
+    }
+    const [cenX, cenY] = toScreen(0, 0);
+    const grad = ctx.createRadialGradient(cenX, cenY, 0, cenX, cenY, R * scale);
+    grad.addColorStop(0, `rgba(0, 212, 255, ${0.1 + loadFactor*0.1})`);
+    grad.addColorStop(1, 'rgba(0, 212, 255, 0)');
+    ctx.fillStyle = grad;
+    ctx.beginPath(); ctx.arc(cenX, cenY, R * scale, 0, 2*Math.PI); ctx.fill();
+    ctx.fillStyle = 'rgba(8, 15, 30, 0.85)';
+    ctx.fillRect(30, 150, 240, 110);
+    ctx.strokeStyle = 'rgba(168, 85, 247, 0.3)';
+    ctx.strokeRect(30, 150, 240, 110);
+    const area = Math.PI * R * R;
+    const minArea = Math.PI * minR * minR;
+    const ratio = area / minArea;
+    ctx.font = '10px monospace';
+    ctx.fillStyle = '#a855f7'; ctx.fillText('SYS :: HOBERMAN_SPHERE_2D', 40, 170);
+    ctx.fillStyle = '#00d4ff'; ctx.fillText(`RADIUS      : ${R.toFixed(2)} cm`, 40, 195);
+    ctx.fillStyle = '#fff'; ctx.fillText(`SCISSOR ANG : ${(alpha * 180 / Math.PI).toFixed(1)}°`, 40, 215);
+    ctx.fillStyle = '#ffb703'; ctx.fillText(`AREA EXPANS : ${ratio.toFixed(1)}X`, 40, 235);
+  }, [angle, load, zoom]);
+  return <div style={{ width: '100%', height: '100%' }}><canvas ref={canvasRef} style={{ width: '100%', height: '100%', display: 'block' }} /></div>;
+};
+export const HookesJointSim: React.FC<SimulationProps> = ({ angle, load, zoom = 1 }) => {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const traceRef = useRef<{t: number, speed: number}[]>([]);
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
