@@ -3538,3 +3538,43 @@ export const LeafSpringSim: React.FC<SimulationProps> = ({ angle, load, zoom = 1
       const [pxL, pyL] = toScreen(leafLength, current_a * leafLength * leafLength + current_y_offset);
       ctx.lineTo(pxL, pyL);
       ctx.strokeStyle = i === 0 ? stressColor : '#94a3b8';
+      ctx.lineWidth = leafThickness * scale * 0.8; 
+      if (i === 0 && load > 50) {
+        ctx.shadowBlur = (load - 50) * 0.2;
+        ctx.shadowColor = '#ff3366';
+      }
+      ctx.stroke(); ctx.shadowBlur = 0;
+      if (i === 0) {
+        const [leyex, leyey] = toScreen(-5, 0);
+        ctx.beginPath(); ctx.arc(leyex, leyey, 0.4*scale, 0, 2*Math.PI);
+        ctx.strokeStyle = stressColor; ctx.lineWidth = 4 * zoom; ctx.stroke();
+        const [reyex, reyey] = toScreen(5, 0);
+        ctx.beginPath(); ctx.arc(reyex, reyey, 0.4*scale, 0, 2*Math.PI);
+        ctx.stroke();
+      }
+    }
+    const fake_dx = loadFactor * 0.8;
+    const rightEyeX = 5.0 + fake_dx;
+    const rightEyeY = 0;
+    const [reyex, reyey] = toScreen(rightEyeX, rightEyeY);
+    ctx.fillStyle = '#050d1a'; ctx.beginPath(); ctx.arc(reyex, reyey, 0.5*scale, 0, 2*Math.PI); ctx.fill();
+    ctx.beginPath(); ctx.arc(reyex, reyey, 0.4*scale, 0, 2*Math.PI); ctx.strokeStyle = stressColor; ctx.stroke();
+    const frameMountX = 5.0;
+    const frameMountY = -1.5;
+    drawLine(rightEyeX, rightEyeY, frameMountX, frameMountY, '#64748b', 8);
+    const drawMount = (x: number, y: number) => {
+      const [mx, my] = toScreen(x, y);
+      ctx.fillStyle = '#1e293b'; ctx.fillRect(mx - 0.6*scale, my - 0.8*scale, 1.2*scale, 0.8*scale);
+      ctx.strokeStyle = '#475569'; ctx.strokeRect(mx - 0.6*scale, my - 0.8*scale, 1.2*scale, 0.8*scale);
+      ctx.beginPath(); ctx.arc(mx, my, 0.15*scale, 0, 2*Math.PI); ctx.fillStyle = '#fff'; ctx.fill();
+    };
+    drawMount(-5.0, 0);
+    drawMount(frameMountX, frameMountY);
+    drawLine(-6, -1.5, 6, -1.5, '#334155', 12);
+    const [lax, lay] = toScreen(0, y_center + 1.5);
+    const fMag = loadFactor * 2.0 + 0.5;
+    ctx.beginPath();
+    ctx.moveTo(lax, lay + 2*scale); ctx.lineTo(lax, lay + 2*scale - fMag*scale);
+    ctx.strokeStyle = '#ffb703'; ctx.lineWidth = 4 * zoom; ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(lax, lay + 2*scale);
