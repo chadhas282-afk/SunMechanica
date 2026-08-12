@@ -4018,3 +4018,43 @@ export const OldhamCouplingSim: React.FC<SimulationProps> = ({ angle, load , zoo
     const drawDisc = (cx: number, cy: number, rotAngle: number, color: string, rgb: string, isCross = false) => {
       ctx.save();
       const [sx, sy] = toScreen(cx, cy);
+      ctx.translate(sx, sy);
+      ctx.rotate(rotAngle);
+      ctx.beginPath();
+      ctx.arc(0, 0, R * scale, 0, 2 * Math.PI);
+      ctx.fillStyle = `rgba(${rgb}, ${isCross ? loadAlpha + 0.1 : loadAlpha - 0.1})`;
+      ctx.fill();
+      ctx.strokeStyle = color;
+      ctx.lineWidth = 3;
+      if (isCross && glow) {
+        ctx.shadowBlur = (load - 50) * 0.4;
+        ctx.shadowColor = color;
+      }
+      ctx.stroke();
+      ctx.shadowBlur = 0;
+      const slotWidth = 0.6 * scale;
+      if (isCross) {
+        ctx.fillStyle = `rgba(${rgb}, 0.8)`;
+        ctx.fillRect(-R * scale, -slotWidth/2, R*2*scale, slotWidth);
+        ctx.fillRect(-slotWidth/2, -R * scale, slotWidth, R*2*scale);
+      } else {
+        ctx.fillStyle = '#050d1a'; 
+        ctx.fillRect(-R * scale, -slotWidth/2, R*2*scale, slotWidth);
+        ctx.strokeStyle = color;
+        ctx.strokeRect(-R * scale, -slotWidth/2, R*2*scale, slotWidth);
+      }
+      ctx.beginPath();
+      ctx.arc(0, 0, 0.4 * scale, 0, 2 * Math.PI);
+      ctx.fillStyle = '#1e293b'; ctx.fill();
+      ctx.strokeStyle = '#fff'; ctx.lineWidth = 2; ctx.stroke();
+      ctx.restore();
+    };
+    drawDisc(inX, inY, -angle, '#ef4444', '239, 68, 68');
+    drawDisc(outX, outY, -angle + Math.PI/2, '#3b82f6', '59, 130, 246');
+    drawDisc(midX, midY, -angle, '#10b981', '16, 185, 129', true);
+    ctx.beginPath();
+    const [origX, origY] = toScreen(0, 0);
+    ctx.arc(origX, origY, (offset / 2) * scale, 0, 2 * Math.PI);
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)';
+    ctx.lineWidth = 2;
+    ctx.setLineDash([5, 5]);
