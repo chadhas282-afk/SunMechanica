@@ -3298,3 +3298,43 @@ export const JournalBearingSim: React.FC<SimulationProps> = ({ angle, load , zoo
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
+    const dpr = window.devicePixelRatio || 1;
+    const rect = canvas.getBoundingClientRect();
+    canvas.width = rect.width * dpr;
+    canvas.height = rect.height * dpr;
+    ctx.scale(dpr, dpr);
+    const width = rect.width;
+    const height = rect.height;
+    ctx.clearRect(0, 0, width, height);
+    const scale = (Math.min(width, height) / 8) * zoom; 
+    const originX = width * 0.5;
+    const originY = height * 0.5;
+    ctx.fillStyle = '#050d1a'; ctx.fillRect(0, 0, width, height);
+    ctx.strokeStyle = '#1e293b'; ctx.lineWidth = 1;
+    for (let i = 0; i < width; i += 40) { ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(i, height); ctx.stroke(); }
+    for (let i = 0; i < height; i += 40) { ctx.beginPath(); ctx.moveTo(0, i); ctx.lineTo(width, i); ctx.stroke(); }
+    const toScreen = (x: number, y: number) => [originX + x * scale, originY - y * scale];
+    const R_b = 3.0; 
+    const C = 0.5;   
+    const R_j = R_b - C; 
+    const loadFactor = load / 100;
+    const eps = loadFactor * 0.95;
+    const e = eps * C;
+    const phi = (90 - 50 * eps) * (Math.PI / 180);
+    const cx = e * Math.sin(phi);
+    const cy = -e * Math.cos(phi);
+    const [bx, by] = toScreen(0, 0);
+    ctx.beginPath(); ctx.arc(bx, by, R_b * scale + 40, 0, 2*Math.PI);
+    ctx.fillStyle = '#0f172a'; ctx.fill();
+    ctx.strokeStyle = '#475569'; ctx.lineWidth = 6; ctx.stroke();
+    ctx.save();
+    ctx.translate(bx, by);
+    ctx.beginPath(); ctx.arc(0, 0, R_b * scale, 0, 2*Math.PI);
+    ctx.fillStyle = 'rgba(0, 212, 255, 0.2)'; ctx.fill();
+    ctx.beginPath();
+    const numPoints = 120;
+    for (let i = 0; i <= numPoints; i++) {
+      const th = (i / numPoints) * 2 * Math.PI;
+      const th_rel = th - (Math.PI/2 + phi);
+      let p = (eps * Math.sin(th_rel)) / Math.pow(1 + eps * Math.cos(th_rel), 3);
+      if (p < 0) p = 0; 
