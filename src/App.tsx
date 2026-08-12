@@ -3618,3 +3618,44 @@ export const MalteseCrossSim: React.FC<SimulationProps> = ({ angle, load, zoom =
     ctx.strokeStyle = '#1e293b'; ctx.lineWidth = 1;
     for (let i = 0; i < width; i += 40) { ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(i, height); ctx.stroke(); }
     for (let i = 0; i < height; i += 40) { ctx.beginPath(); ctx.moveTo(0, i); ctx.lineTo(width, i); ctx.stroke(); }
+    const toScreen = (x: number, y: number) => [originX + x * scale, originY - y * scale];
+    const d = 5.0; 
+    const R = d / Math.SQRT2; 
+    let theta = angle % (2 * Math.PI);
+    if (theta < 0) theta += 2 * Math.PI;
+    const driveX = d/2; const driveY = 0;
+    const crossX = -d/2; const crossY = 0;
+    let relTheta = theta - Math.PI;
+    if (relTheta < -Math.PI) relTheta += 2*Math.PI;
+    if (relTheta > Math.PI) relTheta -= 2*Math.PI;
+    let isEngaged = false;
+    let dPhi = 0;
+    if (Math.abs(relTheta) <= Math.PI/4) {
+      isEngaged = true;
+      const currentPhi = Math.atan2(Math.sin(relTheta), Math.SQRT2 - Math.cos(relTheta));
+      let lastRel = (lastTheta.current % (2*Math.PI)) - Math.PI;
+      if (lastRel < -Math.PI) lastRel += 2*Math.PI;
+      if (lastRel > Math.PI) lastRel -= 2*Math.PI;
+      if (Math.abs(lastRel) <= Math.PI/4) {
+        const lastPhi = Math.atan2(Math.sin(lastRel), Math.SQRT2 - Math.cos(lastRel));
+        dPhi = currentPhi - lastPhi;
+      }
+    }
+    if (!isEngaged) {
+      const target = Math.round(accumPhi.current / (Math.PI/2)) * (Math.PI/2);
+      accumPhi.current += (target - accumPhi.current) * 0.1; 
+    } else {
+      accumPhi.current += dPhi;
+    }
+    lastTheta.current = angle;
+    const loadFactor = load / 100;
+    const stressColor = isEngaged ? `rgb(${Math.round(100 + loadFactor*155)}, 85, 247)` : '#a855f7';
+    const [dx, dy] = toScreen(driveX, driveY);
+    ctx.beginPath(); ctx.arc(dx, dy, R * scale, 0, 2*Math.PI);
+    ctx.fillStyle = 'rgba(15, 23, 42, 0.8)'; ctx.fill();
+    ctx.strokeStyle = '#334155'; ctx.lineWidth = 4; ctx.stroke();
+    ctx.beginPath();
+    ctx.arc(dx, dy, R * scale * 0.5, theta + Math.PI/4 + Math.PI, theta - Math.PI/4 + Math.PI);
+    ctx.strokeStyle = '#475569'; ctx.lineWidth = 12 * zoom; ctx.stroke();
+    const pinX = driveX + R * Math.cos(theta);
+    const pinY = driveY + R * Math.sin(theta);
