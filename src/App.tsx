@@ -4138,3 +4138,43 @@ export const OttoCycleSim: React.FC<SimulationProps> = ({ angle, load , zoom = 1
     let gasColor = '';
     let intakeValveOpen = false;
     let exhaustValveOpen = false;
+    let spark = false;
+    const loadFactor = load / 100;
+    if (cycleAngle >= 0 && cycleAngle < Math.PI) {
+      strokeName = 'INTAKE';
+      intakeValveOpen = true;
+      gasColor = 'rgba(0, 212, 255, 0.4)'; 
+    } else if (cycleAngle >= Math.PI && cycleAngle < 2 * Math.PI) {
+      strokeName = 'COMPRESSION';
+      const progress = (cycleAngle - Math.PI) / Math.PI;
+      const r = Math.round(progress * 255);
+      const b = Math.round(255 - progress * 255);
+      gasColor = `rgba(${r}, 0, ${b}, 0.6)`;
+    } else if (cycleAngle >= 2 * Math.PI && cycleAngle < 3 * Math.PI) {
+      strokeName = 'POWER';
+      if (cycleAngle < 2 * Math.PI + 0.3) spark = true;
+      const progress = (cycleAngle - 2 * Math.PI) / Math.PI;
+      const g = Math.round(200 * (1 - progress));
+      gasColor = `rgba(255, ${g}, 0, 0.8)`;
+    } else {
+      strokeName = 'EXHAUST';
+      exhaustValveOpen = true;
+      gasColor = 'rgba(100, 116, 139, 0.5)'; 
+    }
+    const cylWidth = 3.2;
+    const tdcY = R + L;
+    const bdcY = -R + L;
+    const cylTop = tdcY + 0.5; 
+    const [gx, gy1] = toScreen(-cylWidth/2 + 0.1, cylTop);
+    const [, gy2] = toScreen(-cylWidth/2 + 0.1, pistonY);
+    ctx.fillStyle = gasColor;
+    ctx.fillRect(gx, gy1, (cylWidth - 0.2) * scale, gy2 - gy1);
+    if (spark) {
+      ctx.fillStyle = '#fff';
+      ctx.beginPath();
+      ctx.arc(gx + (cylWidth/2)*scale, gy1 + 0.3*scale, 1.5*scale, 0, 2*Math.PI);
+      ctx.shadowBlur = 30;
+      ctx.shadowColor = '#fff';
+      ctx.fill();
+      ctx.shadowBlur = 0;
+    }
