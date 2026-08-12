@@ -4058,3 +4058,43 @@ export const OldhamCouplingSim: React.FC<SimulationProps> = ({ angle, load , zoo
     ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)';
     ctx.lineWidth = 2;
     ctx.setLineDash([5, 5]);
+     ctx.stroke();
+    ctx.setLineDash([]);
+    drawCircle(inX, inY, 0.15, '#fff', true);
+    drawCircle(outX, outY, 0.15, '#fff', true);
+    drawCircle(midX, midY, 0.15, '#10b981', true);
+    ctx.fillStyle = 'rgba(8, 15, 30, 0.85)';
+    ctx.fillRect(30, 150, 240, 110);
+    ctx.strokeStyle = 'rgba(168, 85, 247, 0.3)';
+    ctx.strokeRect(30, 150, 240, 110);
+    ctx.font = '10px monospace';
+    ctx.fillStyle = '#a855f7';
+    ctx.fillText('SYS :: OLDHAM_COUPLING', 40, 170);
+    ctx.fillStyle = '#ef4444';
+    ctx.fillText(`INPUT RPM  : SYNCHRONIZED`, 40, 195);
+    ctx.fillStyle = '#3b82f6';
+    ctx.fillText(`OUTPUT RPM : SYNCHRONIZED`, 40, 215);
+    ctx.fillStyle = '#10b981';
+    ctx.fillText(`ORBIT RATE : 2X SHAFT RPM`, 40, 235);
+  }, [angle, load]);
+  return (
+    <div style={{ width: '100%', height: '100%' }}>
+      <canvas ref={canvasRef} style={{ width: '100%', height: '100%', display: 'block' }} />
+    </div>
+  );
+};
+export const OttoCycleSim: React.FC<SimulationProps> = ({ angle, load , zoom = 1 }) => {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+    const dpr = window.devicePixelRatio || 1;
+    const rect = canvas.getBoundingClientRect();
+    canvas.width = rect.width * dpr;
+    canvas.height = rect.height * dpr;
+    ctx.scale(dpr, dpr);
+    const width = rect.width;
+    const height = rect.height;
+    ctx.clearRect(0, 0, width, height);
