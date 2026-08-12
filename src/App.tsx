@@ -4178,3 +4178,43 @@ export const OttoCycleSim: React.FC<SimulationProps> = ({ angle, load , zoom = 1
       ctx.fill();
       ctx.shadowBlur = 0;
     }
+     ctx.strokeStyle = '#475569';
+    ctx.lineWidth = 6;
+    ctx.beginPath();
+    const [cxL2, cyB2] = toScreen(-cylWidth/2, bdcY - 1);
+    const [cxL3, cyT2] = toScreen(-cylWidth/2, cylTop);
+    const [cxR, cyT3] = toScreen(cylWidth/2, cylTop);
+    const [cxR2, cyB3] = toScreen(cylWidth/2, bdcY - 1);
+    ctx.moveTo(cxL2, cyB2);
+    ctx.lineTo(cxL3, cyT2);
+    ctx.lineTo(cxR, cyT3);
+    ctx.lineTo(cxR2, cyB3);
+    ctx.stroke();
+    const valveWidth = 0.8;
+    const valveLift = 0.6;
+    const intakeY = cylTop - (intakeValveOpen ? valveLift : 0);
+    const exhaustY = cylTop - (exhaustValveOpen ? valveLift : 0);
+    drawLine(-1.0, cylTop + 1.0, -1.0, intakeY, '#94a3b8', 4); 
+    drawLine(-1.0 - valveWidth/2, intakeY, -1.0 + valveWidth/2, intakeY, '#cbd5e1', 6); 
+    drawLine(1.0, cylTop + 1.0, 1.0, exhaustY, '#94a3b8', 4); 
+    drawLine(1.0 - valveWidth/2, exhaustY, 1.0 + valveWidth/2, exhaustY, '#cbd5e1', 6); 
+    drawLine(0, cylTop + 1.0, 0, cylTop, '#fff', 4);
+    ctx.fillStyle = '#0f172a';
+    const [pxL, pyTop] = toScreen(-cylWidth/2, cylTop + 0.8);
+    ctx.fillRect(pxL, pyTop, cylWidth*scale, -1.0*scale); 
+    const pistonH = 1.6;
+    const [px, py] = toScreen(-cylWidth/2 + 0.1, pistonY);
+    ctx.fillStyle = '#1e293b';
+    ctx.fillRect(px, py, (cylWidth - 0.2) * scale, pistonH * scale);
+    ctx.strokeStyle = '#94a3b8';
+    ctx.lineWidth = 2;
+    ctx.strokeRect(px, py, (cylWidth - 0.2) * scale, pistonH * scale);
+    const stressColor = strokeName === 'POWER' 
+      ? `rgb(255, ${200 - loadFactor*150}, 0)`
+      : '#3b82f6';
+    drawLine(pinX, pinY, pistonX, pistonY - 0.4, stressColor, 12);
+    if (strokeName === 'POWER' && load > 40) {
+      ctx.shadowBlur = (load - 40) * 0.5;
+      ctx.shadowColor = stressColor;
+      ctx.stroke();
+      ctx.shadowBlur = 0;
