@@ -3418,3 +3418,43 @@ export const KlannLinkageSim: React.FC<SimulationProps> = ({ angle, load , zoom 
     const L = 2.5 * R;
     const Ox = 0; const Oy = 0;
     const P_x = -L; const P_y = 0;
+    const drawLeg = (theta: number, color: string, isFront: boolean) => {
+      const Ax = R * Math.cos(theta);
+      const Ay = R * Math.sin(theta);
+      const dx = Ax - P_x, dy = Ay - P_y;
+      const d = Math.hypot(dx, dy);
+      let Bx = 0, By = 0, Fx = 0, Fy = 0;
+      if (d <= 2*L && d > 0) {
+        const a = d / 2;
+        const h = Math.sqrt(L*L - a*a);
+        const M_x = P_x + (dx * a) / d;
+        const M_y = P_y + (dy * a) / d;
+        Bx = M_x + h * (dy / d);
+        By = M_y - h * (dx / d);
+        Fx = Ax + 2.0 * (Bx - Ax);
+        Fy = Ay + 2.0 * (By - Ay);
+      }
+      if (isFront) {
+        traceRef.current.push({ x: Fx, y: Fy });
+        if (traceRef.current.length > 200) traceRef.current.shift();
+      }
+      const w = isFront ? 8 : 4;
+      const c2 = isFront ? '#cbd5e1' : '#64748b';
+      if (isFront && load > 50) {
+        ctx.shadowBlur = (load - 50) * 0.4;
+        ctx.shadowColor = color;
+      }
+      drawLine(Ox, Oy, Ax, Ay, color, w); 
+      drawLine(P_x, P_y, Bx, By, c2, w); 
+      drawLine(Ax, Ay, Fx, Fy, color, w); 
+      ctx.shadowBlur = 0;
+      const r_j = isFront ? 0.3 : 0.2;
+      drawCircle(Ax, Ay, r_j, '#fff', true);
+      drawCircle(Bx, By, r_j, '#fff', true);
+      drawCircle(Fx, Fy, r_j, color, true);
+    };
+    const loadFactor = load / 100;
+    const rC = Math.round(0 + loadFactor * 255);
+    const gC = Math.round(212 - loadFactor * 100);
+    const stressColor = `rgb(${rC}, ${gC}, 255)`;
+    if (traceRef.current.length > 1) {
