@@ -3858,3 +3858,43 @@ export const MassSpringDamperSim: React.FC<SimulationProps> = ({ angle, load , z
   );
 };
 export const MohrsCircleSim: React.FC<SimulationProps> = ({ angle, load, zoom = 1 }) => {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+    const dpr = window.devicePixelRatio || 1;
+    const rect = canvas.getBoundingClientRect();
+    canvas.width = rect.width * dpr;
+    canvas.height = rect.height * dpr;
+    ctx.scale(dpr, dpr);
+    const width = rect.width;
+    const height = rect.height;
+    ctx.clearRect(0, 0, width, height);
+    const scale = (Math.min(width, height) / 16) * zoom; 
+    const originX = width * 0.7; 
+    const originY = height * 0.5;
+    ctx.fillStyle = '#050d1a'; ctx.fillRect(0, 0, width, height);
+    ctx.strokeStyle = '#1e293b'; ctx.lineWidth = 1;
+    for (let i = 0; i < width; i += 40) { ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(i, height); ctx.stroke(); }
+    for (let i = 0; i < height; i += 40) { ctx.beginPath(); ctx.moveTo(0, i); ctx.lineTo(width, i); ctx.stroke(); }
+    const toScreen = (x: number, y: number) => [originX + x * scale, originY - y * scale];
+    const sigma_x = 80;
+    const sigma_y = -30;
+    const loadFactor = load / 100;
+    const tau_xy = 20 + loadFactor * 60; 
+    const C = (sigma_x + sigma_y) / 2;
+    const R = Math.sqrt(Math.pow((sigma_x - sigma_y)/2, 2) + Math.pow(tau_xy, 2));
+    const sigma_1 = C + R;
+    const sigma_2 = C - R;
+    const theta = angle; 
+    const sig_x_prime = C + ((sigma_x - sigma_y)/2) * Math.cos(2*theta) + tau_xy * Math.sin(2*theta);
+    const sig_y_prime = C - ((sigma_x - sigma_y)/2) * Math.cos(2*theta) - tau_xy * Math.sin(2*theta);
+    const tau_prime = -((sigma_x - sigma_y)/2) * Math.sin(2*theta) + tau_xy * Math.cos(2*theta);
+    const st = 0.04; 
+    ctx.beginPath();
+    const [leftX, axisY] = toScreen(-100 * st, 0);
+    const [rightX] = toScreen(150 * st, 0);
+    ctx.moveTo(leftX, axisY); ctx.lineTo(rightX, axisY);
+    const [topX, topY] = toScreen(0, 100 * st);
