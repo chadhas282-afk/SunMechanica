@@ -3818,3 +3818,43 @@ export const MassSpringDamperSim: React.FC<SimulationProps> = ({ angle, load , z
       for (let i = 0; i < traceRef.current.length; i++) {
         const pt = traceRef.current[i];
         const gx = graphX + (i / 200) * 5 * scale;
+        const gy = graphY - pt.base * 0.5 * scale; 
+        if (i === 0) ctx.moveTo(gx, gy);
+        else ctx.lineTo(gx, gy);
+      }
+      ctx.strokeStyle = '#94a3b8';
+      ctx.lineWidth = 2;
+      ctx.stroke();
+      ctx.beginPath();
+      for (let i = 0; i < traceRef.current.length; i++) {
+        const pt = traceRef.current[i];
+        const gx = graphX + (i / 200) * 5 * scale;
+        const gy = graphY - pt.mass * 0.5 * scale; 
+        if (i === 0) ctx.moveTo(gx, gy);
+        else ctx.lineTo(gx, gy);
+      }
+      ctx.strokeStyle = '#00ff88';
+      ctx.lineWidth = 2;
+      ctx.stroke();
+    }
+    ctx.fillStyle = 'rgba(8, 15, 30, 0.85)';
+    ctx.fillRect(30, 150, 240, 110);
+    ctx.strokeStyle = 'rgba(0, 255, 136, 0.3)';
+    ctx.strokeRect(30, 150, 240, 110);
+    ctx.font = '10px monospace';
+    ctx.fillStyle = '#00ff88';
+    ctx.fillText('SYS :: MASS_SPRING_DAMPER', 40, 170);
+    ctx.fillStyle = '#fff';
+    ctx.fillText(`DAMPING ZETA : ${zeta.toFixed(2)}`, 40, 195);
+    ctx.fillStyle = '#3b82f6';
+    ctx.fillText(`AMP RATIO TR : ${TR.toFixed(2)}`, 40, 215);
+    ctx.fillStyle = '#a855f7';
+    ctx.fillText(`PHASE DELAY  : ${(phase * 180 / Math.PI).toFixed(1)}°`, 40, 235);
+  }, [angle, load]);
+  return (
+    <div style={{ width: '100%', height: '100%' }}>
+      <canvas ref={canvasRef} style={{ width: '100%', height: '100%', display: 'block' }} />
+    </div>
+  );
+};
+export const MohrsCircleSim: React.FC<SimulationProps> = ({ angle, load, zoom = 1 }) => {
