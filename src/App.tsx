@@ -4298,3 +4298,43 @@ export const PeaucellierLipkinSim: React.FC<SimulationProps> = ({ angle, load , 
       const h = Math.sqrt(L*L - alpha*alpha);
       const P2x = Ox + alpha * (Bx - Ox) / distOB;
       const P2y = Oy + alpha * (By - Oy) / distOB;
+       Cx = P2x + h * (By - Oy) / distOB;
+      Cy = P2y - h * (Bx - Ox) / distOB;
+      Dx = P2x - h * (By - Oy) / distOB;
+      Dy = P2y + h * (Bx - Ox) / distOB;
+      Ex = 2 * P2x - Bx;
+      Ey = 2 * P2y - By;
+    }
+    traceRef.current.push({ x: Ex, y: Ey });
+    if (traceRef.current.length > 200) traceRef.current.shift();
+    if (traceRef.current.length > 1) {
+      ctx.beginPath();
+      for (let i = 0; i < traceRef.current.length; i++) {
+        const pt = traceRef.current[i];
+        const [sx, sy] = toScreen(pt.x, pt.y);
+        if (i === 0) ctx.moveTo(sx, sy); else ctx.lineTo(sx, sy);
+      }
+      ctx.strokeStyle = '#a855f7'; ctx.lineWidth = 3; ctx.stroke();
+    }
+    const loadFactor = load / 100;
+    const stressColor = `rgb(${168 + loadFactor*87}, 85, ${247 - loadFactor*200})`;
+    drawLine(Ox, Oy, Ax, Ay, '#334155', 12);
+    drawCircle(Ox, Oy, 0.4, '#475569', true);
+    drawCircle(Ax, Ay, 0.4, '#475569', true);
+    drawLine(Ax, Ay, Bx, By, '#3b82f6', 8); 
+    drawLine(Ox, Oy, Cx, Cy, '#94a3b8', 6);
+    drawLine(Ox, Oy, Dx, Dy, '#94a3b8', 6);
+    ctx.shadowBlur = load > 50 ? (load - 50) * 0.3 : 0;
+    ctx.shadowColor = stressColor;
+    drawLine(Bx, By, Cx, Cy, stressColor, 8);
+    drawLine(Bx, By, Dx, Dy, stressColor, 8);
+    drawLine(Cx, Cy, Ex, Ey, stressColor, 8);
+    drawLine(Dx, Dy, Ex, Ey, stressColor, 8);
+    ctx.shadowBlur = 0;
+    drawCircle(Bx, By, 0.25, '#fff', true);
+    drawCircle(Cx, Cy, 0.25, '#fff', true);
+    drawCircle(Dx, Dy, 0.25, '#fff', true);
+    drawCircle(Ex, Ey, 0.3, '#a855f7', true); 
+  }, [angle, load]);
+  return <div style={{ width: '100%', height: '100%' }}><canvas ref={canvasRef} style={{ width: '100%', height: '100%', display: 'block' }} /></div>;
+};
