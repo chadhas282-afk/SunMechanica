@@ -3499,3 +3499,42 @@ export const LeafSpringSim: React.FC<SimulationProps> = ({ angle, load, zoom = 1
     ctx.strokeStyle = '#1e293b'; ctx.lineWidth = 1;
     for (let i = 0; i < width; i += 40) { ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(i, height); ctx.stroke(); }
     for (let i = 0; i < height; i += 40) { ctx.beginPath(); ctx.moveTo(0, i); ctx.lineTo(width, i); ctx.stroke(); }
+     const toScreen = (x: number, y: number) => [originX + x * scale, originY - y * scale];
+    const drawLine = (x1: number, y1: number, x2: number, y2: number, color: string, w: number) => {
+      ctx.beginPath();
+      const [sx1, sy1] = toScreen(x1, y1); const [sx2, sy2] = toScreen(x2, y2);
+      ctx.moveTo(sx1, sy1); ctx.lineTo(sx2, sy2);
+      ctx.strokeStyle = color; ctx.lineWidth = w * zoom; ctx.lineCap = 'round'; ctx.stroke();
+    };
+    const loadFactor = load / 100;
+    const vibration = Math.sin(angle * 5) * 0.2 * (loadFactor > 0 ? 1 : 0.2);
+    const maxDeflection = -3.0; 
+    const deflection = loadFactor * maxDeflection + vibration;
+    const y_center = 3.0 + deflection; 
+    const numLeaves = 5;
+    const leafThickness = 0.3;
+    const [cmx, cmy] = toScreen(0, y_center + 0.5);
+    ctx.fillStyle = '#1e293b'; ctx.fillRect(cmx - 1*scale, cmy, 2*scale, 1.5*scale);
+    ctx.strokeStyle = '#475569'; ctx.lineWidth = 2 * zoom; ctx.strokeRect(cmx - 1*scale, cmy, 2*scale, 1.5*scale);
+    ctx.beginPath();
+    const [ub1x, ub1y] = toScreen(-0.6, y_center - numLeaves * leafThickness - 0.2);
+    const [ub1y2] = toScreen(-0.6, y_center + 1.5);
+    ctx.moveTo(ub1x, ub1y); ctx.lineTo(ub1x, ub1y2);
+    const [ub2x, ub2y] = toScreen(0.6, y_center - numLeaves * leafThickness - 0.2);
+    ctx.moveTo(ub2x, ub2y); ctx.lineTo(ub2x, ub1y2);
+    ctx.strokeStyle = '#94a3b8'; ctx.lineWidth = 3 * zoom; ctx.stroke();
+    const stressColor = loadFactor > 0.5 ? `rgba(255, 51, 102, ${loadFactor})` : '#cbd5e1';
+    for (let i = 0; i < numLeaves; i++) {
+      const leafLength = 5.0 - i * 0.8;
+      const current_y_offset = y_center - i * leafThickness;
+      const current_a = -current_y_offset / 25.0; 
+      ctx.beginPath();
+      for (let x = -leafLength; x <= leafLength; x += 0.2) {
+        const y = current_a * x * x + current_y_offset;
+        const [px, py] = toScreen(x, y);
+        if (x === -leafLength) ctx.moveTo(px, py);
+        else ctx.lineTo(px, py);
+      }
+      const [pxL, pyL] = toScreen(leafLength, current_a * leafLength * leafLength + current_y_offset);
+      ctx.lineTo(pxL, pyL);
+      ctx.strokeStyle = i === 0 ? stressColor : '#94a3b8';
