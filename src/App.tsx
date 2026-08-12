@@ -3978,3 +3978,43 @@ export const OldhamCouplingSim: React.FC<SimulationProps> = ({ angle, load , zoo
     const dpr = window.devicePixelRatio || 1;
     const rect = canvas.getBoundingClientRect();
     canvas.width = rect.width * dpr;
+    canvas.height = rect.height * dpr;
+    ctx.scale(dpr, dpr);
+    const width = rect.width;
+    const height = rect.height;
+    ctx.clearRect(0, 0, width, height);
+    const scale = (Math.min(width, height) / 10) * zoom; 
+    const originX = width * 0.5;
+    const originY = height * 0.5;
+    ctx.fillStyle = '#050d1a';
+    ctx.fillRect(0, 0, width, height);
+    ctx.strokeStyle = '#1e293b';
+    ctx.lineWidth = 1;
+    for (let i = 0; i < width; i += 40) {
+      ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(i, height); ctx.stroke();
+    }
+    for (let i = 0; i < height; i += 40) {
+      ctx.beginPath(); ctx.moveTo(0, i); ctx.lineTo(width, i); ctx.stroke();
+    }
+    const toScreen = (x: number, y: number) => [originX + x * scale, originY - y * scale];
+    const drawCircle = (x: number, y: number, r: number, color: string, fill = false) => {
+      ctx.beginPath();
+      const [sx, sy] = toScreen(x, y);
+      ctx.arc(sx, sy, r * scale, 0, 2 * Math.PI);
+      ctx.strokeStyle = color; ctx.lineWidth = 2; ctx.stroke();
+      if (fill) { ctx.fillStyle = color; ctx.fill(); }
+    };
+    const offset = 2.0; 
+    const R = 3.5; 
+    const inX = -offset / 2;
+    const inY = 0;
+    const outX = offset / 2;
+    const outY = 0;
+    const midX = (offset / 2) * Math.cos(2 * -angle);
+    const midY = (offset / 2) * Math.sin(2 * -angle);
+    const loadFactor = load / 100;
+    const loadAlpha = 0.2 + loadFactor * 0.4;
+    const glow = load > 50;
+    const drawDisc = (cx: number, cy: number, rotAngle: number, color: string, rgb: string, isCross = false) => {
+      ctx.save();
+      const [sx, sy] = toScreen(cx, cy);
