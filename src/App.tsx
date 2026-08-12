@@ -4338,3 +4338,43 @@ export const PeaucellierLipkinSim: React.FC<SimulationProps> = ({ angle, load , 
   }, [angle, load]);
   return <div style={{ width: '100%', height: '100%' }}><canvas ref={canvasRef} style={{ width: '100%', height: '100%', display: 'block' }} /></div>;
 };
+export const PeltonWheelSim: React.FC<SimulationProps> = ({ angle, load, zoom = 1 }) => {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const particlesRef = useRef<{x: number, y: number, vx: number, vy: number, active: boolean}[]>([]);
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+    const dpr = window.devicePixelRatio || 1;
+    const rect = canvas.getBoundingClientRect();
+    canvas.width = rect.width * dpr;
+    canvas.height = rect.height * dpr;
+    ctx.scale(dpr, dpr);
+    const width = rect.width;
+    const height = rect.height;
+    ctx.clearRect(0, 0, width, height);
+    const scale = (Math.min(width, height) / 16) * zoom; 
+    const originX = width * 0.55;
+    const originY = height * 0.5;
+    ctx.fillStyle = '#050d1a'; ctx.fillRect(0, 0, width, height);
+    ctx.strokeStyle = '#1e293b'; ctx.lineWidth = 1;
+    for (let i = 0; i < width; i += 40) { ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(i, height); ctx.stroke(); }
+    for (let i = 0; i < height; i += 40) { ctx.beginPath(); ctx.moveTo(0, i); ctx.lineTo(width, i); ctx.stroke(); }
+    const toScreen = (x: number, y: number) => [originX + x * scale, originY - y * scale];
+    const R_wheel = 4.0;
+    const numBuckets = 12;
+    const bucketPitch = 2 * Math.PI / numBuckets;
+    const nozzleX = -8.0;
+    const nozzleY = -R_wheel;
+    const loadFactor = load / 100;
+    const jetVelocity = 0.2 + loadFactor * 0.4;
+    if (load > 0) {
+      for(let i=0; i<3 * (loadFactor + 0.5); i++) {
+        particlesRef.current.push({
+          x: nozzleX + Math.random() * 0.5,
+          y: nozzleY + (Math.random() - 0.5) * 0.4,
+          vx: jetVelocity + Math.random() * 0.05,
+          vy: 0,
+          active: true
+        });
