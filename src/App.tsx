@@ -3738,3 +3738,43 @@ export const MassSpringDamperSim: React.FC<SimulationProps> = ({ angle, load , z
     const t = angle;
     const w = 2.0; 
     const wn = 3.0; 
+    const r = w / wn; 
+    const zeta = 0.05 + (load / 100) * 0.95;
+    const num = Math.sqrt(1 + Math.pow(2 * zeta * r, 2));
+    const den = Math.sqrt(Math.pow(1 - r * r, 2) + Math.pow(2 * zeta * r, 2));
+    const TR = num / den; 
+    const phase = Math.atan2(2 * zeta * Math.pow(r, 3), 1 - r * r + Math.pow(2 * zeta * r, 2));
+    const Y_base = 2.0;
+    const yBase = Y_base * Math.sin(t * w);
+    const yMass = Y_base * TR * Math.sin(t * w - phase);
+    const baseY = -5.0 + yBase;
+    const massY = 3.0 + yMass; 
+    ctx.fillStyle = '#334155';
+    const [bx, by] = toScreen(0, baseY);
+    ctx.fillRect(bx - 4 * scale, by, 8 * scale, 0.4 * scale);
+    const [mx, my] = toScreen(0, massY);
+    ctx.fillStyle = '#0f172a';
+    ctx.fillRect(mx - 3 * scale, my - 2 * scale, 6 * scale, 4 * scale);
+    ctx.strokeStyle = '#00ff88';
+    ctx.lineWidth = 3;
+    ctx.strokeRect(mx - 3 * scale, my - 2 * scale, 6 * scale, 4 * scale);
+    const springX = -1.5;
+    ctx.beginPath();
+    let [spX, spY] = toScreen(springX, baseY);
+    ctx.moveTo(spX, spY);
+    const numCoils = 8;
+    const springLen = massY - baseY - 2.0; 
+    for (let i = 0; i <= numCoils; i++) {
+      const cy = baseY + (i / numCoils) * springLen;
+      const cx = springX + (i % 2 === 0 ? 0.8 : -0.8);
+      const [px, py] = toScreen(cx, cy);
+      ctx.lineTo(px, py);
+    }
+    const [spEndX, spEndY] = toScreen(springX, massY - 2.0);
+    ctx.lineTo(spEndX, spEndY);
+    ctx.strokeStyle = '#3b82f6';
+    ctx.lineWidth = 4;
+    ctx.stroke();
+    const damperX = 1.5;
+    const [dcX1, dcY1] = toScreen(damperX - 0.6, baseY);
+    const [dcX2, dcY2] = toScreen(damperX + 0.6, baseY + springLen * 0.6)
