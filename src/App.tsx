@@ -3778,3 +3778,43 @@ export const MassSpringDamperSim: React.FC<SimulationProps> = ({ angle, load , z
     const damperX = 1.5;
     const [dcX1, dcY1] = toScreen(damperX - 0.6, baseY);
     const [dcX2, dcY2] = toScreen(damperX + 0.6, baseY + springLen * 0.6)
+     ctx.fillStyle = 'rgba(148, 163, 184, 0.2)';
+    ctx.fillRect(dcX1, dcY1, dcX2 - dcX1, dcY2 - dcY1);
+    ctx.strokeStyle = '#94a3b8';
+    ctx.lineWidth = 3;
+    ctx.strokeRect(dcX1, dcY1, dcX2 - dcX1, dcY2 - dcY1);
+    const [dpX, dpY] = toScreen(damperX, massY - 2.0);
+    const [dpEndX, dpEndY] = toScreen(damperX, massY - 2.0 - springLen * 0.4);
+    ctx.beginPath();
+    ctx.moveTo(dpX, dpY);
+    ctx.lineTo(dpEndX, dpEndY);
+    ctx.moveTo(dpEndX - 0.5 * scale, dpEndY);
+    ctx.lineTo(dpEndX + 0.5 * scale, dpEndY);
+    const rC = Math.round(0 + zeta * 255);
+    const gC = Math.round(255 - zeta * 255);
+    const bC = 136;
+    ctx.strokeStyle = `rgb(${rC}, ${gC}, ${bC})`;
+    ctx.lineWidth = 4;
+    if (zeta > 0.5) {
+      ctx.shadowBlur = zeta * 15;
+      ctx.shadowColor = `rgb(${rC}, ${gC}, ${bC})`;
+    }
+    ctx.stroke();
+    ctx.shadowBlur = 0;
+    traceRef.current.push({ a: t, base: yBase, mass: yMass });
+    if (traceRef.current.length > 200) traceRef.current.shift();
+    const graphX = originX + 5 * scale;
+    const graphY = originY - 1 * scale;
+    ctx.beginPath();
+    ctx.moveTo(graphX, graphY - 3 * scale);
+    ctx.lineTo(graphX, graphY + 3 * scale);
+    ctx.moveTo(graphX, graphY);
+    ctx.lineTo(graphX + 5 * scale, graphY);
+    ctx.strokeStyle = 'rgba(255,255,255,0.2)';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+    if (traceRef.current.length > 1) {
+      ctx.beginPath();
+      for (let i = 0; i < traceRef.current.length; i++) {
+        const pt = traceRef.current[i];
+        const gx = graphX + (i / 200) * 5 * scale;
