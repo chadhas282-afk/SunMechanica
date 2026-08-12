@@ -4378,3 +4378,43 @@ export const PeltonWheelSim: React.FC<SimulationProps> = ({ angle, load, zoom = 
           vy: 0,
           active: true
         });
+        }
+    }
+    const activeParticles = [];
+    for (const p of particlesRef.current) {
+      p.x += p.vx;
+      p.y += p.vy;
+      if (p.active && p.x > -0.5 && p.x < 1.0 && p.y > -R_wheel - 1.0 && p.y < -R_wheel + 1.0) {
+        p.active = false; 
+        const sign = Math.random() > 0.5 ? 1 : -1;
+        p.vx = -p.vx * 0.4 * Math.random();
+        p.vy = sign * (jetVelocity * 0.6 + Math.random() * 0.2);
+      }
+      if (!p.active) {
+        p.vy -= 0.02;
+      }
+      if (p.y > -10 && p.x > -10) {
+        activeParticles.push(p);
+      }
+    }
+    particlesRef.current = activeParticles;
+    ctx.fillStyle = `rgba(0, 255, 136, ${0.4 + loadFactor*0.4})`;
+    for(const p of particlesRef.current) {
+      const [px, py] = toScreen(p.x, p.y);
+      ctx.beginPath(); ctx.arc(px, py, 0.08 * scale, 0, 2*Math.PI);
+      ctx.fill();
+    }
+    if (load > 0) {
+      const [njx, njy] = toScreen(nozzleX, nozzleY);
+      const [hitx] = toScreen(0, nozzleY);
+      ctx.beginPath();
+      ctx.moveTo(njx, njy); ctx.lineTo(hitx, njy);
+      ctx.strokeStyle = `rgba(0, 255, 136, ${0.2 + loadFactor*0.6})`;
+      ctx.lineWidth = 10 * zoom; ctx.stroke();
+    }
+    const [nx, ny] = toScreen(nozzleX, nozzleY);
+    ctx.beginPath();
+    ctx.moveTo(nx - 2*scale, ny + scale);
+    ctx.lineTo(nx, ny + 0.4*scale);
+    ctx.lineTo(nx, ny - 0.4*scale);
+    ctx.lineTo(nx - 2*scale, ny - scale);
