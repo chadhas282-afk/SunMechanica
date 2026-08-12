@@ -3458,3 +3458,44 @@ export const KlannLinkageSim: React.FC<SimulationProps> = ({ angle, load , zoom 
     const gC = Math.round(212 - loadFactor * 100);
     const stressColor = `rgb(${rC}, ${gC}, 255)`;
     if (traceRef.current.length > 1) {
+       ctx.beginPath();
+      for (let i = 0; i < traceRef.current.length; i++) {
+        const pt = traceRef.current[i];
+        const [sx, sy] = toScreen(pt.x, pt.y);
+        if (i === 0) ctx.moveTo(sx, sy); else ctx.lineTo(sx, sy);
+      }
+      ctx.strokeStyle = 'rgba(0, 212, 255, 0.4)'; ctx.lineWidth = 3; ctx.setLineDash([4, 4]); ctx.stroke(); ctx.setLineDash([]);
+    }
+    drawLeg(angle + Math.PI, '#475569', false);
+    drawLeg(angle, stressColor, true);
+    drawCircle(Ox, Oy, 0.4, '#1e293b', true); drawCircle(Ox, Oy, 0.2, '#fff', true);
+    drawCircle(P_x, P_y, 0.4, '#1e293b', true); drawCircle(P_x, P_y, 0.2, '#fff', true);
+    drawLine(Ox, Oy, P_x, P_y, '#334155', 12);
+    const [, gy] = toScreen(0, -6.5);
+    ctx.beginPath(); ctx.moveTo(0, gy); ctx.lineTo(width, gy);
+    ctx.strokeStyle = '#334155'; ctx.lineWidth = 4; ctx.stroke();
+  }, [angle, load]);
+  return <div style={{ width: '100%', height: '100%' }}><canvas ref={canvasRef} style={{ width: '100%', height: '100%', display: 'block' }} /></div>;
+};
+export const LeafSpringSim: React.FC<SimulationProps> = ({ angle, load, zoom = 1 }) => {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+    const dpr = window.devicePixelRatio || 1;
+    const rect = canvas.getBoundingClientRect();
+    canvas.width = rect.width * dpr;
+    canvas.height = rect.height * dpr;
+    ctx.scale(dpr, dpr);
+    const width = rect.width;
+    const height = rect.height;
+    ctx.clearRect(0, 0, width, height);
+    const scale = (Math.min(width, height) / 16) * zoom; 
+    const originX = width * 0.5;
+    const originY = height * 0.4;
+    ctx.fillStyle = '#050d1a'; ctx.fillRect(0, 0, width, height);
+    ctx.strokeStyle = '#1e293b'; ctx.lineWidth = 1;
+    for (let i = 0; i < width; i += 40) { ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(i, height); ctx.stroke(); }
+    for (let i = 0; i < height; i += 40) { ctx.beginPath(); ctx.moveTo(0, i); ctx.lineTo(width, i); ctx.stroke(); }
