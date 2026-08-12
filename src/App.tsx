@@ -4418,3 +4418,43 @@ export const PeltonWheelSim: React.FC<SimulationProps> = ({ angle, load, zoom = 
     ctx.lineTo(nx, ny + 0.4*scale);
     ctx.lineTo(nx, ny - 0.4*scale);
     ctx.lineTo(nx - 2*scale, ny - scale);
+    ctx.closePath();
+    ctx.fillStyle = '#1e293b'; ctx.fill();
+    ctx.strokeStyle = '#94a3b8'; ctx.lineWidth = 3 * zoom; ctx.stroke();
+    ctx.save();
+    const [cx, cy] = toScreen(0, 0);
+    ctx.translate(cx, cy);
+    ctx.rotate(angle);
+    ctx.beginPath(); ctx.arc(0, 0, R_wheel * 0.8 * scale, 0, 2*Math.PI);
+    ctx.fillStyle = '#0f172a'; ctx.fill();
+    ctx.strokeStyle = '#334155'; ctx.lineWidth = 4 * zoom; ctx.stroke();
+    ctx.fillStyle = '#1e293b';
+    ctx.strokeStyle = '#00ff88';
+    if (load > 50) {
+      ctx.shadowBlur = (load - 50) * 0.3;
+      ctx.shadowColor = '#00ff88';
+    }
+    for (let i = 0; i < numBuckets; i++) {
+      ctx.save();
+      ctx.rotate(i * bucketPitch);
+      ctx.translate(0, -R_wheel * scale); 
+      ctx.beginPath();
+      ctx.arc(0, 0, 0.6 * scale, 0, Math.PI, true); 
+      ctx.lineTo(0.6 * scale, 0.4 * scale);
+      ctx.lineTo(-0.6 * scale, 0.4 * scale);
+      ctx.closePath();
+      ctx.fill();
+      ctx.lineWidth = 3 * zoom;
+      ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(0, -0.6 * scale); ctx.lineTo(0, 0.4 * scale);
+      ctx.strokeStyle = '#475569'; ctx.lineWidth = 1 * zoom; ctx.stroke();
+      ctx.restore();
+    }
+    ctx.shadowBlur = 0;
+    ctx.beginPath(); ctx.arc(0, 0, 0.5 * scale, 0, 2*Math.PI);
+    ctx.fillStyle = '#3b82f6'; ctx.fill();
+    ctx.beginPath(); ctx.arc(0, 0, 0.2 * scale, 0, 2*Math.PI);
+    ctx.fillStyle = '#fff'; ctx.fill();
+    ctx.restore();
+    ctx.fillStyle = 'rgba(8, 15, 30, 0.85)';
+    ctx.fillRect(30, 150, 240, 110);
