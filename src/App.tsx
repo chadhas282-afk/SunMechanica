@@ -4218,3 +4218,43 @@ export const OttoCycleSim: React.FC<SimulationProps> = ({ angle, load , zoom = 1
       ctx.shadowColor = stressColor;
       ctx.stroke();
       ctx.shadowBlur = 0;
+      }
+    drawCircle(pistonX, pistonY - 0.4, 0.3, '#fff', true);
+    drawLine(0, 0, pinX, pinY, '#475569', 16);
+    drawCircle(0, 0, R*0.6, '#1e293b', true);
+    drawCircle(pinX, pinY, 0.4, '#fff', true);
+    drawCircle(0, 0, 0.3, '#fff', true);
+    ctx.fillStyle = 'rgba(8, 15, 30, 0.85)';
+    ctx.fillRect(30, 150, 240, 110);
+    ctx.strokeStyle = 'rgba(255, 51, 102, 0.3)';
+    ctx.strokeRect(30, 150, 240, 110);
+    ctx.font = '10px monospace';
+    ctx.fillStyle = '#ff3366';
+    ctx.fillText('SYS :: OTTO_CYCLE', 40, 170);
+    ctx.fillStyle = '#fff';
+    ctx.fillText(`CURRENT STROKE : ${strokeName}`, 40, 195);
+    ctx.fillStyle = '#00d4ff';
+    const volume = (tdcY + 0.5 - pistonY);
+    ctx.fillText(`CYL VOLUME     : ${volume.toFixed(2)} L`, 40, 215);
+    ctx.fillStyle = '#ffb703';
+    ctx.fillText(`CRANK ANGLE    : ${(cycleAngle * 180 / Math.PI).toFixed(0)}°`, 40, 235);
+  }, [angle, load]);
+  return (
+    <div style={{ width: '100%', height: '100%' }}>
+      <canvas ref={canvasRef} style={{ width: '100%', height: '100%', display: 'block' }} />
+    </div>
+  );
+};
+export const PeaucellierLipkinSim: React.FC<SimulationProps> = ({ angle, load , zoom = 1 }) => {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const traceRef = useRef<{x: number, y: number}[]>([]);
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+    const dpr = window.devicePixelRatio || 1;
+    const rect = canvas.getBoundingClientRect();
+    canvas.width = rect.width * dpr;
+    canvas.height = rect.height * dpr;
+    ctx.scale(dpr, dpr);
