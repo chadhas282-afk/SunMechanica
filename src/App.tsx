@@ -3338,3 +3338,43 @@ export const JournalBearingSim: React.FC<SimulationProps> = ({ angle, load , zoo
       const th_rel = th - (Math.PI/2 + phi);
       let p = (eps * Math.sin(th_rel)) / Math.pow(1 + eps * Math.cos(th_rel), 3);
       if (p < 0) p = 0; 
+      const pScale = p * 40; 
+      const r_p = R_b * scale - pScale; 
+      const px = r_p * Math.cos(th);
+      const py = -r_p * Math.sin(th);
+      if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+    }
+    const rC = Math.round(148 + loadFactor * 107);
+    const stressColor = `rgb(${rC}, 85, 247)`;
+    ctx.fillStyle = 'rgba(168, 85, 247, 0.4)';
+    ctx.fill();
+    ctx.strokeStyle = stressColor; ctx.lineWidth = 3; ctx.stroke();
+    ctx.restore();
+    const [jx, jy] = toScreen(cx, cy);
+    ctx.save();
+    ctx.translate(jx, jy);
+    ctx.rotate(-angle);
+    ctx.beginPath(); ctx.arc(0, 0, R_j * scale, 0, 2*Math.PI);
+    ctx.fillStyle = '#1e293b'; ctx.fill();
+    ctx.strokeStyle = '#3b82f6'; ctx.lineWidth = 4; ctx.stroke();
+    ctx.beginPath(); ctx.arc(0, 0, 4, 0, 2*Math.PI); ctx.fillStyle = '#fff'; ctx.fill();
+    ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(R_j * scale, 0); ctx.stroke();
+    ctx.restore();
+    ctx.beginPath(); ctx.arc(bx, by, 3, 0, 2*Math.PI); ctx.fillStyle = '#ef4444'; ctx.fill();
+    if (load > 0) {
+      const fx = jx;
+      const fy = jy;
+      const arrowLen = 20 + loadFactor * 80;
+      ctx.beginPath(); ctx.moveTo(fx, fy - R_j*scale - arrowLen); ctx.lineTo(fx, fy - R_j*scale);
+      ctx.strokeStyle = '#ef4444'; ctx.lineWidth = 6; ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(fx, fy - R_j*scale); ctx.lineTo(fx - 10, fy - R_j*scale - 15); ctx.lineTo(fx + 10, fy - R_j*scale - 15);
+      ctx.fillStyle = '#ef4444'; ctx.fill();
+    }
+    const min_x = cx - R_j * Math.sin(phi); 
+    const min_y = cy + R_j * Math.cos(phi);
+    const [mx, my] = toScreen(min_x, min_y);
+    ctx.beginPath(); ctx.arc(mx, my, 8, 0, 2*Math.PI);
+    ctx.strokeStyle = '#00ff88'; ctx.lineWidth = 2; ctx.stroke();
+  }, [angle, load]);
+  return <div style={{ width: '100%', height: '100%' }}><canvas ref={canvasRef} style={{ width: '100%', height: '100%', display: 'block' }} /></div>;
+};
