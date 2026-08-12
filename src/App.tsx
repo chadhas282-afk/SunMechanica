@@ -3659,3 +3659,42 @@ export const MalteseCrossSim: React.FC<SimulationProps> = ({ angle, load, zoom =
     ctx.strokeStyle = '#475569'; ctx.lineWidth = 12 * zoom; ctx.stroke();
     const pinX = driveX + R * Math.cos(theta);
     const pinY = driveY + R * Math.sin(theta);
+     const [px, py] = toScreen(pinX, pinY);
+    ctx.beginPath(); ctx.arc(px, py, 0.4 * scale, 0, 2*Math.PI);
+    ctx.fillStyle = stressColor; ctx.fill();
+    ctx.save();
+    const [cx, cy] = toScreen(crossX, crossY);
+    ctx.translate(cx, cy);
+    ctx.rotate(-accumPhi.current);
+    const crossRadius = d - R + 0.5; 
+    ctx.fillStyle = '#1e293b';
+    ctx.strokeStyle = stressColor;
+    ctx.lineWidth = 4 * zoom;
+    if (isEngaged && load > 50) {
+      ctx.shadowBlur = (load - 50) * 0.5;
+      ctx.shadowColor = stressColor;
+    }
+    for (let i = 0; i < 4; i++) {
+      ctx.save();
+      ctx.rotate(i * Math.PI/2);
+      ctx.beginPath();
+      ctx.arc(d, 0, R * 0.5 * scale, Math.PI - 0.4, Math.PI + 0.4, true);
+      ctx.lineTo(1.5 * scale, -0.4 * scale);
+      ctx.lineTo(1.5 * scale, 0.4 * scale);
+      ctx.lineTo((crossRadius - 0.5) * scale, 0.4 * scale);
+      ctx.stroke();
+      ctx.fillStyle = '#050d1a';
+      ctx.fillRect(0.8 * scale, -0.42 * scale, (crossRadius - 1.0) * scale, 0.84 * scale);
+      ctx.restore();
+    }
+    ctx.shadowBlur = 0;
+    ctx.beginPath(); ctx.arc(0, 0, 0.8 * scale, 0, 2*Math.PI);
+    ctx.fillStyle = '#a855f7'; ctx.fill();
+    ctx.restore();
+    ctx.beginPath(); ctx.arc(dx, dy, 0.3 * scale, 0, 2*Math.PI); ctx.fillStyle = '#fff'; ctx.fill();
+    ctx.fillStyle = 'rgba(8, 15, 30, 0.85)';
+    ctx.fillRect(30, 150, 240, 110);
+    ctx.strokeStyle = 'rgba(168, 85, 247, 0.3)';
+    ctx.strokeRect(30, 150, 240, 110);
+    ctx.font = '10px monospace';
+    ctx.fillStyle = '#a855f7'; ctx.fillText('SYS :: MALTESE_CROSS', 40, 170);
