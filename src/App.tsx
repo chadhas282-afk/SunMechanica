@@ -5138,3 +5138,43 @@ export const RatchetPawlSim: React.FC<SimulationProps> = ({ angle, load, zoom = 
     const width = rect.width;
     const height = rect.height;
     ctx.clearRect(0, 0, width, height);
+    const scale = (Math.min(width, height) / 16) * zoom; 
+    const originX = width * 0.5;
+    const originY = height * 0.5;
+    ctx.fillStyle = '#050d1a'; ctx.fillRect(0, 0, width, height);
+    ctx.strokeStyle = '#1e293b'; ctx.lineWidth = 1;
+    for (let i = 0; i < width; i += 40) { ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(i, height); ctx.stroke(); }
+    for (let i = 0; i < height; i += 40) { ctx.beginPath(); ctx.moveTo(0, i); ctx.lineTo(width, i); ctx.stroke(); }
+    const toScreen = (x: number, y: number) => [originX + x * scale, originY - y * scale];
+    const driverAngle = Math.sin(angle) * (Math.PI / 4); 
+    const dDriver = driverAngle - lastDriver.current;
+    let isPushing = false;
+    if (dDriver > 0) {
+      wheelAngle.current += dDriver;
+      isPushing = true;
+    }
+    if (Math.abs(dDriver) > 1.0) {
+      wheelAngle.current = 0;
+    }
+    lastDriver.current = driverAngle;
+    const N = 12; 
+    const R_out = 4.0;
+    const R_in = 3.2;
+    const toothPitch = (2 * Math.PI) / N;
+    const loadFactor = load / 100;
+    const stressColor = isPushing ? `rgb(${Math.round(255)}, ${Math.round(107 - loadFactor*50)}, 53)` : '#475569';
+    ctx.save();
+    const [cx, cy] = toScreen(0, 0);
+    ctx.translate(cx, cy);
+    ctx.rotate(-wheelAngle.current);
+    ctx.beginPath();
+    for (let i = 0; i < N; i++) {
+      const theta = i * toothPitch;
+      const t1 = theta;
+      const px1 = R_out * Math.cos(t1) * scale;
+      const py1 = -R_out * Math.sin(t1) * scale;
+      const t2 = theta + 0.15; 
+      const px2 = R_in * Math.cos(t2) * scale;
+      const py2 = -R_in * Math.sin(t2) * scale;
+      if (i === 0) ctx.moveTo(px1, py1);
+      else ctx.lineTo(px1, py1);
