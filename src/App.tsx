@@ -4858,3 +4858,43 @@ export const RackPinionSim: React.FC<SimulationProps> = ({ angle, load , zoom = 
   const canvasRef = useRef<HTMLCanvasElement>(null);
   useEffect(() => {
     const canvas = canvasRef.current;
+     if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+    const dpr = window.devicePixelRatio || 1;
+    const rect = canvas.getBoundingClientRect();
+    canvas.width = rect.width * dpr;
+    canvas.height = rect.height * dpr;
+    ctx.scale(dpr, dpr);
+    const width = rect.width;
+    const height = rect.height;
+    ctx.clearRect(0, 0, width, height);
+    const scale = (Math.min(width, height) / 10) * zoom; 
+    const originX = width * 0.5;
+    const originY = height * 0.4;
+    const pitchRadius = 2.0;
+    const numTeeth = 16;
+    const teethDepth = 0.3;
+    const oscillAngle = Math.sin(angle * 0.5) * Math.PI;
+    const rackX = -oscillAngle * pitchRadius;
+    const rackY = -pitchRadius; 
+    ctx.fillStyle = '#050d1a';
+    ctx.fillRect(0, 0, width, height);
+    ctx.strokeStyle = '#1e293b';
+    ctx.lineWidth = 1;
+    for (let i = 0; i < width; i += 40) {
+      ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(i, height); ctx.stroke();
+    }
+    for (let i = 0; i < height; i += 40) {
+      ctx.beginPath(); ctx.moveTo(0, i); ctx.lineTo(width, i); ctx.stroke();
+    }
+    const toScreen = (x: number, y: number) => [originX + x * scale, originY - y * scale];
+    ctx.save();
+    ctx.beginPath();
+    const rackPathYBase = rackY - 0.8;
+    const rackPathYTop = rackY + teethDepth * 0.5;
+    const [rxStart, ryBase] = toScreen(-10, rackPathYBase);
+    const [, ryTop] = toScreen(0, rackPathYTop);
+    ctx.moveTo(rxStart, ryBase);
+    const rackToothPitch = (Math.PI * 2 * pitchRadius) / numTeeth;
+    for (let xOffset = -15; xOffset <= 15; xOffset += rackToothPitch) {
