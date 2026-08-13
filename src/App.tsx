@@ -4938,3 +4938,43 @@ export const RackPinionSim: React.FC<SimulationProps> = ({ angle, load , zoom = 
       const a = (i / (numTeeth * 4)) * Math.PI * 2;
       const toothPhase = i % 4;
       let r = pitchRadius;
+       if (toothPhase === 1) r = pitchRadius + teethDepth * 0.5;
+      if (toothPhase === 2) r = pitchRadius + teethDepth * 0.5;
+      if (toothPhase === 3) r = pitchRadius - teethDepth * 0.5;
+      if (toothPhase === 0) r = pitchRadius - teethDepth * 0.5;
+      const x = r * Math.cos(a) * scale;
+      const y = -r * Math.sin(a) * scale;
+      if (i === 0) ctx.moveTo(x, y);
+      else ctx.lineTo(x, y);
+    }
+    ctx.closePath();
+    const rBase = 236; const rHigh = 255;
+    const gBase = 72;  const gHigh = 50;
+    const bBase = 153; const bHigh = 50;
+    const loadFactor = load / 100;
+    const rC = Math.round(rBase + (rHigh - rBase) * loadFactor);
+    const gC = Math.round(gBase + (gHigh - gBase) * loadFactor);
+    const bC = Math.round(bBase + (bHigh - bBase) * loadFactor);
+    ctx.fillStyle = `rgba(${rC}, ${gC}, ${bC}, ${0.2 + loadFactor * 0.3})`;
+    ctx.fill();
+    ctx.strokeStyle = `rgb(${rC}, ${gC}, ${bC})`;
+    ctx.lineWidth = 3 + loadFactor * 2;
+    if (load > 70) {
+      ctx.shadowBlur = (load - 70);
+      ctx.shadowColor = `rgb(${rC}, ${gC}, ${bC})`;
+    }
+    ctx.stroke();
+    ctx.shadowBlur = 0;
+    ctx.beginPath();
+    ctx.arc(0, 0, pitchRadius * 0.7 * scale, 0, Math.PI * 2);
+    ctx.strokeStyle = 'rgba(236, 72, 153, 0.5)';
+    ctx.stroke();
+    for (let i = 0; i < 4; i++) {
+      ctx.beginPath();
+      ctx.moveTo(0, 0);
+      ctx.lineTo(pitchRadius * 0.7 * scale * Math.cos(i * Math.PI / 2), pitchRadius * 0.7 * scale * Math.sin(i * Math.PI / 2));
+      ctx.stroke();
+    }
+    ctx.beginPath();
+    ctx.arc(0, 0, 0.3 * scale, 0, Math.PI * 2);
+    ctx.fillStyle = '#9d174d';
