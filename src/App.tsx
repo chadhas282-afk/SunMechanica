@@ -5698,3 +5698,43 @@ export const ScotchYokeSim: React.FC<SimulationProps> = ({ angle, load , zoom = 
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
+     const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+    const dpr = window.devicePixelRatio || 1;
+    const rect = canvas.getBoundingClientRect();
+    canvas.width = rect.width * dpr;
+    canvas.height = rect.height * dpr;
+    ctx.scale(dpr, dpr);
+    const width = rect.width;
+    const height = rect.height;
+    ctx.clearRect(0, 0, width, height);
+    const scale = (Math.min(width, height) / 16) * zoom; 
+    const originX = width * 0.4;
+    const originY = height * 0.5;
+    ctx.fillStyle = '#050d1a';
+    ctx.fillRect(0, 0, width, height);
+    ctx.strokeStyle = '#1e293b';
+    ctx.lineWidth = 1;
+    for (let i = 0; i < width; i += 40) {
+      ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(i, height); ctx.stroke();
+    }
+    for (let i = 0; i < height; i += 40) {
+      ctx.beginPath(); ctx.moveTo(0, i); ctx.lineTo(width, i); ctx.stroke();
+    }
+    const toScreen = (x: number, y: number) => [originX + x * scale, originY - y * scale];
+    const drawCircle = (x: number, y: number, r: number, color: string, fill = false) => {
+      ctx.beginPath();
+      const [sx, sy] = toScreen(x, y);
+      ctx.arc(sx, sy, r * scale, 0, 2 * Math.PI);
+      ctx.strokeStyle = color; ctx.lineWidth = 2; ctx.stroke();
+      if (fill) { ctx.fillStyle = color; ctx.fill(); }
+    };
+    const R = 3.0; 
+    const pinX = R * Math.cos(-angle);
+    const pinY = R * Math.sin(-angle);
+    const yokeX = pinX;
+    const loadFactor = load / 100;
+    const rC = Math.round(0 + loadFactor * 255);
+    const gC = Math.round(212 - loadFactor * 212);
+    const bC = Math.round(255 - loadFactor * 255);
+    const stressColor = `rgb(${rC}, ${gC}, ${bC})`;
