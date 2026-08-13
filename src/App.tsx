@@ -4538,3 +4538,43 @@ export const PlanetaryGearSim: React.FC<SimulationProps> = ({ angle, load , zoom
         ctx.lineWidth = 3;
         ctx.stroke();
       } else {
+        ctx.fillStyle = `rgba(${color}, 0.15)`;
+        ctx.fill();
+        ctx.strokeStyle = `rgb(${color})`;
+        ctx.lineWidth = 3;
+        ctx.stroke();
+      }
+      ctx.restore();
+    };
+    drawGear(0, 0, RING_R, 36, 0, '14, 165, 233', true); 
+    const sunColor = load > 50 
+      ? `${249 + (load-50)*0.12}, ${115 - (load-50)*1.5}, ${22 - (load-50)*0.4}` 
+      : '249, 115, 22';
+    drawGear(0, 0, SUN_R, 12, -angle, sunColor, false); 
+    ctx.beginPath();
+    ctx.arc(originX, originY, 0.2 * scale, 0, Math.PI * 2);
+    ctx.fillStyle = '#ea580c'; ctx.fill();
+    ctx.strokeStyle = '#fff'; ctx.lineWidth = 2; ctx.stroke();
+    ctx.save();
+    ctx.translate(originX, originY);
+    ctx.rotate(carrierAngle); 
+    ctx.beginPath();
+    for (let i = 0; i < NUM_PLANETS; i++) {
+      const a = (i * Math.PI * 2) / NUM_PLANETS;
+      const px = Math.cos(a) * CENTER_OFFSET * scale;
+      const py = Math.sin(a) * CENTER_OFFSET * scale;
+      ctx.moveTo(0, 0);
+      ctx.lineTo(px, py);
+    }
+    ctx.strokeStyle = '#64748b';
+    ctx.lineWidth = Math.max(12, scale * 0.4);
+    ctx.lineCap = 'round';
+    ctx.stroke();
+    for (let i = 0; i < NUM_PLANETS; i++) {
+      const a = (i * Math.PI * 2) / NUM_PLANETS;
+      ctx.save();
+      const px = Math.cos(a) * CENTER_OFFSET * scale;
+      const py = Math.sin(a) * CENTER_OFFSET * scale;
+      ctx.translate(px, py);
+      ctx.rotate(planetSelfAngle);
+      const r = PLANET_R;
