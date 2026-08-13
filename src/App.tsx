@@ -5298,3 +5298,43 @@ export const RhombicStirlingSim: React.FC<SimulationProps> = ({ angle, load, zoo
     const pPistonHeight = 1.0;
     const hotSpaceVol = cylTop - dispTop;
     drawRect(-cylRadius, cylTop, cylRadius*2, -hotSpaceVol, 'rgba(255, 51, 102, 0.4)', 'transparent');
+    const coldSpaceVol = dispBottom - pPistonTop;
+    if (coldSpaceVol > 0) {
+      drawRect(-cylRadius, dispBottom, cylRadius*2, -coldSpaceVol, 'rgba(0, 212, 255, 0.4)', 'transparent');
+    }
+    ctx.fillStyle = '#ff3366'; 
+    for(let i=0; i<4; i++) {
+      const [hx, hy] = toScreen(-cylRadius - 0.5, cylTop - 0.2 - i*0.4);
+      ctx.fillRect(hx, hy, 0.5*scale, 0.2*scale);
+      const [hx2, hy2] = toScreen(cylRadius, cylTop - 0.2 - i*0.4);
+      ctx.fillRect(hx2, hy2, 0.5*scale, 0.2*scale);
+    }
+    ctx.fillStyle = '#00d4ff'; 
+    for(let i=0; i<4; i++) {
+      const [cx, cy] = toScreen(-cylRadius - 0.5, cylBottom + 1.5 - i*0.4);
+      ctx.fillRect(cx, cy, 0.5*scale, 0.2*scale);
+      const [cx2, cy2] = toScreen(cylRadius, cylBottom + 1.5 - i*0.4);
+      ctx.fillRect(cx2, cy2, 0.5*scale, 0.2*scale);
+    }
+    drawRect(-cylRadius + 0.1, dispTop, cylRadius*2 - 0.2, -dispHeight, 'rgba(71, 85, 105, 0.8)', '#94a3b8');
+    drawRect(-cylRadius, pPistonTop, cylRadius*2, -pPistonHeight, '#3b82f6', '#00d4ff', 3);
+    drawLine(0, Uy, 0, dispBottom, '#cbd5e1', 4);
+    drawLine(-0.4, Dy, -0.4, pPistonTop, '#94a3b8', 4);
+    drawLine(0.4, Dy, 0.4, pPistonTop, '#94a3b8', 4);
+    drawLine(-0.6, Dy, 0.6, Dy, '#64748b', 10);
+    drawLine(-0.4, Uy, 0.4, Uy, '#94a3b8', 8);
+    const drawGear = (x: number, y: number) => {
+      const [gx, gy] = toScreen(x, y);
+      ctx.beginPath(); ctx.arc(gx, gy, c * scale, 0, 2*Math.PI);
+      ctx.fillStyle = 'rgba(15, 23, 42, 0.6)'; ctx.fill();
+      ctx.strokeStyle = '#475569'; ctx.lineWidth = 2 * zoom; ctx.stroke();
+      ctx.setLineDash([4*zoom, 6*zoom]);
+      ctx.beginPath(); ctx.arc(gx, gy, (c - 0.2) * scale, 0, 2*Math.PI); ctx.stroke();
+      ctx.setLineDash([]);
+      ctx.beginPath(); ctx.arc(gx, gy, 0.2 * scale, 0, 2*Math.PI);
+      ctx.fillStyle = '#fff'; ctx.fill();
+    };
+    drawGear(-c, 0); drawGear(c, 0);
+    drawLine(-c, 0, Ax, Ay, '#ffb703', 8);
+    drawLine(c, 0, Bx, By, '#ffb703', 8);
+    const rodColor = '#cbd5e1';
