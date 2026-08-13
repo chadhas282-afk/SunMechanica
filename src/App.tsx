@@ -5458,3 +5458,43 @@ export const RootsBlowerSim: React.FC<SimulationProps> = ({ angle, load, zoom = 
     ctx.font = '10px monospace';
     ctx.fillStyle = '#ffd700'; ctx.fillText('SYS :: ROOTS_BLOWER', 40, 170);
     ctx.fillStyle = '#3b82f6'; ctx.fillText(`ROTOR 1 ANG : ${(angle * 180 / Math.PI % 360).toFixed(0)}°`, 40, 195);
+     ctx.fillStyle = '#00d4ff'; ctx.fillText(`ROTOR 2 ANG : ${((-angle + Math.PI/2) * 180 / Math.PI % 360).toFixed(0)}°`, 40, 215);
+    ctx.fillStyle = stressColor; 
+    ctx.fillText(`BOOST PRESS : ${(loadFactor * 14.7).toFixed(1)} PSI`, 40, 235);
+  }, [angle, load, zoom]);
+  return <div style={{ width: '100%', height: '100%' }}><canvas ref={canvasRef} style={{ width: '100%', height: '100%', display: 'block' }} /></div>;
+};
+export const SarrusLinkageSim: React.FC<SimulationProps> = ({ angle, load, zoom = 1 }) => {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+    const dpr = window.devicePixelRatio || 1;
+    const rect = canvas.getBoundingClientRect();
+    canvas.width = rect.width * dpr;
+    canvas.height = rect.height * dpr;
+    ctx.scale(dpr, dpr);
+    const width = rect.width;
+    const height = rect.height;
+    ctx.clearRect(0, 0, width, height);
+    const scale = (Math.min(width, height) / 16) * zoom; 
+    const originX = width * 0.5;
+    const originY = height * 0.7; 
+    ctx.fillStyle = '#050d1a'; ctx.fillRect(0, 0, width, height);
+    ctx.strokeStyle = '#1e293b'; ctx.lineWidth = 1;
+    for (let i = 0; i < width; i += 40) { ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(i, height); ctx.stroke(); }
+    for (let i = 0; i < height; i += 40) { ctx.beginPath(); ctx.moveTo(0, i); ctx.lineTo(width, i); ctx.stroke(); }
+    const loadFactor = load / 100;
+    const viewAngle = Math.PI / 6 + loadFactor * 0.5;
+    const cosV = Math.cos(viewAngle);
+    const sinV = Math.sin(viewAngle);
+    const zScale = 0.8;
+    const project = (x: number, y: number, z: number) => {
+      const px = x * cosV - y * sinV;
+      const py = x * sinV * zScale + y * cosV * zScale;
+      return [originX + px * scale, originY - (z + py) * scale];
+    };
+    const drawPoly3D = (pts: number[][], fill: string, stroke: string, lw: number = 2) => {
+      ctx.beginPath();
