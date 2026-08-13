@@ -4898,3 +4898,43 @@ export const RackPinionSim: React.FC<SimulationProps> = ({ angle, load , zoom = 
     ctx.moveTo(rxStart, ryBase);
     const rackToothPitch = (Math.PI * 2 * pitchRadius) / numTeeth;
     for (let xOffset = -15; xOffset <= 15; xOffset += rackToothPitch) {
+      const physicalX = xOffset + rackX;
+      if (physicalX < -8 || physicalX > 8) continue; 
+      const [tx1] = toScreen(physicalX, 0);
+      const [tx2] = toScreen(physicalX + rackToothPitch * 0.25, 0);
+      const [tx3] = toScreen(physicalX + rackToothPitch * 0.5, 0);
+      const [tx4] = toScreen(physicalX + rackToothPitch * 0.75, 0);
+      const [tx5] = toScreen(physicalX + rackToothPitch, 0);
+      const [ , yBot ] = toScreen(0, rackY - teethDepth * 0.5);
+      ctx.lineTo(tx1, ryTop);
+      ctx.lineTo(tx2, yBot);
+      ctx.lineTo(tx3, yBot);
+      ctx.lineTo(tx4, ryTop);
+      ctx.lineTo(tx5, ryTop);
+    }
+    const [rxEnd] = toScreen(10, rackPathYBase);
+    ctx.lineTo(rxEnd, ryTop);
+    ctx.lineTo(rxEnd, ryBase);
+    ctx.closePath();
+    ctx.fillStyle = 'rgba(56, 189, 248, 0.2)';
+    ctx.fill();
+    ctx.strokeStyle = '#38bdf8';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+    ctx.strokeStyle = '#1e3a8a';
+    ctx.beginPath();
+    ctx.moveTo(0, ryBase + 10); ctx.lineTo(width, ryBase + 10);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(0, ryBase + 15); ctx.lineTo(width, ryBase + 15);
+    ctx.stroke();
+    ctx.restore();
+    ctx.save();
+    const [px, py] = toScreen(0, 0);
+    ctx.translate(px, py);
+    ctx.rotate(-oscillAngle);
+    ctx.beginPath();
+    for (let i = 0; i <= numTeeth * 4; i++) {
+      const a = (i / (numTeeth * 4)) * Math.PI * 2;
+      const toothPhase = i % 4;
+      let r = pitchRadius;
