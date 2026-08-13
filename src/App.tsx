@@ -5018,3 +5018,43 @@ export const RankineCycleSim: React.FC<SimulationProps> = ({ angle, load, zoom =
     if (!ctx) return;
     const dpr = window.devicePixelRatio || 1;
     const rect = canvas.getBoundingClientRect();
+     canvas.width = rect.width * dpr;
+    canvas.height = rect.height * dpr;
+    ctx.scale(dpr, dpr);
+    const width = rect.width;
+    const height = rect.height;
+    ctx.clearRect(0, 0, width, height);
+    const scale = (Math.min(width, height) / 16) * zoom; 
+    const originX = width * 0.4;
+    const originY = height * 0.5;
+    ctx.fillStyle = '#050d1a'; ctx.fillRect(0, 0, width, height);
+    ctx.strokeStyle = '#1e293b'; ctx.lineWidth = 1;
+    for (let i = 0; i < width; i += 40) { ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(i, height); ctx.stroke(); }
+    for (let i = 0; i < height; i += 40) { ctx.beginPath(); ctx.moveTo(0, i); ctx.lineTo(width, i); ctx.stroke(); }
+    const toScreen = (x: number, y: number) => [originX + x * scale, originY - y * scale];
+    const drawRect = (x: number, y: number, w: number, h: number, fill: string, stroke: string, lw: number = 2) => {
+      const [sx, sy] = toScreen(x, y);
+      ctx.fillStyle = fill; ctx.fillRect(sx, sy, w * scale, h * scale);
+      if (stroke !== 'transparent') {
+        ctx.strokeStyle = stroke; ctx.lineWidth = lw * zoom; ctx.strokeRect(sx, sy, w * scale, h * scale);
+      }
+    };
+    const R_crank = 2.0;
+    const L_rod = 6.0;
+    const R_eccentric = 1.0;
+    const cx = 6.0;
+    const cy = 0.0;
+    const crankX = cx + R_crank * Math.cos(angle);
+    const crankY = cy + R_crank * Math.sin(angle);
+    const p_dx = Math.sqrt(Math.max(0, L_rod*L_rod - (crankY - cy)*(crankY - cy)));
+    const pistonX = crankX - p_dx; 
+    const eccX = cx + R_eccentric * Math.cos(angle + Math.PI/2);
+    const valveX = (eccX - cx) - 2.5; 
+    const loadFactor = load / 100;
+    const cylLen = 6.0;
+    const cylH = 3.0;
+    const cylX = -5.0; 
+    const leftPortState = valveX > -2.5 ? 'hot' : 'cold';
+    const rightPortState = valveX < -2.5 ? 'hot' : 'cold';
+    const hotColor = `rgba(255, 51, 102, ${0.4 + loadFactor*0.4})`;
+    const coldColor = 'rgba(0, 212, 255, 0.4)';
