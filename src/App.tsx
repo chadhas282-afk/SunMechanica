@@ -5338,3 +5338,43 @@ export const RhombicStirlingSim: React.FC<SimulationProps> = ({ angle, load, zoo
     drawLine(-c, 0, Ax, Ay, '#ffb703', 8);
     drawLine(c, 0, Bx, By, '#ffb703', 8);
     const rodColor = '#cbd5e1';
+     drawLine(Ax, Ay, 0, Uy, rodColor, 6);
+    drawLine(Bx, By, 0, Uy, rodColor, 6);
+    drawLine(Ax, Ay, 0, Dy, rodColor, 6);
+    drawLine(Bx, By, 0, Dy, rodColor, 6);
+    const drawJoint = (x: number, y: number) => {
+      const [jx, jy] = toScreen(x, y);
+      ctx.beginPath(); ctx.arc(jx, jy, 0.25 * scale, 0, 2*Math.PI);
+      ctx.fillStyle = '#050d1a'; ctx.fill();
+      ctx.strokeStyle = '#fff'; ctx.lineWidth = 2 * zoom; ctx.stroke();
+    };
+    drawJoint(Ax, Ay); drawJoint(Bx, By);
+    drawJoint(0, Uy); drawJoint(0, Dy);
+    ctx.fillStyle = 'rgba(8, 15, 30, 0.85)';
+    ctx.fillRect(30, 150, 240, 110);
+    ctx.strokeStyle = 'rgba(255, 107, 53, 0.3)';
+    ctx.strokeRect(30, 150, 240, 110);
+    const pressure = 14.7 - Ay * 5 + loadFactor * 10;
+    ctx.font = '10px monospace';
+    ctx.fillStyle = '#ff6b35'; ctx.fillText('SYS :: RHOMBIC_STIRLING', 40, 170);
+    ctx.fillStyle = '#00d4ff'; ctx.fillText(`ENGINE SPEED : ${(angle * 180 / Math.PI).toFixed(0)} RPM`, 40, 195);
+    ctx.fillStyle = '#ff3366'; ctx.fillText(`INT PRESSURE : ${pressure.toFixed(1)} PSI`, 40, 215);
+    ctx.fillStyle = '#fff'; ctx.fillText(`PHASE ANGLE  : 90° (IDEAL)`, 40, 235);
+  }, [angle, load, zoom]);
+  return <div style={{ width: '100%', height: '100%' }}><canvas ref={canvasRef} style={{ width: '100%', height: '100%', display: 'block' }} /></div>;
+};
+export const RootsBlowerSim: React.FC<SimulationProps> = ({ angle, load, zoom = 1 }) => {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+    const dpr = window.devicePixelRatio || 1;
+    const rect = canvas.getBoundingClientRect();
+    canvas.width = rect.width * dpr;
+    canvas.height = rect.height * dpr;
+    ctx.scale(dpr, dpr);
+    const width = rect.width;
+    const height = rect.height;
+    ctx.clearRect(0, 0, width, height);
