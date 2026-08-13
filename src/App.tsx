@@ -5538,3 +5538,43 @@ export const SarrusLinkageSim: React.FC<SimulationProps> = ({ angle, load, zoom 
     drawPoly3D([
       [-armW, -w2, 0], [armW, -w2, 0],
       [armW, -w2 - foldY, Z/2], [-armW, -w2 - foldY, Z/2]
+       ], 'rgba(0, 212, 255, 0.4)', '#00d4ff', 2);
+    drawPoly3D([
+      [-armW, -w2 - foldY, Z/2], [armW, -w2 - foldY, Z/2],
+      [armW, -w2, Z], [-armW, -w2, Z]
+    ], 'rgba(0, 212, 255, 0.6)', '#00d4ff', 2);
+    drawPoly3D([
+      [-armW, w2, 0], [armW, w2, 0],
+      [armW, w2 + foldY, Z/2], [-armW, w2 + foldY, Z/2]
+    ], 'rgba(0, 212, 255, 0.4)', '#00d4ff', 2);
+    drawPoly3D([
+      [-armW, w2 + foldY, Z/2], [armW, w2 + foldY, Z/2],
+      [armW, w2, Z], [-armW, w2, Z]
+    ], 'rgba(0, 212, 255, 0.6)', '#00d4ff', 2);
+    drawPoly3D([
+      [-w2, -w2, Z], [w2, -w2, Z], [w2, w2, Z], [-w2, w2, Z]
+    ], 'rgba(30, 41, 59, 0.9)', '#94a3b8', 4);
+    const [cpx, cpy] = project(0, 0, Z);
+    ctx.beginPath(); ctx.arc(cpx, cpy, 0.2*scale, 0, 2*Math.PI);
+    ctx.fillStyle = '#fff'; ctx.fill();
+    ctx.beginPath();
+    const [glx1, gly1] = project(0, 0, 0);
+    const [glx2, gly2] = project(0, 0, Z + 2);
+    ctx.moveTo(glx1, gly1); ctx.lineTo(glx2, gly2);
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.3)'; ctx.lineWidth = 1 * zoom;
+    ctx.setLineDash([5*zoom, 5*zoom]); ctx.stroke(); ctx.setLineDash([]);
+    ctx.fillStyle = 'rgba(8, 15, 30, 0.85)';
+    ctx.fillRect(30, 150, 240, 110);
+    ctx.strokeStyle = 'rgba(0, 212, 255, 0.3)';
+    ctx.strokeRect(30, 150, 240, 110);
+    ctx.font = '10px monospace';
+    ctx.fillStyle = '#00d4ff'; ctx.fillText('SYS :: SARRUS_LINKAGE_3D', 40, 170);
+    ctx.fillStyle = '#a855f7'; ctx.fillText(`Z ELEVATION : ${Z.toFixed(2)} cm`, 40, 195);
+    ctx.fillStyle = '#fff'; ctx.fillText(`FOLD RADIUS : ${foldX.toFixed(2)} cm`, 40, 215);
+    ctx.fillStyle = '#ffb703'; ctx.fillText(`CONSTRAINT  : PERFECT LINEAR`, 40, 235);
+  }, [angle, load, zoom]);
+  return <div style={{ width: '100%', height: '100%' }}><canvas ref={canvasRef} style={{ width: '100%', height: '100%', display: 'block' }} /></div>;
+};
+export const ScissorLiftSim: React.FC<SimulationProps> = ({ angle, load , zoom = 1 }) => {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  useEffect(() => {
