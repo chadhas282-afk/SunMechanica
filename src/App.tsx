@@ -5618,3 +5618,43 @@ export const ScissorLiftSim: React.FC<SimulationProps> = ({ angle, load , zoom =
       ctx.strokeStyle = color; ctx.lineWidth = 2; ctx.stroke();
       if (fill) { ctx.fillStyle = color; ctx.fill(); }
     };
+    const L = 6.0; 
+    const numStages = 3;
+    const dMin = 1.5;
+    const dMax = 5.5;
+    const extensionPhase = 0.5 - 0.5 * Math.cos(angle); 
+    const d = dMax - extensionPhase * (dMax - dMin);
+    const h = Math.sqrt(L * L - d * d); 
+    const loadFactor = load / 100;
+    const rC = Math.round(0 + loadFactor * 255);
+    const gC = Math.round(255 - loadFactor * 255);
+    const bC = 136;
+    const stressColor = `rgb(${rC}, ${gC}, ${bC})`;
+    ctx.fillStyle = '#0f172a';
+    const [bx, by] = toScreen(0, -0.2);
+    ctx.fillRect(bx - 3.5 * scale, by, 7 * scale, 0.4 * scale);
+    ctx.strokeStyle = '#3b82f6'; ctx.lineWidth = 2;
+    ctx.strokeRect(bx - 3.5 * scale, by, 7 * scale, 0.4 * scale);
+    const slideBaseX = d / 2;
+    drawLine(0, 0, slideBaseX, 0, '#475569', 16); 
+    drawLine(slideBaseX, 0, slideBaseX - (dMax - d) * 0.5, 0, '#94a3b8', 8); 
+    for (let i = 0; i < numStages; i++) {
+      const yBottom = i * h;
+      const yTop = (i + 1) * h;
+      const xLeft = -d / 2;
+      const xRight = d / 2;
+      const stageStressColor = i === 0 ? stressColor : (i === 1 ? '#10b981' : '#34d399');
+      drawLine(xLeft, yBottom, xRight, yTop, stageStressColor, 10);
+      drawLine(xRight, yBottom, xLeft, yTop, stageStressColor, 10);
+      drawCircle(0, yBottom + h / 2, 0.15, '#fff', true);
+      drawCircle(xLeft, yBottom, 0.2, '#fff', true);
+      drawCircle(xRight, yBottom, 0.2, '#fff', true);
+      if (i === numStages - 1) {
+        drawCircle(xLeft, yTop, 0.2, '#fff', true);
+        drawCircle(xRight, yTop, 0.2, '#fff', true);
+      }
+    }
+    const topY = numStages * h;
+    const [tx, ty] = toScreen(0, topY);
+    ctx.fillStyle = '#0f172a';
+    ctx.fillRect(tx - 3.5 * scale, ty - 0.4 * scale, 7 * scale, 0.4 * scale);
