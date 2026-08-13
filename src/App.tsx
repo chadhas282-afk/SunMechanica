@@ -4578,3 +4578,43 @@ export const PlanetaryGearSim: React.FC<SimulationProps> = ({ angle, load , zoom
       ctx.translate(px, py);
       ctx.rotate(planetSelfAngle);
       const r = PLANET_R;
+      const numTeeth = 14;
+      const teethDepth = 0.2;
+      ctx.beginPath();
+      for (let j = 0; j <= numTeeth * 4; j++) {
+        const ta = (j / (numTeeth * 4)) * Math.PI * 2;
+        const tp = j % 4;
+        let radius = r;
+        if (tp === 1 || tp === 2) radius = r + teethDepth;
+        if (tp === 3 || tp === 0) radius = r - teethDepth;
+        const tx = radius * Math.cos(ta) * scale;
+        const ty = radius * Math.sin(ta) * scale;
+        if (j === 0) ctx.moveTo(tx, ty);
+        else ctx.lineTo(tx, ty);
+      }
+      ctx.closePath();
+      ctx.fillStyle = 'rgba(168, 85, 247, 0.15)'; 
+      ctx.fill();
+      ctx.strokeStyle = '#a855f7';
+      ctx.lineWidth = 3;
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.arc(0, 0, 0.2 * scale, 0, Math.PI * 2);
+      ctx.fillStyle = '#6b21a8'; ctx.fill();
+      ctx.strokeStyle = '#fff'; ctx.lineWidth = 2; ctx.stroke();
+      ctx.restore();
+    }
+    ctx.restore();
+    ctx.fillStyle = 'rgba(8, 15, 30, 0.85)';
+    ctx.fillRect(20, height - 130, 240, 110);
+    ctx.strokeStyle = 'rgba(249, 115, 22, 0.3)';
+    ctx.strokeRect(20, height - 130, 240, 110);
+    ctx.font = '10px monospace';
+    ctx.fillStyle = '#f97316';
+    ctx.fillText('SYS :: PLANETARY_GEARSET', 30, height - 110);
+    ctx.fillStyle = '#fff';
+    const normSun = ((angle * 180 / Math.PI) % 360 + 360) % 360;
+    const normCarrier = ((Math.abs(carrierAngle) * 180 / Math.PI) % 360 + 360) % 360;
+    ctx.fillText(`SUN INPUT     : ${normSun.toFixed(1)}°`, 30, height - 85);
+    ctx.fillStyle = '#00ff88';
+    ctx.fillText(`CARRIER OUT   : ${normCarrier.toFixed(1)}°`, 30, height - 65);
