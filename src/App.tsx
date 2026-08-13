@@ -4698,3 +4698,43 @@ export const PrattTrussSim: React.FC<SimulationProps> = ({ angle, load , zoom = 
       ctx.moveTo(sx1, sy1); ctx.lineTo(sx2, sy2);
       ctx.strokeStyle = color; 
       const lineW = 6 + Math.abs(actStress) * 6;
+       ctx.lineWidth = lineW;
+      if (Math.abs(actStress) > 0.5) {
+        ctx.shadowBlur = Math.abs(actStress) * 15;
+        ctx.shadowColor = color;
+      }
+      ctx.stroke();
+      ctx.shadowBlur = 0;
+    });
+    defNodes.forEach(n => {
+      drawCircle(n.dx, n.dy, 0.3, '#1e293b', true);
+      drawCircle(n.dx, n.dy, 0.15, '#fff', true);
+    });
+    ctx.fillStyle = '#475569';
+    const [sup1x, sup1y] = toScreen(-6, 0);
+    ctx.beginPath(); ctx.moveTo(sup1x, sup1y); ctx.lineTo(sup1x - 20, sup1y + 30); ctx.lineTo(sup1x + 20, sup1y + 30); ctx.fill();
+    const [sup2x, sup2y] = toScreen(6, 0);
+    ctx.beginPath(); ctx.moveTo(sup2x, sup2y); ctx.lineTo(sup2x - 20, sup2y + 30); ctx.lineTo(sup2x + 20, sup2y + 30); ctx.fill();
+  }, [angle, load]);
+  return <div style={{ width: '100%', height: '100%' }}><canvas ref={canvasRef} style={{ width: '100%', height: '100%', display: 'block' }} /></div>;
+};
+export const QuickReturnSim: React.FC<SimulationProps> = ({ angle, load , zoom = 1 }) => {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+    const dpr = window.devicePixelRatio || 1;
+    const rect = canvas.getBoundingClientRect();
+    canvas.width = rect.width * dpr;
+    canvas.height = rect.height * dpr;
+    ctx.scale(dpr, dpr);
+    const width = rect.width;
+    const height = rect.height;
+    ctx.clearRect(0, 0, width, height);
+    const scale = (Math.min(width, height) / 12) * zoom; 
+    const originX = width * 0.5;
+    const originY = height * 0.7; 
+    const pivotX = 0;
+    const pivotY = 0;
