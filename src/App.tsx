@@ -5378,3 +5378,43 @@ export const RootsBlowerSim: React.FC<SimulationProps> = ({ angle, load, zoom = 
     const width = rect.width;
     const height = rect.height;
     ctx.clearRect(0, 0, width, height);
+     const scale = (Math.min(width, height) / 16) * zoom; 
+    const originX = width * 0.5;
+    const originY = height * 0.5;
+    ctx.fillStyle = '#050d1a'; ctx.fillRect(0, 0, width, height);
+    ctx.strokeStyle = '#1e293b'; ctx.lineWidth = 1;
+    for (let i = 0; i < width; i += 40) { ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(i, height); ctx.stroke(); }
+    for (let i = 0; i < height; i += 40) { ctx.beginPath(); ctx.moveTo(0, i); ctx.lineTo(width, i); ctx.stroke(); }
+    const toScreen = (x: number, y: number) => [originX + x * scale, originY - y * scale];
+    const d = 4.0; 
+    const R_out = d * 0.75; 
+    const L_x1 = -d/2;
+    const L_x2 = d/2;
+    const [c1x, c1y] = toScreen(L_x1, 0);
+    const [c2x, c2y] = toScreen(L_x2, 0);
+    ctx.beginPath();
+    ctx.arc(c1x, c1y, R_out * scale, Math.PI/2, -Math.PI/2);
+    ctx.arc(c2x, c2y, R_out * scale, -Math.PI/2, Math.PI/2);
+    ctx.closePath();
+    ctx.fillStyle = 'rgba(15, 23, 42, 0.8)'; ctx.fill();
+    ctx.strokeStyle = '#334155'; ctx.lineWidth = 6 * zoom; ctx.stroke();
+    const loadFactor = load / 100;
+    const stressColor = `rgb(255, ${215 - loadFactor*100}, 0)`;
+    if (load > 0) {
+      ctx.beginPath();
+      ctx.arc(c1x, c1y, (R_out - 0.4) * scale, Math.PI/2, Math.PI);
+      ctx.strokeStyle = `rgba(255, ${215 - loadFactor*100}, 0, ${0.4 * loadFactor})`;
+      ctx.lineWidth = 15 * zoom;
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.arc(c2x, c2y, (R_out - 0.4) * scale, 0, Math.PI/2);
+      ctx.stroke();
+    }
+    const drawLobe = (cx: number, cy: number, rot: number, color: string) => {
+      ctx.save();
+      ctx.translate(cx, cy);
+      ctx.rotate(rot);
+      ctx.beginPath();
+      const numPoints = 180;
+      for(let i=0; i<=numPoints; i++) {
+        const t = (i / numPoints) * 2 * Math.PI;
