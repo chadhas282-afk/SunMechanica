@@ -5258,3 +5258,43 @@ export const RhombicStirlingSim: React.FC<SimulationProps> = ({ angle, load, zoo
     ctx.clearRect(0, 0, width, height);
     const scale = (Math.min(width, height) / 16) * zoom; 
     const originX = width * 0.5;
+    const originY = height * 0.55;
+    ctx.fillStyle = '#050d1a'; ctx.fillRect(0, 0, width, height);
+    ctx.strokeStyle = '#1e293b'; ctx.lineWidth = 1;
+    for (let i = 0; i < width; i += 40) { ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(i, height); ctx.stroke(); }
+    for (let i = 0; i < height; i += 40) { ctx.beginPath(); ctx.moveTo(0, i); ctx.lineTo(width, i); ctx.stroke(); }
+    const toScreen = (x: number, y: number) => [originX + x * scale, originY - y * scale];
+    const drawLine = (x1: number, y1: number, x2: number, y2: number, color: string, w: number) => {
+      ctx.beginPath();
+      const [sx1, sy1] = toScreen(x1, y1); const [sx2, sy2] = toScreen(x2, y2);
+      ctx.moveTo(sx1, sy1); ctx.lineTo(sx2, sy2);
+      ctx.strokeStyle = color; ctx.lineWidth = w * zoom; ctx.lineCap = 'round'; ctx.stroke();
+    };
+    const drawRect = (x: number, y: number, w: number, h: number, fill: string, stroke: string, lw: number = 2) => {
+      const [sx, sy] = toScreen(x, y);
+      ctx.fillStyle = fill; ctx.fillRect(sx, sy, w * scale, h * scale);
+      ctx.strokeStyle = stroke; ctx.lineWidth = lw * zoom; ctx.strokeRect(sx, sy, w * scale, h * scale);
+    };
+    const c = 1.8; 
+    const r = 1.2; 
+    const L = 3.5; 
+    const theta = -angle;
+    const Ax = -c + r * Math.cos(theta);
+    const Ay = r * Math.sin(theta);
+    const Bx = c - r * Math.cos(theta); 
+    const By = r * Math.sin(theta);
+    const dy = Math.sqrt(Math.max(0, L*L - Ax*Ax));
+    const Uy = Ay + dy; 
+    const Dy = Ay - dy; 
+    const loadFactor = load / 100;
+    const cylRadius = 2.0;
+    const cylTop = 9.0;
+    const cylBottom = 2.0;
+    drawRect(-cylRadius, cylTop, cylRadius*2, -(cylTop - cylBottom), 'rgba(15, 23, 42, 0.5)', '#475569');
+    const dispTop = Uy + 3.0; 
+    const dispHeight = 2.5;
+    const dispBottom = dispTop - dispHeight;
+    const pPistonTop = Dy + 3.0; 
+    const pPistonHeight = 1.0;
+    const hotSpaceVol = cylTop - dispTop;
+    drawRect(-cylRadius, cylTop, cylRadius*2, -hotSpaceVol, 'rgba(255, 51, 102, 0.4)', 'transparent');
