@@ -5498,3 +5498,43 @@ export const SarrusLinkageSim: React.FC<SimulationProps> = ({ angle, load, zoom 
     };
     const drawPoly3D = (pts: number[][], fill: string, stroke: string, lw: number = 2) => {
       ctx.beginPath();
+      for (let i = 0; i < pts.length; i++) {
+        const [px, py] = project(pts[i][0], pts[i][1], pts[i][2]);
+        if (i === 0) ctx.moveTo(px, py);
+        else ctx.lineTo(px, py);
+      }
+      ctx.closePath();
+      ctx.fillStyle = fill; ctx.fill();
+      ctx.strokeStyle = stroke; ctx.lineWidth = lw * zoom; ctx.stroke();
+    };
+    const L = 3.5; 
+    const w = 4.0; 
+    const minZ = 1.0;
+    const maxZ = 2 * L - 0.5;
+    const Z = minZ + ((Math.sin(angle) + 1) / 2) * (maxZ - minZ);
+    const foldY = Math.sqrt(Math.max(0, L*L - (Z/2)*(Z/2)));
+    const foldX = Math.sqrt(Math.max(0, L*L - (Z/2)*(Z/2)));
+    const w2 = w/2;
+    drawPoly3D([
+      [-w2, -w2, 0], [w2, -w2, 0], [w2, w2, 0], [-w2, w2, 0]
+    ], 'rgba(15, 23, 42, 0.9)', '#475569', 3);
+    const armW = 1.0;
+    drawPoly3D([
+      [w2, -armW, 0], [w2, armW, 0],
+      [w2 + foldX, armW, Z/2], [w2 + foldX, -armW, Z/2]
+    ], 'rgba(168, 85, 247, 0.4)', '#a855f7', 2);
+    drawPoly3D([
+      [w2 + foldX, -armW, Z/2], [w2 + foldX, armW, Z/2],
+      [w2, armW, Z], [w2, -armW, Z]
+    ], 'rgba(168, 85, 247, 0.6)', '#a855f7', 2);
+    drawPoly3D([
+      [-w2, -armW, 0], [-w2, armW, 0],
+      [-w2 - foldX, armW, Z/2], [-w2 - foldX, -armW, Z/2]
+    ], 'rgba(168, 85, 247, 0.4)', '#a855f7', 2);
+    drawPoly3D([
+      [-w2 - foldX, -armW, Z/2], [-w2 - foldX, armW, Z/2],
+      [-w2, armW, Z], [-w2, -armW, Z]
+    ], 'rgba(168, 85, 247, 0.6)', '#a855f7', 2);
+    drawPoly3D([
+      [-armW, -w2, 0], [armW, -w2, 0],
+      [armW, -w2 - foldY, Z/2], [-armW, -w2 - foldY, Z/2]
