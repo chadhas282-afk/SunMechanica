@@ -4978,3 +4978,43 @@ export const RackPinionSim: React.FC<SimulationProps> = ({ angle, load , zoom = 
     ctx.beginPath();
     ctx.arc(0, 0, 0.3 * scale, 0, Math.PI * 2);
     ctx.fillStyle = '#9d174d';
+    ctx.fill();
+    ctx.strokeStyle = '#fff';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+    ctx.restore();
+    ctx.beginPath();
+    ctx.arc(px, py, pitchRadius * scale, 0, Math.PI * 2);
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)';
+    ctx.setLineDash([4, 4]);
+    ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle = 'rgba(8, 15, 30, 0.85)';
+    ctx.fillRect(30, 150, 200, 110);
+    ctx.strokeStyle = 'rgba(236, 72, 153, 0.3)';
+    ctx.strokeRect(30, 150, 200, 110);
+    ctx.font = '10px monospace';
+    ctx.fillStyle = '#ec4899';
+    ctx.fillText('SYS :: RACK_PINION', 40, 170);
+    ctx.fillStyle = '#fff';
+    ctx.fillText(`ROTATION : ${(oscillAngle * 180 / Math.PI).toFixed(1)}°`, 40, 195);
+    ctx.fillStyle = '#38bdf8';
+    ctx.fillText(`RACK POS : ${rackX.toFixed(2)} cm`, 40, 215);
+    ctx.fillStyle = '#ff6b35';
+    ctx.fillText(`LOAD     : ${load}%`, 40, 235);
+  }, [angle, load]);
+  return (
+    <div style={{ width: '100%', height: '100%' }}>
+      <canvas ref={canvasRef} style={{ width: '100%', height: '100%', display: 'block' }} />
+    </div>
+  );
+};
+export const RankineCycleSim: React.FC<SimulationProps> = ({ angle, load, zoom = 1 }) => {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+    const dpr = window.devicePixelRatio || 1;
+    const rect = canvas.getBoundingClientRect();
