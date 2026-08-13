@@ -5178,3 +5178,43 @@ export const RatchetPawlSim: React.FC<SimulationProps> = ({ angle, load, zoom = 
       const py2 = -R_in * Math.sin(t2) * scale;
       if (i === 0) ctx.moveTo(px1, py1);
       else ctx.lineTo(px1, py1);
+      ctx.lineTo(px2, py2);
+    }
+    ctx.closePath();
+    ctx.fillStyle = '#1e293b'; ctx.fill();
+    ctx.strokeStyle = '#ff6b35'; ctx.lineWidth = 3 * zoom; ctx.stroke();
+    ctx.beginPath(); ctx.arc(0, 0, 0.6 * scale, 0, 2*Math.PI);
+    ctx.fillStyle = '#0f172a'; ctx.fill(); ctx.stroke();
+    ctx.restore();
+    ctx.save();
+    ctx.translate(cx, cy);
+    ctx.rotate(-driverAngle);
+    ctx.beginPath();
+    ctx.moveTo(0, 0); ctx.lineTo(0, - (R_out + 1.0) * scale);
+    ctx.strokeStyle = '#3b82f6'; ctx.lineWidth = 8 * zoom; ctx.lineCap = 'round'; ctx.stroke();
+    const relAngle = wheelAngle.current - driverAngle;
+    const toothPhase = (relAngle % toothPitch + toothPitch) % toothPitch; 
+    const pawlDrop = toothPhase / toothPitch; 
+    ctx.translate(0, - (R_out + 1.0) * scale);
+    const pawlAngle = -Math.PI/6 - pawlDrop * 0.4; 
+    ctx.rotate(pawlAngle);
+    ctx.beginPath();
+    ctx.moveTo(0, 0); ctx.lineTo(0, 1.5 * scale); 
+    ctx.lineTo(0.5 * scale, 1.5 * scale); 
+    ctx.closePath();
+    ctx.fillStyle = '#cbd5e1'; ctx.fill();
+    ctx.strokeStyle = stressColor; ctx.lineWidth = 3 * zoom;
+    if (isPushing && load > 50) {
+      ctx.shadowBlur = 10; ctx.shadowColor = stressColor;
+    }
+    ctx.stroke(); ctx.shadowBlur = 0;
+    ctx.beginPath(); ctx.arc(0, 0, 0.3*scale, 0, 2*Math.PI); ctx.fillStyle = '#fff'; ctx.fill();
+    ctx.restore();
+    ctx.save();
+    const holdPivotX = - (R_out + 1.5);
+    const holdPivotY = 0;
+    const [hpx, hpy] = toScreen(holdPivotX, holdPivotY);
+    ctx.translate(hpx, hpy);
+    const hRelAngle = wheelAngle.current; 
+    const hToothPhase = (hRelAngle % toothPitch + toothPitch) % toothPitch;
+    const hPawlDrop = hToothPhase / toothPitch;
