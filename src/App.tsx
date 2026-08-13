@@ -5418,3 +5418,43 @@ export const RootsBlowerSim: React.FC<SimulationProps> = ({ angle, load, zoom = 
       const numPoints = 180;
       for(let i=0; i<=numPoints; i++) {
         const t = (i / numPoints) * 2 * Math.PI;
+         const R_tip = d/2 + 0.5; 
+        const e = 0.4;
+        const k = 2.5; 
+        const r = R_tip * (1 - e * Math.pow(Math.abs(Math.sin(t)), k));
+        const px = r * Math.cos(t) * scale;
+        const py = r * Math.sin(t) * scale;
+        if (i === 0) ctx.moveTo(px, py);
+        else ctx.lineTo(px, py);
+      }
+      ctx.closePath();
+      ctx.fillStyle = '#1e293b'; ctx.fill();
+      ctx.strokeStyle = color; ctx.lineWidth = 4 * zoom;
+      if (load > 50) {
+        ctx.shadowBlur = (load - 50) * 0.4;
+        ctx.shadowColor = color;
+      }
+      ctx.stroke(); ctx.shadowBlur = 0;
+      ctx.beginPath(); ctx.arc(0, 0, 0.4 * scale, 0, 2*Math.PI);
+      ctx.fillStyle = '#050d1a'; ctx.fill(); ctx.stroke();
+      ctx.restore();
+    };
+    drawLobe(c1x, c1y, angle, '#3b82f6');
+    drawLobe(c2x, c2y, -angle + Math.PI/2, '#00d4ff');
+    ctx.fillStyle = 'rgba(15, 23, 42, 0.9)';
+    ctx.fillRect(originX - 1.5*scale, originY - (R_out + 1.5)*scale, 3*scale, 1.5*scale);
+    ctx.fillRect(originX - 1.5*scale, originY + R_out*scale, 3*scale, 1.5*scale);
+    ctx.strokeStyle = '#475569'; ctx.lineWidth = 2 * zoom;
+    ctx.strokeRect(originX - 1.5*scale, originY - (R_out + 1.5)*scale, 3*scale, 1.5*scale);
+    ctx.strokeRect(originX - 1.5*scale, originY + R_out*scale, 3*scale, 1.5*scale);
+    const arrowY = originY - (R_out + 0.5)*scale;
+    ctx.beginPath(); ctx.moveTo(originX, arrowY); ctx.lineTo(originX, arrowY - 0.8*scale);
+    ctx.lineTo(originX - 0.4*scale, arrowY - 0.4*scale); ctx.moveTo(originX, arrowY - 0.8*scale); ctx.lineTo(originX + 0.4*scale, arrowY - 0.4*scale);
+    ctx.strokeStyle = stressColor; ctx.lineWidth = 4 * zoom; ctx.stroke();
+    ctx.fillStyle = 'rgba(8, 15, 30, 0.85)';
+    ctx.fillRect(30, 150, 240, 110);
+    ctx.strokeStyle = 'rgba(255, 215, 0, 0.3)';
+    ctx.strokeRect(30, 150, 240, 110);
+    ctx.font = '10px monospace';
+    ctx.fillStyle = '#ffd700'; ctx.fillText('SYS :: ROOTS_BLOWER', 40, 170);
+    ctx.fillStyle = '#3b82f6'; ctx.fillText(`ROTOR 1 ANG : ${(angle * 180 / Math.PI % 360).toFixed(0)}°`, 40, 195);
