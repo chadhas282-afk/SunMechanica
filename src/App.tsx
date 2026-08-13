@@ -4618,3 +4618,43 @@ export const PlanetaryGearSim: React.FC<SimulationProps> = ({ angle, load , zoom
     ctx.fillText(`SUN INPUT     : ${normSun.toFixed(1)}°`, 30, height - 85);
     ctx.fillStyle = '#00ff88';
     ctx.fillText(`CARRIER OUT   : ${normCarrier.toFixed(1)}°`, 30, height - 65);
+    ctx.fillStyle = '#38bdf8';
+    ctx.fillText(`GEAR RATIO    : 1 : ${ratio.toFixed(2)}`, 30, height - 45);
+  }, [angle, load]);
+  return (
+    <div style={{ width: '100%', height: '100%' }}>
+      <canvas ref={canvasRef} style={{ width: '100%', height: '100%', display: 'block' }} />
+    </div>
+  );
+};
+export const PrattTrussSim: React.FC<SimulationProps> = ({ angle, load , zoom = 1 }) => {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+    const dpr = window.devicePixelRatio || 1;
+    const rect = canvas.getBoundingClientRect();
+    canvas.width = rect.width * dpr;
+    canvas.height = rect.height * dpr;
+    ctx.scale(dpr, dpr);
+    const width = rect.width;
+    const height = rect.height;
+    ctx.clearRect(0, 0, width, height);
+    const scale = (Math.min(width, height) / 16) * zoom; 
+    const originX = width * 0.5;
+    const originY = height * 0.6; 
+    ctx.fillStyle = '#050d1a'; ctx.fillRect(0, 0, width, height);
+    const toScreen = (x: number, y: number) => [originX + x * scale, originY - y * scale];
+    const drawCircle = (x: number, y: number, r: number, color: string, fill = false) => {
+      ctx.beginPath();
+      const [sx, sy] = toScreen(x, y);
+      ctx.arc(sx, sy, r * scale, 0, 2 * Math.PI);
+      ctx.strokeStyle = color; ctx.lineWidth = 2; ctx.stroke();
+      if (fill) { ctx.fillStyle = color; ctx.fill(); }
+    };
+    const loadFactor = load / 100;
+    const dynamicLoad = loadFactor * (1.0 + 0.1 * Math.sin(angle * 6.0));
+    const maxDeflect = 1.2; 
+    const h = 3.0; 
