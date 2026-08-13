@@ -4498,3 +4498,43 @@ export const PlanetaryGearSim: React.FC<SimulationProps> = ({ angle, load , zoom
     ctx.fillStyle = '#050d1a';
     ctx.fillRect(0, 0, width, height);
     ctx.strokeStyle = '#1e293b';
+    ctx.lineWidth = 1;
+    for (let i = 0; i < width; i += 40) {
+      ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(i, height); ctx.stroke();
+    }
+    for (let i = 0; i < height; i += 40) {
+      ctx.beginPath(); ctx.moveTo(0, i); ctx.lineTo(width, i); ctx.stroke();
+    }
+    const toScreen = (x: number, y: number) => [originX + x * scale, originY - y * scale];
+    const drawGear = (x: number, y: number, r: number, numTeeth: number, rot: number, color: string, internal = false) => {
+      ctx.save();
+      const [sx, sy] = toScreen(x, y);
+      ctx.translate(sx, sy);
+      ctx.rotate(rot);
+      const teethDepth = 0.2;
+      ctx.beginPath();
+      for (let i = 0; i <= numTeeth * 4; i++) {
+        const a = (i / (numTeeth * 4)) * Math.PI * 2;
+        const toothPhase = i % 4;
+        let radius = r;
+        if (internal) {
+          if (toothPhase === 1 || toothPhase === 2) radius = r - teethDepth;
+          if (toothPhase === 3 || toothPhase === 0) radius = r + teethDepth;
+        } else {
+          if (toothPhase === 1 || toothPhase === 2) radius = r + teethDepth;
+          if (toothPhase === 3 || toothPhase === 0) radius = r - teethDepth;
+        }
+        const px = radius * Math.cos(a) * scale;
+        const py = radius * Math.sin(a) * scale;
+        if (i === 0) ctx.moveTo(px, py);
+        else ctx.lineTo(px, py);
+      }
+      ctx.closePath();
+      if (internal) {
+        ctx.arc(0, 0, (r + 0.6) * scale, 0, Math.PI * 2, true);
+        ctx.fillStyle = `rgba(${color}, 0.15)`;
+        ctx.fill();
+        ctx.strokeStyle = `rgb(${color})`;
+        ctx.lineWidth = 3;
+        ctx.stroke();
+      } else {
