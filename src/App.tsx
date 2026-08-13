@@ -5658,3 +5658,43 @@ export const ScissorLiftSim: React.FC<SimulationProps> = ({ angle, load , zoom =
     const [tx, ty] = toScreen(0, topY);
     ctx.fillStyle = '#0f172a';
     ctx.fillRect(tx - 3.5 * scale, ty - 0.4 * scale, 7 * scale, 0.4 * scale);
+    ctx.strokeStyle = '#00ff88'; ctx.lineWidth = 2;
+    ctx.strokeRect(tx - 3.5 * scale, ty - 0.4 * scale, 7 * scale, 0.4 * scale);
+    if (load > 0) {
+      const boxW = 2.0 * scale;
+      const boxH = (0.5 + loadFactor * 1.5) * scale; 
+      ctx.fillStyle = stressColor;
+      ctx.fillRect(tx - boxW/2, ty - 0.4 * scale - boxH, boxW, boxH);
+      if (load > 60) {
+        ctx.shadowBlur = 15;
+        ctx.shadowColor = stressColor;
+        ctx.strokeRect(tx - boxW/2, ty - 0.4 * scale - boxH, boxW, boxH);
+        ctx.shadowBlur = 0;
+      }
+    }
+    ctx.fillStyle = 'rgba(8, 15, 30, 0.85)';
+    ctx.fillRect(30, 150, 220, 110);
+    ctx.strokeStyle = 'rgba(0, 255, 136, 0.3)';
+    ctx.strokeRect(30, 150, 220, 110);
+    ctx.font = '10px monospace';
+    ctx.fillStyle = '#00ff88';
+    ctx.fillText('SYS :: SCISSOR_LIFT', 40, 170);
+    ctx.fillStyle = '#fff';
+    ctx.fillText(`EXTENSION : ${(extensionPhase * 100).toFixed(1)}%`, 40, 195);
+    ctx.fillStyle = '#3b82f6';
+    ctx.fillText(`HEIGHT    : ${topY.toFixed(2)}m`, 40, 215);
+    ctx.fillStyle = stressColor;
+    ctx.fillText(`LOAD MASS : ${Math.round(load * 20)} kg`, 40, 235);
+  }, [angle, load]);
+  return (
+    <div style={{ width: '100%', height: '100%' }}>
+      <canvas ref={canvasRef} style={{ width: '100%', height: '100%', display: 'block' }} />
+    </div>
+  );
+};
+export const ScotchYokeSim: React.FC<SimulationProps> = ({ angle, load , zoom = 1 }) => {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const traceRef = useRef<{a: number, pos: number}[]>([]);
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
