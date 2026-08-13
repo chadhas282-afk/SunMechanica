@@ -4818,3 +4818,43 @@ export const QuickReturnSim: React.FC<SimulationProps> = ({ angle, load , zoom =
     ctx.shadowBlur = 0;
     ctx.beginPath();
     ctx.moveTo(rx - rw/2, ry + rh/2);
+    ctx.lineTo(rx - rw/2 - 15, ry + rh/2 + 20);
+    ctx.lineTo(rx - rw/2 + 10, ry + rh/2);
+    ctx.fillStyle = '#94a3b8';
+    ctx.fill();
+    ctx.strokeStyle = '#1e3a8a';
+    ctx.lineWidth = 4;
+    ctx.beginPath();
+    const [gx1, gy1] = toScreen(-7, ramY + 0.6);
+    const [gx2, gy2] = toScreen(3, ramY + 0.6);
+    ctx.moveTo(gx1, gy1); ctx.lineTo(gx2, gy2);
+    ctx.stroke();
+    const [gx3, gy3] = toScreen(-7, ramY - 0.6);
+    const [gx4, gy4] = toScreen(3, ramY - 0.6);
+    ctx.moveTo(gx3, gy3); ctx.lineTo(gx4, gy4);
+    ctx.stroke();
+    ctx.fillStyle = 'rgba(8, 15, 30, 0.85)';
+    ctx.fillRect(width - 260, 150, 220, 110);
+    ctx.strokeStyle = 'rgba(0, 212, 255, 0.3)';
+    ctx.strokeRect(width - 260, 150, 220, 110);
+    ctx.font = '10px monospace';
+    ctx.fillStyle = '#00d4ff';
+    ctx.fillText('SYS :: QUICK_RETURN', width - 250, 170);
+    ctx.fillStyle = '#fff';
+    ctx.fillText(`PHASE  : ${isCutting ? 'CUTTING (SLOW)' : 'RETURN (FAST)'}`, width - 250, 195);
+    ctx.fillStyle = isCutting ? '#ff4444' : '#00ff88';
+    ctx.fillText(`TOOL X : ${ramX.toFixed(2)} cm`, width - 250, 215);
+    ctx.fillStyle = '#a855f7';
+    const normAngle = ((angle * 180 / Math.PI) % 360 + 360) % 360;
+    ctx.fillText(`CRANK  : ${normAngle.toFixed(1)}°`, width - 250, 235);
+  }, [angle, load]);
+  return (
+    <div style={{ width: '100%', height: '100%' }}>
+      <canvas ref={canvasRef} style={{ width: '100%', height: '100%', display: 'block' }} />
+    </div>
+  );
+};
+export const RackPinionSim: React.FC<SimulationProps> = ({ angle, load , zoom = 1 }) => {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  useEffect(() => {
+    const canvas = canvasRef.current;
