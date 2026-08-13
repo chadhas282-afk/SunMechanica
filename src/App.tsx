@@ -4658,3 +4658,43 @@ export const PrattTrussSim: React.FC<SimulationProps> = ({ angle, load , zoom = 
     const dynamicLoad = loadFactor * (1.0 + 0.1 * Math.sin(angle * 6.0));
     const maxDeflect = 1.2; 
     const h = 3.0; 
+    const nodes = [
+      { id: 0, x: -6, y: 0, type: 'support' },
+      { id: 1, x: -3, y: 0, type: 'bottom' },
+      { id: 2, x: 0, y: 0, type: 'bottom' },
+      { id: 3, x: 3, y: 0, type: 'bottom' },
+      { id: 4, x: 6, y: 0, type: 'support' },
+      { id: 5, x: -3, y: h, type: 'top' },
+      { id: 6, x: 0, y: h, type: 'top' },
+      { id: 7, x: 3, y: h, type: 'top' }
+    ];
+    const defNodes = nodes.map(n => {
+      let dy = 0;
+      if (n.type !== 'support') {
+        dy = -maxDeflect * dynamicLoad * (1 - Math.pow(n.x / 6, 2));
+      }
+      return { ...n, dx: n.x, dy: n.y + dy };
+    });
+    const getCol = (stress: number) => {
+      if (stress > 0) return `rgb(${148 - stress*148}, ${163 - stress*10}, ${184 + stress*71})`; 
+      const s = -stress;
+      return `rgb(${148 + s*107}, ${163 - s*100}, ${184 - s*184})`; 
+    };
+    const members = [
+      { n1: 0, n2: 1, stress: 0.5 }, { n1: 1, n2: 2, stress: 1.0 }, { n1: 2, n2: 3, stress: 1.0 }, { n1: 3, n2: 4, stress: 0.5 },
+      { n1: 5, n2: 6, stress: -1.0 }, { n1: 6, n2: 7, stress: -1.0 },
+      { n1: 0, n2: 5, stress: -0.8 }, { n1: 4, n2: 7, stress: -0.8 },
+      { n1: 1, n2: 5, stress: -0.4 }, { n1: 2, n2: 6, stress: -0.2 }, { n1: 3, n2: 7, stress: -0.4 },
+      { n1: 5, n2: 2, stress: 0.6 }, { n1: 7, n2: 2, stress: 0.6 }
+    ];
+    members.forEach(m => {
+      const p1 = defNodes[m.n1];
+      const p2 = defNodes[m.n2];
+      const actStress = m.stress * loadFactor;
+      const color = getCol(actStress);
+      ctx.beginPath();
+      const [sx1, sy1] = toScreen(p1.dx, p1.dy);
+      const [sx2, sy2] = toScreen(p2.dx, p2.dy);
+      ctx.moveTo(sx1, sy1); ctx.lineTo(sx2, sy2);
+      ctx.strokeStyle = color; 
+      const lineW = 6 + Math.abs(actStress) * 6;
