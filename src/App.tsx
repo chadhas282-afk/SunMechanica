@@ -4778,3 +4778,43 @@ export const QuickReturnSim: React.FC<SimulationProps> = ({ angle, load , zoom =
       const [sx, sy] = toScreen(x, y);
       ctx.arc(sx, sy, r * scale, 0, 2 * Math.PI);
       ctx.strokeStyle = color; ctx.lineWidth = 2; ctx.stroke();
+      if (fill) { ctx.fillStyle = color; ctx.fill(); }
+    };
+    const isCutting = Math.sin(angle) > 0;
+    const loadFactor = load / 100;
+    const rC = Math.round(0 + loadFactor * 255);
+    const gC = Math.round(212 - loadFactor * 212);
+    const bC = Math.round(255 - loadFactor * 255);
+    const stressColor = isCutting ? `rgb(${rC}, ${gC}, ${bC})` : '#00d4ff';
+    drawCircle(pivotX, pivotY, 0.3, '#475569', true);
+    ctx.setLineDash([4, 4]);
+    drawCircle(0, crankCenterY, R, '#1e3a8a');
+    ctx.setLineDash([]);
+    drawCircle(0, crankCenterY, 0.2, '#fff', true); 
+    drawLine(0, crankCenterY, pinX, pinY, '#3b82f6', 8);
+    drawLine(pivotX, pivotY, leverEndX, leverEndY, stressColor, 12);
+    ctx.beginPath();
+    const [sl1X, sl1Y] = toScreen(pivotX + 1.0 * Math.cos(leverAngle), pivotY + 1.0 * Math.sin(leverAngle));
+    const [sl2X, sl2Y] = toScreen(leverEndX - 0.5 * Math.cos(leverAngle), leverEndY - 0.5 * Math.sin(leverAngle));
+    ctx.moveTo(sl1X, sl1Y); ctx.lineTo(sl2X, sl2Y);
+    ctx.strokeStyle = '#050d1a'; ctx.lineWidth = 4; ctx.stroke();
+    drawCircle(pinX, pinY, 0.25, '#fff', true);
+    drawCircle(pinX, pinY, 0.15, '#3b82f6', true);
+    drawLine(leverEndX, leverEndY, ramX, ramY, '#94a3b8', 6);
+    drawCircle(leverEndX, leverEndY, 0.15, '#fff', true);
+    drawCircle(ramX, ramY, 0.15, '#fff', true);
+    const [rx, ry] = toScreen(ramX, ramY);
+    const rw = 2.0 * scale;
+    const rh = 1.0 * scale;
+    ctx.fillStyle = '#0f172a';
+    ctx.fillRect(rx - rw/2, ry - rh/2, rw, rh);
+    ctx.strokeStyle = stressColor;
+    ctx.lineWidth = 2 + (isCutting ? loadFactor * 2 : 0);
+    if (isCutting && load > 50) {
+      ctx.shadowBlur = (load - 50) * 0.5;
+      ctx.shadowColor = stressColor;
+    }
+    ctx.strokeRect(rx - rw/2, ry - rh/2, rw, rh);
+    ctx.shadowBlur = 0;
+    ctx.beginPath();
+    ctx.moveTo(rx - rw/2, ry + rh/2);
