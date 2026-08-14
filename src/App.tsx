@@ -6738,3 +6738,43 @@ export const TrussModelSim: React.FC<SimulationProps> = ({ angle, load , zoom = 
     const h = 3.0; 
     const nodes = [
       { id: 0, x: -6, y: 0, type: 'support' },
+      { id: 1, x: -2, y: 0, type: 'bottom' },
+      { id: 2, x: 2, y: 0, type: 'bottom' },
+      { id: 3, x: 6, y: 0, type: 'support' },
+      { id: 4, x: -4, y: h, type: 'top' },
+      { id: 5, x: 0, y: h, type: 'top' },
+      { id: 6, x: 4, y: h, type: 'top' }
+    ];
+    const defNodes = nodes.map(n => {
+      let dy = 0;
+      if (n.type !== 'support') {
+        dy = -maxDeflect * dynamicLoad * (1 - Math.pow(n.x / 6, 2));
+      }
+      return { ...n, dx: n.x, dy: n.y + dy };
+    });
+    const getCol = (stress: number) => {
+      if (stress > 0) {
+        return `rgb(${148 - stress*148}, ${163 - stress*10}, ${184 + stress*71})`;
+      } else {
+        const s = -stress;
+        return `rgb(${148 + s*107}, ${163 - s*100}, ${184 - s*184})`;
+      }
+    };
+    const members = [
+      { n1: 0, n2: 1, stress: 0.5 },
+      { n1: 1, n2: 2, stress: 1.0 },
+      { n1: 2, n2: 3, stress: 0.5 },
+      { n1: 4, n2: 5, stress: -1.0 },
+      { n1: 5, n2: 6, stress: -1.0 },
+      { n1: 0, n2: 4, stress: -0.8 }, 
+      { n1: 1, n2: 4, stress: 0.6 },  
+      { n1: 1, n2: 5, stress: -0.4 }, 
+      { n1: 2, n2: 5, stress: -0.4 }, 
+      { n1: 2, n2: 6, stress: 0.6 },  
+      { n1: 3, n2: 6, stress: -0.8 }, 
+    ];
+    members.forEach(m => {
+      const p1 = defNodes[m.n1];
+      const p2 = defNodes[m.n2];
+      const actStress = m.stress * loadFactor;
+      const color = getCol(actStress);
