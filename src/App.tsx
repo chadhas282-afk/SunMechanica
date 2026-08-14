@@ -7058,3 +7058,43 @@ export const VenturiTubeSim: React.FC<SimulationProps> = ({ angle, load , zoom =
       ctx.strokeStyle = color;
       ctx.lineWidth = 2;
       ctx.stroke();
+       });
+    ctx.globalCompositeOperation = 'source-over';
+    ctx.beginPath();
+    for (let x = -L; x <= L; x += 0.1) {
+      const r = tubeRadius(x);
+      const [sx, sy] = toScreen(x, r);
+      if (x === -L) ctx.moveTo(sx, sy);
+      else ctx.lineTo(sx, sy);
+    }
+    ctx.strokeStyle = '#f8fafc';
+    ctx.lineWidth = 3;
+    ctx.stroke();
+    ctx.beginPath();
+    for (let x = -L; x <= L; x += 0.1) {
+      const r = tubeRadius(x);
+      const [sx, sy] = toScreen(x, -r);
+      if (x === -L) ctx.moveTo(sx, sy);
+      else ctx.lineTo(sx, sy);
+    }
+    ctx.strokeStyle = '#f8fafc';
+    ctx.lineWidth = 3;
+    ctx.stroke();
+    const p1 = 100;
+    const p2 = 100 - (load / 100) * 80; 
+    const [tx1, ty1] = toScreen(-5, 3.5);
+    const [tx2, ty2] = toScreen(0, 3.5);
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)';
+    ctx.setLineDash([4, 4]);
+    ctx.beginPath(); ctx.moveTo(tx1, originY); ctx.lineTo(tx1, ty1); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(tx2, originY); ctx.lineTo(tx2, ty2); ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle = 'rgba(8, 15, 30, 0.85)';
+    ctx.fillRect(30, 150, 240, 110);
+    ctx.strokeStyle = 'rgba(56, 189, 248, 0.3)';
+    ctx.strokeRect(30, 150, 240, 110);
+    ctx.font = '10px monospace';
+    ctx.fillStyle = '#38bdf8';
+    ctx.fillText('SYS :: VENTURI_DYNAMICS', 40, 170);
+    ctx.fillStyle = '#fff';
+    ctx.fillText(`P_INLET  : ${p1.toFixed(1)} kPa`, 40, 195);
