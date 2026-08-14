@@ -5998,3 +5998,43 @@ export const SlidingVanePumpSim: React.FC<SimulationProps> = ({ angle, load , zo
     ctx.clearRect(0, 0, width, height);
     const scale = (Math.min(width, height) / 12) * zoom; 
     const originX = width * 0.5;
+    const originY = height * 0.5;
+    ctx.fillStyle = '#050d1a'; ctx.fillRect(0, 0, width, height);
+    ctx.strokeStyle = '#1e293b'; ctx.lineWidth = 1;
+    for (let i = 0; i < width; i += 40) { ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(i, height); ctx.stroke(); }
+    for (let i = 0; i < height; i += 40) { ctx.beginPath(); ctx.moveTo(0, i); ctx.lineTo(width, i); ctx.stroke(); }
+    const toScreen = (x: number, y: number) => [originX + x * scale, originY - y * scale];
+    const drawCircle = (x: number, y: number, r: number, color: string, fill = false) => {
+      ctx.beginPath(); const [sx, sy] = toScreen(x, y);
+      ctx.arc(sx, sy, r * scale, 0, 2 * Math.PI);
+      ctx.strokeStyle = color; ctx.lineWidth = 2; ctx.stroke();
+      if (fill) { ctx.fillStyle = color; ctx.fill(); }
+    };
+    const Rc = 4.0; 
+    const Rr = 2.5; 
+    const e = 1.2; 
+    ctx.beginPath();
+    const [cx, cy] = toScreen(0, 0);
+    ctx.arc(cx, cy, Rc * scale, 0, 2 * Math.PI);
+    ctx.fillStyle = '#0f172a'; ctx.fill();
+    ctx.strokeStyle = '#475569'; ctx.lineWidth = 6; ctx.stroke();
+    ctx.fillStyle = '#0f172a';
+    ctx.fillRect(cx + Rc * scale * 0.5, cy, 3 * scale, 1.5 * scale); 
+    ctx.fillRect(cx - Rc * scale * 0.5 - 3 * scale, cy, 3 * scale, -1.5 * scale); 
+    const numVanes = 8;
+    const rot = -angle;
+    const loadFactor = load / 100;
+    const stressColor = `rgb(${loadFactor*255}, 212, 255)`;
+    ctx.save();
+    const [rx, ry] = toScreen(0, -e);
+    ctx.translate(rx, ry);
+    ctx.lineWidth = 4;
+    for (let i = 0; i < numVanes; i++) {
+      const alpha = rot + (i * 2 * Math.PI) / numVanes;
+      const b = -2 * e * Math.sin(alpha);
+      const c = e * e - Rc * Rc;
+      const r_ext = (-b + Math.sqrt(b * b - 4 * c)) / 2;
+      const vx1 = Rr * scale * Math.cos(alpha);
+      const vy1 = -Rr * scale * Math.sin(alpha); 
+      const vx2 = r_ext * scale * Math.cos(alpha);
+      const vy2 = -r_ext * scale * Math.sin(alpha);
