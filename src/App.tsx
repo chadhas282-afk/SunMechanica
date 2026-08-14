@@ -6818,3 +6818,43 @@ export const TrussModelSim: React.FC<SimulationProps> = ({ angle, load , zoom = 
       ctx.fillStyle = '#ef4444';
       ctx.fill();
     }
+     ctx.fillStyle = 'rgba(8, 15, 30, 0.85)';
+    ctx.fillRect(30, 150, 240, 110);
+    ctx.strokeStyle = 'rgba(255, 215, 0, 0.3)';
+    ctx.strokeRect(30, 150, 240, 110);
+    ctx.font = '10px monospace';
+    ctx.fillStyle = '#ffd700';
+    ctx.fillText('SYS :: WARREN_TRUSS', 40, 170);
+    ctx.fillStyle = '#fff';
+    ctx.fillText(`CENTER DEFLECTION : ${(defNodes[1].dy).toFixed(3)} m`, 40, 195);
+    ctx.fillStyle = '#00d4ff';
+    ctx.fillText(`MAX TENSION       : ${(loadFactor * 100).toFixed(0)} kN`, 40, 215);
+    ctx.fillStyle = '#ff4444';
+    ctx.fillText(`MAX COMPRESSION   : ${(loadFactor * 100).toFixed(0)} kN`, 40, 235);
+  }, [angle, load]);
+  return (
+    <div style={{ width: '100%', height: '100%' }}>
+      <canvas ref={canvasRef} style={{ width: '100%', height: '100%', display: 'block' }} />
+    </div>
+  );
+};
+export const TunedMassDamperSim: React.FC<SimulationProps> = ({ angle, load , zoom = 1 }) => {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+    const dpr = window.devicePixelRatio || 1;
+    const rect = canvas.getBoundingClientRect();
+    canvas.width = rect.width * dpr;
+    canvas.height = rect.height * dpr;
+    ctx.scale(dpr, dpr);
+    const width = rect.width;
+    const height = rect.height;
+    ctx.clearRect(0, 0, width, height);
+    const scale = (Math.min(width, height) / 14) * zoom; 
+    const originX = width * 0.5;
+    const originY = height * 0.9; 
+    const forceFreq = 0.5; 
+    const baseDeflection = Math.sin(angle * forceFreq) * (load / 100);
