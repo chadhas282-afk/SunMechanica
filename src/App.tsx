@@ -5958,3 +5958,43 @@ export const ShaftTorsionSim: React.FC<SimulationProps> = ({ angle, load, zoom =
       if (Math.abs(r) < 0.1) continue;
       const sh = (r / R) * maxShear * sign;
       const [ax, ay] = gx(r, 0);
+       const [ax2, ay2] = gx(r, sh);
+      ctx.beginPath(); ctx.moveTo(ax, ay); ctx.lineTo(ax2, ay2);
+      ctx.strokeStyle = '#ffb703'; ctx.stroke();
+      const ahDir = sh > 0 ? 1 : -1;
+      ctx.beginPath(); ctx.moveTo(ax2, ay2);
+      ctx.lineTo(ax2 - 0.1*scale, ay2 - ahDir*0.1*scale);
+      ctx.lineTo(ax2 + 0.1*scale, ay2 - ahDir*0.1*scale);
+      ctx.fillStyle = '#ffb703'; ctx.fill();
+    }
+    ctx.font = `${12*zoom}px monospace`; ctx.fillStyle = '#ffb703';
+    ctx.fillText('SHEAR STRESS (τ)', graphOriginX - 50, graphOriginY - R * scale - 20);
+    ctx.fillStyle = 'rgba(8, 15, 30, 0.85)';
+    ctx.fillRect(30, 150, 240, 110);
+    ctx.strokeStyle = 'rgba(0, 212, 255, 0.3)';
+    ctx.strokeRect(30, 150, 240, 110);
+    ctx.font = '10px monospace';
+    ctx.fillStyle = '#00d4ff'; ctx.fillText('SYS :: SHAFT_TORSION', 40, 170);
+    ctx.fillStyle = '#fff'; ctx.fillText(`TWIST ANGLE  : ${(twist * 180 / Math.PI).toFixed(1)}°`, 40, 195);
+    ctx.fillStyle = '#ff3366'; ctx.fillText(`MAX SHEAR    : ${maxShear.toFixed(1)} MPa`, 40, 215);
+    ctx.fillStyle = '#3b82f6'; ctx.fillText(`SHAFT LENGTH : ${(L * 10).toFixed(0)} cm`, 40, 235);
+  }, [angle, load, zoom]);
+  return <div style={{ width: '100%', height: '100%' }}><canvas ref={canvasRef} style={{ width: '100%', height: '100%', display: 'block' }} /></div>;
+};
+export const SlidingVanePumpSim: React.FC<SimulationProps> = ({ angle, load , zoom = 1 }) => {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+    const dpr = window.devicePixelRatio || 1;
+    const rect = canvas.getBoundingClientRect();
+    canvas.width = rect.width * dpr;
+    canvas.height = rect.height * dpr;
+    ctx.scale(dpr, dpr);
+    const width = rect.width;
+    const height = rect.height;
+    ctx.clearRect(0, 0, width, height);
+    const scale = (Math.min(width, height) / 12) * zoom; 
+    const originX = width * 0.5;
