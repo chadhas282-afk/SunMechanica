@@ -6858,3 +6858,43 @@ export const TunedMassDamperSim: React.FC<SimulationProps> = ({ angle, load , zo
     const originY = height * 0.9; 
     const forceFreq = 0.5; 
     const baseDeflection = Math.sin(angle * forceFreq) * (load / 100);
+    const tmdDeflection = Math.sin(angle * forceFreq + Math.PI) * (load / 100) * 1.5;
+    const buildingHeight = 10.0;
+    const buildingWidth = 2.0;
+    ctx.fillStyle = '#050d1a';
+    ctx.fillRect(0, 0, width, height);
+    ctx.strokeStyle = '#1e293b';
+    ctx.lineWidth = 1;
+    for (let i = 0; i < width; i += 40) {
+      ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(i, height); ctx.stroke();
+    }
+    for (let i = 0; i < height; i += 40) {
+      ctx.beginPath(); ctx.moveTo(0, i); ctx.lineTo(width, i); ctx.stroke();
+    }
+    ctx.beginPath();
+    ctx.moveTo(0, originY);
+    ctx.lineTo(width, originY);
+    ctx.strokeStyle = '#475569';
+    ctx.lineWidth = 4;
+    ctx.stroke();
+    ctx.save();
+    ctx.translate(originX, originY); 
+    const numSegments = 20;
+    const dy = buildingHeight / numSegments;
+    const getDeflectedX = (y: number) => {
+      const normalizedY = y / buildingHeight;
+      return baseDeflection * Math.pow(normalizedY, 1.5) * 5.0; 
+    };
+    ctx.beginPath();
+    for (let i = 0; i <= numSegments; i++) {
+      const y = i * dy;
+      const x = getDeflectedX(y);
+      if (i === 0) ctx.moveTo(x * scale, -y * scale);
+      else ctx.lineTo(x * scale, -y * scale);
+    }
+    ctx.strokeStyle = '#334155';
+    ctx.lineWidth = 2;
+    ctx.setLineDash([4, 4]);
+    ctx.stroke();
+    ctx.setLineDash([]);
+    for (let i = 0; i < numSegments; i++) {
