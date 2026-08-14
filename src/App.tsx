@@ -6578,3 +6578,43 @@ export const ToggleMechanismSim: React.FC<SimulationProps> = ({ angle, load, zoo
     ctx.font = '10px monospace';
     ctx.fillStyle = '#00ff88'; ctx.fillText('SYS :: TOGGLE_MECHANISM', 40, 170);
     ctx.fillStyle = '#fff'; ctx.fillText(`TOGGLE ANGLE : ${(alpha * 180 / Math.PI).toFixed(1)}°`, 40, 195);
+    ctx.fillStyle = '#00d4ff'; ctx.fillText(`JAW POSITION : ${D[0].toFixed(2)} cm`, 40, 215);
+    ctx.fillStyle = forceColor; 
+    ctx.fillText(`MECH ADVANTAGE: ${ma > 50 ? 'MAX' : ma.toFixed(2)}X`, 40, 235);
+  }, [angle, load, zoom]);
+  return <div style={{ width: '100%', height: '100%' }}><canvas ref={canvasRef} style={{ width: '100%', height: '100%', display: 'block' }} /></div>;
+};
+export const TrussJointMethodSim: React.FC<SimulationProps> = ({ angle, load, zoom = 1 }) => {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+    const dpr = window.devicePixelRatio || 1;
+    const rect = canvas.getBoundingClientRect();
+    canvas.width = rect.width * dpr;
+    canvas.height = rect.height * dpr;
+    ctx.scale(dpr, dpr);
+    const width = rect.width;
+    const height = rect.height;
+    ctx.clearRect(0, 0, width, height);
+    const scale = (Math.min(width, height) / 16) * zoom; 
+    const originX = width * 0.5;
+    const originY = height * 0.5;
+    ctx.fillStyle = '#050d1a'; ctx.fillRect(0, 0, width, height);
+    ctx.strokeStyle = '#1e293b'; ctx.lineWidth = 1;
+    for (let i = 0; i < width; i += 40) { ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(i, height); ctx.stroke(); }
+    for (let i = 0; i < height; i += 40) { ctx.beginPath(); ctx.moveTo(0, i); ctx.lineTo(width, i); ctx.stroke(); }
+    const toScreen = (x: number, y: number) => [originX + x * scale, originY - y * scale];
+    const nodeX = 0;
+    const nodeY = 2;
+    const supAX = -4; const supAY = -2;
+    const supBX = 4; const supBY = -2;
+    const loadFactor = load / 100;
+    const W = 2.0 + loadFactor * 5.0; 
+    const H = Math.sin(angle) * 4.0;
+    const vecA = [supAX - nodeX, supAY - nodeY]; 
+    const lenA = Math.hypot(vecA[0], vecA[1]);
+    const dirA = [vecA[0]/lenA, vecA[1]/lenA];
+    const vecB = [supBX - nodeX, supBY - nodeY]; 
