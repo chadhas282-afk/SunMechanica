@@ -7018,3 +7018,43 @@ export const VenturiTubeSim: React.FC<SimulationProps> = ({ angle, load , zoom =
     }
     const dAngle = angle - lastAngleRef.current;
     lastAngleRef.current = angle;
+    const baseFlowRate = 1.0 + (load / 100) * 2;
+    const dt = Math.max(0, dAngle) * baseFlowRate; 
+    particlesRef.current.forEach(p => {
+      const currentR = tubeRadius(p.x);
+      const area = Math.PI * currentR * currentR;
+      const speed = (20.0 / area) * p.speedMultiplier; 
+      p.x += speed * dt;
+      if (p.x > L) {
+        p.x = -L;
+        p.y = (Math.random() - 0.5) * 2.0;
+      }
+    });
+    ctx.fillStyle = '#050d1a';
+    ctx.fillRect(0, 0, width, height);
+    ctx.strokeStyle = '#1e293b';
+    ctx.lineWidth = 1;
+    for (let i = 0; i < width; i += 40) {
+      ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(i, height); ctx.stroke();
+    }
+    for (let i = 0; i < height; i += 40) {
+      ctx.beginPath(); ctx.moveTo(0, i); ctx.lineTo(width, i); ctx.stroke();
+    }
+    const toScreen = (x: number, y: number) => [originX + x * scale, originY - y * scale];
+    ctx.globalCompositeOperation = 'lighter';
+    particlesRef.current.forEach(p => {
+      const r = tubeRadius(p.x);
+      const actualY = p.y * r;
+      const [sx, sy] = toScreen(p.x, actualY);
+      const area = Math.PI * r * r;
+      const speed = (20.0 / area);
+      const trailLen = speed * 0.5;
+      let color = '#0284c7';
+      if (speed > 10) color = '#38bdf8';
+      if (speed > 25) color = '#bae6fd';
+      ctx.beginPath();
+      ctx.moveTo(sx - trailLen * scale, sy);
+      ctx.lineTo(sx + trailLen * scale, sy);
+      ctx.strokeStyle = color;
+      ctx.lineWidth = 2;
+      ctx.stroke();
