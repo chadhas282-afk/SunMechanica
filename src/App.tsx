@@ -6038,3 +6038,43 @@ export const SlidingVanePumpSim: React.FC<SimulationProps> = ({ angle, load , zo
       const vy1 = -Rr * scale * Math.sin(alpha); 
       const vx2 = r_ext * scale * Math.cos(alpha);
       const vy2 = -r_ext * scale * Math.sin(alpha);
+       ctx.beginPath();
+      ctx.moveTo(vx1, vy1);
+      ctx.lineTo(vx2, vy2);
+      ctx.strokeStyle = stressColor;
+      if (load > 50) { ctx.shadowBlur = (load - 50)*0.2; ctx.shadowColor = stressColor; }
+      ctx.stroke();
+      ctx.shadowBlur = 0;
+      ctx.beginPath();
+      ctx.arc(vx2, vy2, 3, 0, 2*Math.PI);
+      ctx.fillStyle = '#fff'; ctx.fill();
+    }
+    ctx.beginPath();
+    ctx.arc(0, 0, Rr * scale, 0, 2 * Math.PI);
+    ctx.fillStyle = '#1e293b'; ctx.fill();
+    ctx.strokeStyle = '#3b82f6'; ctx.lineWidth = 3; ctx.stroke();
+    ctx.beginPath();
+    ctx.arc(0, 0, 0.4 * scale, 0, 2 * Math.PI);
+    ctx.fillStyle = '#0f172a'; ctx.fill();
+    ctx.strokeStyle = '#fff'; ctx.stroke();
+    ctx.restore();
+    drawCircle(0, 0, 0.1, '#fff', true); 
+  }, [angle, load]);
+  return <div style={{ width: '100%', height: '100%' }}><canvas ref={canvasRef} style={{ width: '100%', height: '100%', display: 'block' }} /></div>;
+};
+export const StirlingEngineSim: React.FC<SimulationProps> = ({ angle, load , zoom = 1 }) => {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+    const dpr = window.devicePixelRatio || 1;
+    const rect = canvas.getBoundingClientRect();
+    canvas.width = rect.width * dpr;
+    canvas.height = rect.height * dpr;
+    ctx.scale(dpr, dpr);
+    const width = rect.width;
+    const height = rect.height;
+    ctx.clearRect(0, 0, width, height);
+    const scale = (Math.min(width, height) / 10) * zoom; 
