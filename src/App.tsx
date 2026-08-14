@@ -6118,3 +6118,43 @@ export const StirlingEngineSim: React.FC<SimulationProps> = ({ angle, load , zoo
       const [sx, sy] = toScreen(xCenter, 0);
       const cw = 3.5 * scale;
       const ch = 1.4 * scale;
+      const heatPhase = isHot ? Math.max(0, Math.sin(angle)) : Math.max(0, Math.sin(betaAngle));
+      const intensity = 0.1 + 0.3 * heatPhase + (load / 100) * 0.4;
+      ctx.fillStyle = isHot 
+        ? `rgba(220, 38, 38, ${intensity})` 
+        : `rgba(14, 165, 233, ${intensity})`;
+      ctx.fillRect(sx - cw/2, sy - ch/2, cw, ch);
+      ctx.strokeStyle = isHot ? '#ef4444' : '#38bdf8';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(sx - cw/2, sy - ch/2); ctx.lineTo(sx + cw/2, sy - ch/2);
+      ctx.moveTo(sx - cw/2, sy + ch/2); ctx.lineTo(sx + cw/2, sy + ch/2);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(isHot ? sx - cw/2 : sx + cw/2, sy - ch/2);
+      ctx.lineTo(isHot ? sx - cw/2 : sx + cw/2, sy + ch/2);
+      ctx.lineWidth = 4;
+      ctx.stroke();
+      ctx.lineWidth = 2;
+      for (let i=0; i<5; i++) {
+        const finX = sx + (isHot ? -cw/2 + 10 + i*10 : cw/2 - 10 - i*10);
+        ctx.beginPath(); ctx.moveTo(finX, sy - ch/2); ctx.lineTo(finX, sy - ch/2 - 15); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(finX, sy + ch/2); ctx.lineTo(finX, sy + ch/2 + 15); ctx.stroke();
+      }
+    };
+    drawCylinder(-3.5, true);
+    drawCylinder(3.5, false);
+    ctx.strokeStyle = '#94a3b8';
+    ctx.lineWidth = 12;
+    ctx.beginPath();
+    const [tx1, ty1] = toScreen(-4.5, 0.7);
+    const [tx2, ty2] = toScreen(4.5, 0.7);
+    ctx.moveTo(tx1, ty1);
+    ctx.lineTo(tx1, ty1 - 40);
+    ctx.lineTo(tx2, ty2 - 40);
+    ctx.lineTo(tx2, ty2);
+    ctx.stroke();
+    ctx.strokeStyle = '#1e293b';
+    ctx.lineWidth = 8;
+    ctx.stroke();
+    const drawPiston = (x: number, isHot: boolean) => {
