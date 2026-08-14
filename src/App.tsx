@@ -6978,3 +6978,43 @@ interface Particle {
   x: number;
   y: number;
   speedMultiplier: number;
+  color: string;
+}
+export const VenturiTubeSim: React.FC<SimulationProps> = ({ angle, load , zoom = 1 }) => {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const particlesRef = useRef<Particle[]>([]);
+  const lastAngleRef = useRef(angle);
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+    const dpr = window.devicePixelRatio || 1;
+    const rect = canvas.getBoundingClientRect();
+    canvas.width = rect.width * dpr;
+    canvas.height = rect.height * dpr;
+    ctx.scale(dpr, dpr);
+    const width = rect.width;
+    const height = rect.height;
+    ctx.clearRect(0, 0, width, height);
+    const scale = (Math.min(width, height) / 10) * zoom; 
+    const originX = width * 0.5;
+    const originY = height * 0.5;
+    const L = 8.0;
+    const tubeRadius = (x: number) => {
+      const choke = 0.6;
+      const wide = 2.0;
+      return choke + (wide - choke) * (1 - Math.exp(-Math.pow(x, 2)));
+    };
+    if (particlesRef.current.length === 0) {
+      for (let i = 0; i < 400; i++) {
+        particlesRef.current.push({
+          x: (Math.random() - 0.5) * L * 2,
+          y: (Math.random() - 0.5) * 2.0, 
+          speedMultiplier: 0.8 + Math.random() * 0.4,
+          color: Math.random() > 0.8 ? '#38bdf8' : '#0ea5e9'
+        });
+      }
+    }
+    const dAngle = angle - lastAngleRef.current;
+    lastAngleRef.current = angle;
