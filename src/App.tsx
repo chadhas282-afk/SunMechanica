@@ -6238,3 +6238,63 @@ export const StrandbeestSim: React.FC<SimulationProps> = ({ angle, load , zoom =
     };
     const intersect = (p1: number[], r1: number, p2: number[], r2: number, dir: number) => {
       const dx = p2[0] - p1[0], dy = p2[1] - p1[1];
+       const d = Math.hypot(dx, dy);
+      if (d > r1 + r2 || d < Math.abs(r1 - r2) || d === 0) return [0, 0]; 
+      const a = (r1*r1 - r2*r2 + d*d) / (2*d);
+      const h = Math.sqrt(Math.max(0, r1*r1 - a*a));
+      const mx = p1[0] + (dx * a) / d;
+      const my = p1[1] + (dy * a) / d;
+      return [
+        mx + dir * h * (dy / d),
+        my - dir * h * (dx / d)
+      ];
+    };
+    const a = 3.8, b = 4.15, c = 3.93, d = 4.01, e = 5.58, f = 3.94, g = 3.67, h = 6.57, i = 4.9, j = 5.0, k = 6.19, l = 0.78, m = 1.5;
+    const drawLeg = (theta: number, color: string, glow: boolean) => {
+      const P = [-a, -l]; 
+      const A = [m * Math.cos(theta), m * Math.sin(theta)];
+      const B = intersect(P, b, A, j, -1);
+      const D = intersect(P, c, B, k, -1);
+      const C = intersect(P, d, B, e, 1);
+      const E = intersect(C, f, D, g, 1);
+      const Foot = intersect(C, h, E, i, 1);
+      ctx.shadowBlur = glow ? 15 : 0;
+      ctx.shadowColor = color;
+      const w = 4;
+      drawLine(P, B, color, w); drawLine(A, B, color, w);
+      drawLine(P, D, color, w); drawLine(B, D, color, w);
+      drawLine(P, C, color, w); drawLine(B, C, color, w);
+      drawLine(C, E, color, w); drawLine(D, E, color, w);
+      drawLine(C, Foot, color, w); drawLine(E, Foot, color, w);
+      ctx.shadowBlur = 0;
+      const jCol = glow ? '#fff' : '#64748b';
+      [B, C, D, E, Foot].forEach(pt => drawCircle(pt, 0.15, jCol, true));
+    };
+    const loadFactor = load / 100;
+    const rC = Math.round(168 + loadFactor * 87);
+    const stressColor = `rgb(${rC}, 85, 247)`;
+    drawLeg(angle + Math.PI, '#475569', false);
+    drawLeg(angle, stressColor, load > 50);
+    const O = [0, 0];
+    const P = [-a, -l];
+    const A = [m * Math.cos(angle), m * Math.sin(angle)];
+    const A_back = [m * Math.cos(angle + Math.PI), m * Math.sin(angle + Math.PI)];
+    drawLine(O, P, '#334155', 8);
+    drawLine(O, A, '#fff', 6);
+    drawLine(O, A_back, '#64748b', 4);
+    drawCircle(O, 0.3, '#1e293b', true); drawCircle(O, 0.15, '#fff', true);
+    drawCircle(P, 0.3, '#1e293b', true); drawCircle(P, 0.15, '#fff', true);
+    drawCircle(A, 0.2, '#fff', true);
+    const [, gy] = toScreen(0, 6.0); 
+    ctx.beginPath();
+    ctx.moveTo(0, gy); ctx.lineTo(width, gy);
+    ctx.strokeStyle = '#334155'; ctx.lineWidth = 4; ctx.stroke();
+  }, [angle, load]);
+  return <div style={{ width: '100%', height: '100%' }}><canvas ref={canvasRef} style={{ width: '100%', height: '100%', display: 'block' }} /></div>;
+};
+export const SwashplateSim: React.FC<SimulationProps> = ({ angle, load , zoom = 1 }) => {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
