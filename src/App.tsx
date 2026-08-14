@@ -6338,3 +6338,43 @@ export const SwashplateSim: React.FC<SimulationProps> = ({ angle, load , zoom = 
       { phi: (4*Math.PI)/3, color: '#a855f7' }
     ];
     pistons.sort((a, b) => Math.cos(a.phi) - Math.cos(b.phi));
+    const topX = R * Math.tan(alpha) * Math.cos(angle);
+    const botX = R * Math.tan(alpha) * Math.cos(angle + Math.PI);
+    ctx.beginPath();
+    const [swT_x, swT_y] = toScreen(topX, R + 1);
+    const [swB_x, swB_y] = toScreen(botX, -(R + 1));
+    ctx.moveTo(swT_x, swT_y);
+    ctx.lineTo(swB_x, swB_y);
+    ctx.strokeStyle = '#ffd700'; ctx.lineWidth = 15; ctx.lineCap = 'round';
+    if (load > 50) {
+      ctx.shadowBlur = (load - 50) * 0.4;
+      ctx.shadowColor = '#ffd700';
+    }
+    ctx.stroke(); ctx.shadowBlur = 0;
+    pistons.forEach(p => {
+      const py = R * Math.sin(p.phi);
+      const pz = R * Math.cos(p.phi);
+      const px = py * Math.tan(alpha) * Math.cos(angle) + pz * Math.tan(alpha) * Math.sin(angle);
+      const [screenX, screenY] = toScreen(px, py);
+      const [cylBaseX, ] = toScreen(4, py);
+      ctx.beginPath();
+      ctx.moveTo(screenX, screenY);
+      ctx.lineTo(cylBaseX + 6*scale, screenY);
+      ctx.strokeStyle = p.color; ctx.lineWidth = 8; ctx.stroke();
+      ctx.beginPath();
+      ctx.arc(screenX, screenY, 6, 0, 2*Math.PI);
+      ctx.fillStyle = '#fff'; ctx.fill();
+      ctx.fillStyle = '#050d1a';
+      ctx.fillRect(cylBaseX, screenY - 6, 6*scale, 12);
+      ctx.strokeStyle = p.color; ctx.lineWidth = 2;
+      ctx.strokeRect(cylBaseX, screenY - 6, 6*scale, 12);
+      ctx.fillStyle = p.color;
+      ctx.fillRect(cylBaseX, screenY - 4, screenX - cylBaseX > 0 ? 0 : (cylBaseX - screenX), 8); 
+      ctx.fillRect(screenX, screenY - 4, (cylBaseX + 5*scale) - screenX, 8);
+    });
+    ctx.fillStyle = 'rgba(8, 15, 30, 0.85)';
+    ctx.fillRect(30, 150, 240, 110);
+    ctx.strokeStyle = 'rgba(255, 215, 0, 0.3)';
+    ctx.strokeRect(30, 150, 240, 110);
+    ctx.font = '10px monospace';
+    ctx.fillStyle = '#ffd700';
