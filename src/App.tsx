@@ -6418,3 +6418,43 @@ export const TeslaTurbineSim: React.FC<SimulationProps> = ({ angle, load , zoom 
       ctx.arc(sx, sy, r * scale, 0, 2 * Math.PI);
       ctx.strokeStyle = color; ctx.lineWidth = 2; ctx.stroke();
       if (fill) { ctx.fillStyle = color; ctx.fill(); }
+      };
+    const R = 4.0; 
+    ctx.fillStyle = '#0f172a';
+    ctx.beginPath();
+    const [nx, ny] = toScreen(R, R * 0.8);
+    ctx.moveTo(nx, ny); ctx.lineTo(nx + 40, ny - 40); ctx.lineTo(nx + 60, ny - 20); ctx.lineTo(nx + 20, ny + 20);
+    ctx.fill(); ctx.strokeStyle = '#475569'; ctx.lineWidth = 4; ctx.stroke();
+    for (let i = 0; i < 6; i++) {
+      particlesRef.current.push({
+        r: R - 0.1,
+        t: Math.PI / 4 + (Math.random() * 0.2 - 0.1), 
+        l: 1.0 
+      });
+    }
+    const loadFactor = load / 100;
+    const speed = 0.05 + loadFactor * 0.1;
+    const viscosity = 0.02; 
+    const activeParticles = [];
+    ctx.save();
+    for (let i = 0; i < particlesRef.current.length; i++) {
+      const p = particlesRef.current[i];
+      p.r -= viscosity * p.r * speed;
+      p.t -= speed * (R / Math.max(0.5, p.r)); 
+      p.l -= 0.005; 
+      if (p.r > 0.8 && p.l > 0) {
+        activeParticles.push(p);
+        const px = p.r * Math.cos(p.t);
+        const py = p.r * Math.sin(p.t);
+        const [spx, spy] = toScreen(px, py);
+        ctx.fillStyle = `rgba(0, 255, 136, ${p.l})`;
+        ctx.beginPath();
+        ctx.arc(spx, spy, 1.5, 0, 2 * Math.PI);
+        ctx.fill();
+      }
+    }
+    particlesRef.current = activeParticles;
+    ctx.restore();
+    drawCircle(0, 0, R, '#3b82f6', false);
+    ctx.beginPath();
+    const [cx, cy] = toScreen(0, 0);
