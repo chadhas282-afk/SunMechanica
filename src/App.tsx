@@ -6458,3 +6458,43 @@ export const TeslaTurbineSim: React.FC<SimulationProps> = ({ angle, load , zoom 
     drawCircle(0, 0, R, '#3b82f6', false);
     ctx.beginPath();
     const [cx, cy] = toScreen(0, 0);
+    ctx.arc(cx, cy, R * scale, 0, 2 * Math.PI);
+    ctx.fillStyle = 'rgba(15, 23, 42, 0.4)';
+    ctx.fill();
+    const exhaustRot = -angle; 
+    for (let i = 0; i < 4; i++) {
+      const a = exhaustRot + i * Math.PI / 2;
+      const hx = 0.8 * Math.cos(a);
+      const hy = 0.8 * Math.sin(a);
+      drawCircle(hx, hy, 0.3, '#050d1a', true);
+      drawCircle(hx, hy, 0.3, '#475569', false);
+    }
+    drawCircle(0, 0, 0.4, '#fff', true);
+  }, [angle, load]);
+  return <div style={{ width: '100%', height: '100%' }}><canvas ref={canvasRef} style={{ width: '100%', height: '100%', display: 'block' }} /></div>;
+};
+export const ToggleMechanismSim: React.FC<SimulationProps> = ({ angle, load, zoom = 1 }) => {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+    const dpr = window.devicePixelRatio || 1;
+    const rect = canvas.getBoundingClientRect();
+    canvas.width = rect.width * dpr;
+    canvas.height = rect.height * dpr;
+    ctx.scale(dpr, dpr);
+    const width = rect.width;
+    const height = rect.height;
+    ctx.clearRect(0, 0, width, height);
+    const scale = (Math.min(width, height) / 16) * zoom; 
+    const originX = width * 0.5;
+    const originY = height * 0.5;
+    ctx.fillStyle = '#050d1a'; ctx.fillRect(0, 0, width, height);
+    ctx.strokeStyle = '#1e293b'; ctx.lineWidth = 1;
+    for (let i = 0; i < width; i += 40) { ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(i, height); ctx.stroke(); }
+    for (let i = 0; i < height; i += 40) { ctx.beginPath(); ctx.moveTo(0, i); ctx.lineTo(width, i); ctx.stroke(); }
+    const toScreen = (x: number, y: number) => [originX + x * scale, originY - y * scale];
+    const drawLine = (x1: number, y1: number, x2: number, y2: number, color: string, w: number) => {
+      ctx.beginPath();
