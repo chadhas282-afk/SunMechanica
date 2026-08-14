@@ -5878,3 +5878,43 @@ export const ShaftTorsionSim: React.FC<SimulationProps> = ({ angle, load, zoom =
     const drawGridLines = (front: boolean) => {
       for (let j = 0; j < numLines; j++) {
         const theta0 = j * (2 * Math.PI / numLines);
+        ctx.beginPath();
+        let started = false;
+        for (let i = 0; i <= numSections; i++) {
+          const x = (i / numSections) * L;
+          const currentTwist = (x / L) * twist;
+          const theta = theta0 + currentTwist;
+          const y = R * Math.cos(theta);
+          const z = R * Math.sin(theta);
+          if ((front && z >= -0.1) || (!front && z <= 0.1)) {
+            const [px, py] = project(x, y, z);
+            if (!started) {
+              ctx.moveTo(px, py);
+              started = true;
+            } else {
+              ctx.lineTo(px, py);
+            }
+          } else {
+            started = false;
+          }
+        }
+        ctx.strokeStyle = front ? '#00d4ff' : 'rgba(0, 212, 255, 0.2)';
+        ctx.stroke();
+      }
+    };
+    const drawCircSections = (front: boolean) => {
+      for (let i = 0; i <= numSections; i++) {
+        const x = (i / numSections) * L;
+        ctx.beginPath();
+        let started = false;
+        for (let j = 0; j <= 40; j++) {
+          const theta = (j / 40) * 2 * Math.PI;
+          const y = R * Math.cos(theta);
+          const z = R * Math.sin(theta);
+          if ((front && z >= -0.1) || (!front && z <= 0.1)) {
+            const [px, py] = project(x, y, z);
+            if (!started) { ctx.moveTo(px, py); started = true; }
+            else { ctx.lineTo(px, py); }
+          } else {
+            started = false;
+          }
