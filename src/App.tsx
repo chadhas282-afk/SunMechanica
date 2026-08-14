@@ -5798,3 +5798,43 @@ export const ScotchYokeSim: React.FC<SimulationProps> = ({ angle, load , zoom = 
     ctx.moveTo(graphX, graphY);
     ctx.lineTo(graphX + 4 * scale, graphY);
     ctx.strokeStyle = 'rgba(255,255,255,0.2)';
+     ctx.lineWidth = 2;
+    ctx.stroke();
+    if (traceRef.current.length > 1) {
+      ctx.beginPath();
+      for (let i = 0; i < traceRef.current.length; i++) {
+        const pt = traceRef.current[i];
+        const gx = graphX + (i / 150) * 4 * scale;
+        const gy = graphY - pt.pos * 0.8 * scale;
+        if (i === 0) ctx.moveTo(gx, gy);
+        else ctx.lineTo(gx, gy);
+      }
+      ctx.strokeStyle = '#00d4ff';
+      ctx.lineWidth = 2;
+      ctx.stroke();
+    }
+    ctx.fillStyle = 'rgba(8, 15, 30, 0.85)';
+    ctx.fillRect(width - 260, 150, 220, 110);
+    ctx.strokeStyle = 'rgba(0, 212, 255, 0.3)';
+    ctx.strokeRect(width - 260, 150, 220, 110);
+    ctx.font = '10px monospace';
+    ctx.fillStyle = '#00d4ff';
+    ctx.fillText('SYS :: SCOTCH_YOKE', width - 250, 170);
+    ctx.fillStyle = '#fff';
+    ctx.fillText(`YOKE X POS : ${yokeX.toFixed(3)} m`, width - 250, 195);
+    ctx.fillStyle = '#3b82f6';
+    const vel = -R * Math.sin(-angle);
+    ctx.fillText(`YOKE VELOC : ${vel.toFixed(3)} m/s`, width - 250, 215);
+    ctx.fillStyle = stressColor;
+    ctx.fillText(`AXIAL LOAD : ${(loadFactor * 100).toFixed(0)} kN`, width - 250, 235);
+  }, [angle, load]);
+  return (
+    <div style={{ width: '100%', height: '100%' }}>
+      <canvas ref={canvasRef} style={{ width: '100%', height: '100%', display: 'block' }} />
+    </div>
+  );
+};
+export const ShaftTorsionSim: React.FC<SimulationProps> = ({ angle, load, zoom = 1 }) => {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  useEffect(() => {
+    const canvas = canvasRef.current;
