@@ -6538,3 +6538,43 @@ export const ToggleMechanismSim: React.FC<SimulationProps> = ({ angle, load, zoo
     const stressColor = `rgb(${rC}, 255, 136)`;
     const forceColor = load > 50 && ma > 3 ? '#ff3366' : '#00ff88';
     drawCircle(O[0], O[1], 0.4, '#1e293b', true); drawCircle(O[0], O[1], 0.2, '#fff', true);
+    drawCircle(C[0], C[1], 0.4, '#1e293b', true); drawCircle(C[0], C[1], 0.2, '#fff', true);
+    drawLine(O[0], O[1], A[0], A[1], '#3b82f6', 10);
+    drawLine(A[0], A[1], B[0], B[1], '#64748b', 8);
+    if (load > 50 && ma > 3) {
+      ctx.shadowBlur = ma * 3;
+      ctx.shadowColor = forceColor;
+    }
+    drawLine(C[0], C[1], B[0], B[1], stressColor, 12);
+    drawLine(B[0], B[1], D[0], D[1], stressColor, 12);
+    ctx.shadowBlur = 0;
+    const [dx_s, dy_s] = toScreen(D[0], D[1]);
+    ctx.fillStyle = '#1e293b';
+    ctx.fillRect(dx_s - 1.5*scale, dy_s - 2*scale, 2*scale, 4*scale);
+    ctx.strokeStyle = forceColor; ctx.lineWidth = 4 * zoom;
+    ctx.strokeRect(dx_s - 1.5*scale, dy_s - 2*scale, 2*scale, 4*scale);
+    const fixedJawX = -6;
+    const [fjx, fjy] = toScreen(fixedJawX, 0);
+    ctx.fillStyle = '#0f172a';
+    ctx.fillRect(fjx - scale, fjy - 2.5*scale, 2*scale, 5*scale);
+    ctx.strokeStyle = '#475569';
+    ctx.strokeRect(fjx - scale, fjy - 2.5*scale, 2*scale, 5*scale);
+    if (D[0] < fixedJawX + 2.0 && load > 0) {
+      ctx.fillStyle = forceColor;
+      for(let i=0; i<5; i++) {
+        const rx = fixedJawX + 1.0 + Math.random();
+        const ry = (Math.random() - 0.5) * 4;
+        drawCircle(rx, ry, 0.1 + Math.random()*0.1, forceColor, true);
+      }
+    }
+    drawCircle(A[0], A[1], 0.3, '#fff', true);
+    drawCircle(B[0], B[1], 0.3, '#fff', true);
+    drawCircle(D[0], D[1], 0.3, '#fff', true);
+    drawLine(D[0] - 2, D[1] + 2.2, D[0] + 2, D[1] + 2.2, '#334155', 4);
+    ctx.fillStyle = 'rgba(8, 15, 30, 0.85)';
+    ctx.fillRect(30, 150, 240, 110);
+    ctx.strokeStyle = 'rgba(0, 255, 136, 0.3)';
+    ctx.strokeRect(30, 150, 240, 110);
+    ctx.font = '10px monospace';
+    ctx.fillStyle = '#00ff88'; ctx.fillText('SYS :: TOGGLE_MECHANISM', 40, 170);
+    ctx.fillStyle = '#fff'; ctx.fillText(`TOGGLE ANGLE : ${(alpha * 180 / Math.PI).toFixed(1)}°`, 40, 195);
