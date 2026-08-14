@@ -6158,3 +6158,44 @@ export const StirlingEngineSim: React.FC<SimulationProps> = ({ angle, load , zoo
     ctx.lineWidth = 8;
     ctx.stroke();
     const drawPiston = (x: number, isHot: boolean) => {
+      const [sx, sy] = toScreen(x, 0);
+      const pw = 1.0 * scale;
+      const ph = 1.35 * scale;
+      ctx.fillStyle = '#0f172a';
+      ctx.fillRect(sx - pw/2, sy - ph/2, pw, ph);
+      ctx.strokeStyle = isHot ? '#fca5a5' : '#bae6fd';
+      ctx.lineWidth = 2;
+      ctx.strokeRect(sx - pw/2, sy - ph/2, pw, ph);
+      drawCircle(x, 0, 0.15, '#fff', true);
+    };
+    drawPiston(alphaX, true);
+    drawPiston(betaX, false);
+    ctx.setLineDash([4, 4]);
+    drawCircle(0, 0, R, '#64748b');
+    ctx.setLineDash([]);
+    drawLine(alphaX, 0, crankX, crankY, '#94a3b8', 6);
+    drawLine(betaX, 0, betaCrankX, betaCrankY, '#94a3b8', 6);
+    drawLine(0, 0, crankX, crankY, '#ef4444', 8); 
+    drawLine(0, 0, betaCrankX, betaCrankY, '#38bdf8', 8); 
+    drawCircle(crankX, crankY, 0.15, '#fca5a5', true);
+    drawCircle(betaCrankX, betaCrankY, 0.15, '#bae6fd', true);
+    drawCircle(0, 0, 0.25, '#fff', true);
+    ctx.fillStyle = 'rgba(8, 15, 30, 0.85)';
+    ctx.fillRect(width/2 - 120, height - 120, 240, 110);
+    ctx.strokeStyle = 'rgba(239, 68, 68, 0.3)';
+    ctx.strokeRect(width/2 - 120, height - 120, 240, 110);
+    ctx.font = '10px monospace';
+    ctx.fillStyle = '#ef4444';
+    ctx.fillText('SYS :: STIRLING_CYCLE', width/2 - 110, height - 100);
+    ctx.fillStyle = '#fff';
+    const normAngle = ((angle * 180 / Math.PI) % 360 + 360) % 360;
+    ctx.fillText(`CRANK ANGLE : ${normAngle.toFixed(1)}°`, width/2 - 110, height - 75);
+    ctx.fillStyle = '#fca5a5';
+    ctx.fillText(`ALPHA (HOT) : ${Math.abs(alphaX).toFixed(2)}`, width/2 - 110, height - 55);
+    ctx.fillStyle = '#bae6fd';
+    ctx.fillText(`BETA (COLD) : ${Math.abs(betaX).toFixed(2)}`, width/2 - 110, height - 35);
+  }, [angle, load]);
+  return (
+    <div style={{ width: '100%', height: '100%' }}>
+      <canvas ref={canvasRef} style={{ width: '100%', height: '100%', display: 'block' }} />
+    </div>
