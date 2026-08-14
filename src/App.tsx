@@ -5838,3 +5838,43 @@ export const ShaftTorsionSim: React.FC<SimulationProps> = ({ angle, load, zoom =
   const canvasRef = useRef<HTMLCanvasElement>(null);
   useEffect(() => {
     const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+    const dpr = window.devicePixelRatio || 1;
+    const rect = canvas.getBoundingClientRect();
+    canvas.width = rect.width * dpr;
+    canvas.height = rect.height * dpr;
+    ctx.scale(dpr, dpr);
+    const width = rect.width;
+    const height = rect.height;
+    ctx.clearRect(0, 0, width, height);
+    const scale = (Math.min(width, height) / 16) * zoom; 
+    const originX = width * 0.4;
+    const originY = height * 0.5;
+    ctx.fillStyle = '#050d1a'; ctx.fillRect(0, 0, width, height);
+    ctx.strokeStyle = '#1e293b'; ctx.lineWidth = 1;
+    for (let i = 0; i < width; i += 40) { ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(i, height); ctx.stroke(); }
+    for (let i = 0; i < height; i += 40) { ctx.beginPath(); ctx.moveTo(0, i); ctx.lineTo(width, i); ctx.stroke(); }
+    const toScreen = (x: number, y: number) => [originX + x * scale, originY - y * scale];
+    const project = (x: number, y: number, z: number) => {
+      const px = x + z * 0.3;
+      const py = y - z * 0.15;
+      return toScreen(px, py);
+    };
+    const L = 8.0;
+    const R = 2.0;
+    const twist = Math.sin(angle) * (Math.PI / 2) * (load / 100);
+    ctx.fillStyle = '#0f172a';
+    const [sup1x, sup1y] = project(0, R + 0.5, R + 0.5);
+    const [sup2x, sup2y] = project(0, -(R + 0.5), R + 0.5);
+    const [sup3x, sup3y] = project(-1, -(R + 0.5), R + 0.5);
+    const [sup4x, sup4y] = project(-1, R + 0.5, R + 0.5);
+    ctx.beginPath(); ctx.moveTo(sup1x, sup1y); ctx.lineTo(sup2x, sup2y); ctx.lineTo(sup3x, sup3y); ctx.lineTo(sup4x, sup4y); ctx.closePath();
+    ctx.fill(); ctx.strokeStyle = '#475569'; ctx.stroke();
+    const numSections = 20;
+    const numLines = 16;
+    ctx.lineWidth = 1 * zoom;
+    const drawGridLines = (front: boolean) => {
+      for (let j = 0; j < numLines; j++) {
+        const theta0 = j * (2 * Math.PI / numLines);
