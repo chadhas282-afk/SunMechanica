@@ -5918,3 +5918,43 @@ export const ShaftTorsionSim: React.FC<SimulationProps> = ({ angle, load, zoom =
           } else {
             started = false;
           }
+           }
+        ctx.strokeStyle = front ? '#3b82f6' : 'rgba(59, 130, 246, 0.2)';
+        ctx.stroke();
+      }
+    };
+    drawCircSections(false);
+    drawGridLines(false);
+    drawGridLines(true);
+    drawCircSections(true);
+    ctx.beginPath();
+    for (let j = 0; j <= 40; j++) {
+      const theta = (j / 40) * 2 * Math.PI;
+      const [px, py] = project(L, R * Math.cos(theta), R * Math.sin(theta));
+      if (j === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+    }
+    ctx.fillStyle = 'rgba(15, 23, 42, 0.8)'; ctx.fill();
+    ctx.strokeStyle = '#00d4ff'; ctx.lineWidth = 3 * zoom; ctx.stroke();
+    const [cx, cy] = project(L, 0, 0);
+    const [rx, ry] = project(L, R * Math.cos(twist), R * Math.sin(twist));
+    ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(rx, ry);
+    ctx.strokeStyle = '#ff3366'; ctx.lineWidth = 3 * zoom; ctx.stroke();
+    const graphOriginX = width * 0.8;
+    const graphOriginY = height * 0.5;
+    const gx = (x: number, y: number) => [graphOriginX + x * scale, graphOriginY - y * scale];
+    const [gcx, gcy] = gx(0, 0);
+    ctx.beginPath(); ctx.arc(gcx, gcy, R * scale, 0, 2*Math.PI);
+    ctx.strokeStyle = '#475569'; ctx.lineWidth = 2 * zoom; ctx.stroke();
+    const maxShear = Math.abs(twist) * 2; 
+    ctx.beginPath();
+    const [gL, gy] = gx(-R, 0); const [gR] = gx(R, 0);
+    ctx.moveTo(gL, gy); ctx.lineTo(gR, gy); ctx.strokeStyle = '#334155'; ctx.stroke();
+    const sign = twist >= 0 ? 1 : -1;
+    const [t1x, t1y] = gx(-R, -sign * maxShear);
+    const [t2x, t2y] = gx(R, sign * maxShear);
+    ctx.beginPath(); ctx.moveTo(t1x, t1y); ctx.lineTo(t2x, t2y);
+    ctx.strokeStyle = '#ffb703'; ctx.lineWidth = 2 * zoom; ctx.stroke();
+    for (let r = -R; r <= R; r += R/4) {
+      if (Math.abs(r) < 0.1) continue;
+      const sh = (r / R) * maxShear * sign;
+      const [ax, ay] = gx(r, 0);
