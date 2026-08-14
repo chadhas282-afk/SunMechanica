@@ -6938,3 +6938,43 @@ export const TunedMassDamperSim: React.FC<SimulationProps> = ({ angle, load , zo
     const pendulumLen = 2.0;
     const pendulumAngle = tmdDeflection;
     const px = pendulumLen * scale * Math.sin(pendulumAngle);
+     const py = 15 + pendulumLen * scale * Math.cos(pendulumAngle);
+    ctx.beginPath();
+    ctx.moveTo(0, 15);
+    ctx.lineTo(px, py);
+    ctx.strokeStyle = '#a855f7';
+    ctx.lineWidth = 4;
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.arc(px, py, 0.6 * scale, 0, 2*Math.PI);
+    ctx.fillStyle = '#c084fc';
+    ctx.fill();
+    ctx.strokeStyle = '#fff';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+    ctx.restore(); 
+    ctx.restore(); 
+    ctx.fillStyle = 'rgba(8, 15, 30, 0.85)';
+    ctx.fillRect(width - 260, 150, 220, 110);
+    ctx.strokeStyle = 'rgba(168, 85, 247, 0.3)';
+    ctx.strokeRect(width - 260, 150, 220, 110);
+    ctx.font = '10px monospace';
+    ctx.fillStyle = '#a855f7';
+    ctx.fillText('SYS :: TUNED_MASS_DAMPER', width - 250, 170);
+    ctx.fillStyle = '#fff';
+    ctx.fillText(`BUILDING SWAY: ${(baseDeflection * 100).toFixed(1)} cm`, width - 250, 195);
+    ctx.fillStyle = '#00ff88';
+    ctx.fillText(`TMD DEFLECT  : ${(tmdDeflection * 100).toFixed(1)} cm`, width - 250, 215);
+    ctx.fillStyle = '#38bdf8';
+    ctx.fillText(`WIND LOAD    : ${load}%`, width - 250, 235);
+  }, [angle, load]);
+  return (
+    <div style={{ width: '100%', height: '100%' }}>
+      <canvas ref={canvasRef} style={{ width: '100%', height: '100%', display: 'block' }} />
+    </div>
+  );
+};
+interface Particle {
+  x: number;
+  y: number;
+  speedMultiplier: number;
