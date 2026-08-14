@@ -6778,3 +6778,43 @@ export const TrussModelSim: React.FC<SimulationProps> = ({ angle, load , zoom = 
       const p2 = defNodes[m.n2];
       const actStress = m.stress * loadFactor;
       const color = getCol(actStress);
+      ctx.beginPath();
+      const [sx1, sy1] = toScreen(p1.dx, p1.dy);
+      const [sx2, sy2] = toScreen(p2.dx, p2.dy);
+      ctx.moveTo(sx1, sy1); ctx.lineTo(sx2, sy2);
+      ctx.strokeStyle = color; 
+      const lineW = 6 + Math.abs(actStress) * 6;
+      ctx.lineWidth = lineW;
+      if (Math.abs(actStress) > 0.5) {
+        ctx.shadowBlur = Math.abs(actStress) * 15;
+        ctx.shadowColor = color;
+      }
+      ctx.stroke();
+      ctx.shadowBlur = 0;
+    });
+    defNodes.forEach(n => {
+      drawCircle(n.dx, n.dy, 0.3, '#1e293b', true);
+      drawCircle(n.dx, n.dy, 0.15, '#fff', true);
+    });
+    ctx.fillStyle = '#475569';
+    const [sup1x, sup1y] = toScreen(-6, 0);
+    ctx.beginPath(); ctx.moveTo(sup1x, sup1y); ctx.lineTo(sup1x - 20, sup1y + 30); ctx.lineTo(sup1x + 20, sup1y + 30); ctx.fill();
+    const [sup2x, sup2y] = toScreen(6, 0);
+    ctx.beginPath(); ctx.moveTo(sup2x, sup2y); ctx.lineTo(sup2x - 20, sup2y + 30); ctx.lineTo(sup2x + 20, sup2y + 30); ctx.fill();
+    if (loadFactor > 0) {
+      const pC = defNodes[5]; 
+      const [fx, fy] = toScreen(pC.dx, pC.dy);
+      const arrowLen = 20 + loadFactor * 80;
+      ctx.beginPath();
+      ctx.moveTo(fx, fy - arrowLen - 20);
+      ctx.lineTo(fx, fy - 20);
+      ctx.strokeStyle = '#ef4444';
+      ctx.lineWidth = 6;
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(fx, fy - 20);
+      ctx.lineTo(fx - 10, fy - 35);
+      ctx.lineTo(fx + 10, fy - 35);
+      ctx.fillStyle = '#ef4444';
+      ctx.fill();
+    }
