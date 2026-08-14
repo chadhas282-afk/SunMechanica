@@ -6498,3 +6498,43 @@ export const ToggleMechanismSim: React.FC<SimulationProps> = ({ angle, load, zoo
     const toScreen = (x: number, y: number) => [originX + x * scale, originY - y * scale];
     const drawLine = (x1: number, y1: number, x2: number, y2: number, color: string, w: number) => {
       ctx.beginPath();
+      const [sx1, sy1] = toScreen(x1, y1); const [sx2, sy2] = toScreen(x2, y2);
+      ctx.moveTo(sx1, sy1); ctx.lineTo(sx2, sy2);
+      ctx.strokeStyle = color; ctx.lineWidth = w * zoom; ctx.lineCap = 'round'; ctx.stroke();
+    };
+    const drawCircle = (x: number, y: number, r: number, color: string, fill = false) => {
+      ctx.beginPath(); const [sx, sy] = toScreen(x, y);
+      ctx.arc(sx, sy, r * scale, 0, 2 * Math.PI);
+      ctx.strokeStyle = color; ctx.lineWidth = 2 * zoom; ctx.stroke();
+      if (fill) { ctx.fillStyle = color; ctx.fill(); }
+    };
+    const intersect = (p1: number[], r1: number, p2: number[], r2: number, dir: number) => {
+      const dx = p2[0] - p1[0], dy = p2[1] - p1[1];
+      const d = Math.hypot(dx, dy);
+      if (d > r1 + r2 || d < Math.abs(r1 - r2) || d === 0) return [0, 0];
+      const a = (r1*r1 - r2*r2 + d*d) / (2*d);
+      const h = Math.sqrt(Math.max(0, r1*r1 - a*a));
+      const mx = p1[0] + (dx * a) / d;
+      const my = p1[1] + (dy * a) / d;
+      return [
+        mx + dir * h * (dy / d),
+        my - dir * h * (dx / d)
+      ];
+    };
+    const O = [3.5, 0]; 
+    const r = 1.0;
+    const A = [O[0] + r * Math.cos(angle), O[1] + r * Math.sin(angle)];
+    const C = [-2, -3]; 
+    const L_ab = 4.5;
+    const L_cb = 3.2;
+    const L_bd = 4.2;
+    const B = intersect(C, L_cb, A, L_ab, 1);
+    const dx = Math.sqrt(Math.max(0, L_bd*L_bd - B[1]*B[1]));
+    const D = [B[0] - dx, 0]; 
+    const alpha = Math.atan2(Math.abs(B[1]), L_bd); 
+    const ma = 1 / Math.tan(Math.max(0.01, alpha));
+    const loadFactor = load / 100;
+    const rC = Math.round(100 + loadFactor * 155);
+    const stressColor = `rgb(${rC}, 255, 136)`;
+    const forceColor = load > 50 && ma > 3 ? '#ff3366' : '#00ff88';
+    drawCircle(O[0], O[1], 0.4, '#1e293b', true); drawCircle(O[0], O[1], 0.2, '#fff', true);
