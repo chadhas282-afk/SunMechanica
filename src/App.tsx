@@ -6298,3 +6298,43 @@ export const SwashplateSim: React.FC<SimulationProps> = ({ angle, load , zoom = 
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
+     if (!ctx) return;
+    const dpr = window.devicePixelRatio || 1;
+    const rect = canvas.getBoundingClientRect();
+    canvas.width = rect.width * dpr;
+    canvas.height = rect.height * dpr;
+    ctx.scale(dpr, dpr);
+    const width = rect.width;
+    const height = rect.height;
+    ctx.clearRect(0, 0, width, height);
+    const scale = (Math.min(width, height) / 16) * zoom; 
+    const originX = width * 0.4;
+    const originY = height * 0.5;
+    ctx.fillStyle = '#050d1a'; ctx.fillRect(0, 0, width, height);
+    ctx.strokeStyle = '#1e293b'; ctx.lineWidth = 1;
+    for (let i = 0; i < width; i += 40) { ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(i, height); ctx.stroke(); }
+    for (let i = 0; i < height; i += 40) { ctx.beginPath(); ctx.moveTo(0, i); ctx.lineTo(width, i); ctx.stroke(); }
+    const toScreen = (x: number, y: number) => [originX + x * scale, originY - y * scale];
+    const drawLine = (x1: number, y1: number, x2: number, y2: number, color: string, w: number) => {
+      ctx.beginPath();
+      const [sx1, sy1] = toScreen(x1, y1); const [sx2, sy2] = toScreen(x2, y2);
+      ctx.moveTo(sx1, sy1); ctx.lineTo(sx2, sy2);
+      ctx.strokeStyle = color; ctx.lineWidth = w; ctx.stroke();
+    };
+    const loadFactor = load / 100;
+    const maxAlpha = Math.PI / 4; 
+    const alpha = loadFactor * maxAlpha;
+    const R = 4.0; 
+    drawLine(-6, 0, 6, 0, '#334155', 20); 
+    drawLine(-6, 0, 6, 0, '#475569', 10);
+    const [cbX, cbY] = toScreen(4, 0);
+    ctx.fillStyle = 'rgba(15, 23, 42, 0.8)';
+    ctx.fillRect(cbX, cbY - (R+1.5)*scale, 6*scale, (2*R+3)*scale);
+    ctx.strokeStyle = '#1e293b'; ctx.lineWidth = 4;
+    ctx.strokeRect(cbX, cbY - (R+1.5)*scale, 6*scale, (2*R+3)*scale);
+    const pistons = [
+      { phi: 0, color: '#3b82f6' },
+      { phi: (2*Math.PI)/3, color: '#00d4ff' },
+      { phi: (4*Math.PI)/3, color: '#a855f7' }
+    ];
+    pistons.sort((a, b) => Math.cos(a.phi) - Math.cos(b.phi));
