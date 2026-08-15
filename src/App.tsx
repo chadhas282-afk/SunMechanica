@@ -7507,3 +7507,34 @@ export const encyclopediaData: Concept[] = [
   {
     id: 'wankel-engine',
     title: 'Wankel Rotary Engine',
+     category: 'Thermodynamics',
+    description: 'Internal combustion engine using an eccentric rotary design to convert pressure into rotating motion.',
+    implemented: true,
+    color: '#ff3366',
+    glowColor: 'rgba(255,51,102,0.2)',
+    tags: ['Rotary', 'Combustion', 'Epitrochoid']
+  },
+  {
+    id: 'quick-return',
+    title: 'Whitworth Quick Return',
+    category: 'Motion & Power',
+    description: 'Mechanism that produces a slow forward cutting stroke and a rapid return stroke.',
+    implemented: true,
+    color: '#00d4ff',
+    glowColor: 'rgba(0,212,255,0.2)',
+    tags: ['Machining', 'Shaper', 'Linkage']
+  },
+  {
+    id: 'escapement',
+    title: 'Anchor Escapement',
+    category: 'Advanced Mechanisms',
+    description: 'Clockwork mechanism that transfers energy to a pendulum and regulates the unwinding of a spring.',
+    implemented: true,
+    color: '#ffd700',
+    glowColor: 'rgba(255,215,0,0.2)',
+    tags: ['Clockwork', 'Tick-Tock', 'Regulator']
+  },
+  {
+    id: 'scissor-lift',
+    title: 'Scissor Lift Mechanism',
+    category: 'Structural',
