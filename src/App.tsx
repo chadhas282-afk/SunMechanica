@@ -8338,3 +8338,63 @@ export const Dashboard: React.FC<DashboardProps> = ({ onSelectConcept, onGoHome 
             transition: 'all 0.2s ease',
             display: 'flex',
             alignItems: 'center',
+            gap: '8px'
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.background = 'var(--bg-card-hover)';
+            e.currentTarget.style.color = 'var(--cyan)';
+            e.currentTarget.style.borderColor = 'var(--cyan)';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.background = 'rgba(15, 23, 42, 0.7)';
+            e.currentTarget.style.color = 'var(--text-secondary)';
+            e.currentTarget.style.borderColor = 'var(--border-subtle)';
+          }}
+        >
+          <span>←</span> Back to Landing
+        </button>
+      )}
+      <div style={{ marginBottom: '48px' }}>
+        <div style={{
+          fontFamily: 'var(--font-mono)',
+          fontSize: '11px',
+          color: 'var(--cyan)',
+          letterSpacing: '0.2em',
+          marginBottom: '12px',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '8px',
+        }}>
+          <div style={{ width: '20px', height: '1px', background: 'var(--cyan)' }} />
+          INTERACTIVE ENCYCLOPEDIA
+          <div style={{ width: '20px', height: '1px', background: 'var(--cyan)' }} />
+        </div>
+        <h1 className="dashboard-title" style={{
+          fontSize: '56px',
+          fontWeight: 900,
+          lineHeight: 1.1,
+          background: 'linear-gradient(135deg, #ffffff 0%, #7a8fa8 100%)',
+          WebkitBackgroundClip: 'text',
+          WebkitTextFillColor: 'transparent',
+          backgroundClip: 'text',
+          marginBottom: '16px',
+          letterSpacing: '0.02em',
+        }}>
+          SUN<br/>
+          <span style={{
+            background: 'linear-gradient(135deg, var(--cyan) 0%, var(--purple) 100%)',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+            backgroundClip: 'text',
+          }}>MECHANICA</span>
+        </h1>
+        <p style={{
+          color: 'var(--text-secondary)',
+          fontSize: '16px',
+          maxWidth: '560px',
+          lineHeight: 1.6,
+        }}>
+          Explore interactive, high-precision 2D CAD blueprint simulations of mechanical mechanisms.
+          Click any active module below to launch a live simulation.
+        </p>
+      </div>
