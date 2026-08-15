@@ -7378,3 +7378,43 @@ export const WattsLinkageSim: React.FC<SimulationProps> = ({ angle, load , zoom 
     ctx.fillStyle = '#00ff88';
     ctx.fillText(`CENTER Y POS: ${Py.toFixed(2)}`, width - 250, 215);
     ctx.fillStyle = stressColor;
+     ctx.fillText(`LOAD STRESS : ${load}%`, width - 250, 235);
+  }, [angle, load]);
+  return (
+    <div style={{ width: '100%', height: '100%' }}>
+      <canvas ref={canvasRef} style={{ width: '100%', height: '100%', display: 'block' }} />
+    </div>
+  );
+};
+export type Category = 
+  | 'Motion & Power'
+  | 'Fluid Power'
+  | 'Structural'
+  | 'Thermodynamics'
+  | 'Advanced Mechanisms'
+  | 'Vibration & Tribology';
+export interface Concept {
+  id: string;
+  title: string;
+  category: Category;
+  description: string;
+  implemented: boolean;
+  color: string;        
+  glowColor: string;   
+  tags: string[];
+}
+export const encyclopediaData: Concept[] = [
+  {
+    id: 'crankshaft',
+    title: 'Crankshaft',
+    category: 'Motion & Power',
+    description: 'Converts reciprocating piston motion into continuous rotational output. The backbone of internal combustion engines.',
+    implemented: true,
+    color: '#00d4ff',
+    glowColor: 'rgba(0,212,255,0.2)',
+    tags: ['Engine', 'Kinematics', 'Piston']
+  },
+  {
+    id: 'cam-follower',
+    title: 'Cam & Follower',
+    category: 'Motion & Power',
