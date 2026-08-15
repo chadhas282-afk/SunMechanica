@@ -8299,3 +8299,42 @@ export const ControlsPanel: React.FC<ControlsPanelProps> = ({
                 <div style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', color: 'var(--text-muted)', letterSpacing: '0.08em', marginBottom: '2px' }}>{r.label}</div>
                 <div style={{ fontFamily: 'var(--font-mono)', fontSize: '14px', color, fontWeight: 600 }}>{r.value}</div>
               </div>
+               ))}
+          </div>
+        </>
+      )}
+    </div>
+  );
+};
+interface DashboardProps {
+  onSelectConcept: (id: string) => void;
+  onGoHome?: () => void;
+}
+export const Dashboard: React.FC<DashboardProps> = ({ onSelectConcept, onGoHome }) => {
+  return (
+    <div style={{
+      flex: 1,
+      height: '100vh',
+      overflowY: 'auto',
+      padding: '40px 48px',
+      position: 'relative'
+    }} className="grid-bg dashboard-container">
+      {onGoHome && (
+        <button
+          onClick={onGoHome}
+          style={{
+            position: 'absolute',
+            top: '40px',
+            right: '48px',
+            background: 'rgba(15, 23, 42, 0.7)',
+            backdropFilter: 'blur(12px)',
+            border: '1px solid var(--border-subtle)',
+            borderRadius: '8px',
+            padding: '8px 16px',
+            color: 'var(--text-secondary)',
+            fontFamily: 'var(--font-mono)',
+            fontSize: '12px',
+            cursor: 'pointer',
+            transition: 'all 0.2s ease',
+            display: 'flex',
+            alignItems: 'center',
