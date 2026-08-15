@@ -7418,3 +7418,43 @@ export const encyclopediaData: Concept[] = [
     id: 'cam-follower',
     title: 'Cam & Follower',
     category: 'Motion & Power',
+     description: 'Transforms continuous rotation into a specific, programmable linear motion profile using shaped cam lobes.',
+    implemented: true,
+    color: '#ff6b35',
+    glowColor: 'rgba(255,107,53,0.2)',
+    tags: ['Profile', 'Valve Train', 'Lift']
+  },
+  {
+    id: 'rack-pinion',
+    title: 'Rack & Pinion',
+    category: 'Motion & Power',
+    description: 'Converts rotary motion of a pinion gear into precise linear translation of a toothed rack.',
+    implemented: true,
+    color: '#00ff88',
+    glowColor: 'rgba(0,255,136,0.2)',
+    tags: ['Linear', 'Steering', 'CNC']
+  },
+  {
+    id: 'geneva-drive',
+    title: 'Geneva Drive',
+    category: 'Motion & Power',
+    description: 'Produces precise intermittent rotation from a continuous drive — the mechanism behind clock hands and film projectors.',
+    implemented: true,
+    color: '#a855f7',
+    glowColor: 'rgba(168,85,247,0.2)',
+    tags: ['Intermittent', 'Indexing', 'Precision']
+  },
+  {
+    id: 'planetary-gear',
+    title: 'Planetary Gear Set',
+    category: 'Motion & Power',
+    description: 'High-torque gear system with sun, planet and ring gears — used in automatic transmissions.',
+    implemented: true,
+    color: '#ffd700',
+    glowColor: 'rgba(255,215,0,0.2)',
+    tags: ['Transmission', 'Torque', 'Compact']
+  },
+  {
+    id: 'harmonic-drive',
+    title: 'Harmonic Drive',
+    category: 'Advanced Mechanisms',
