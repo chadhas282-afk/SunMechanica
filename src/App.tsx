@@ -7738,3 +7738,43 @@ export const encyclopediaData: Concept[] = [
     id: 'cvt-transmission',
     title: 'CVT Transmission',
     category: 'Advanced Mechanisms',
+    description: 'Continuously Variable Transmission using smooth cone-and-belt mechanics to provide infinite gear ratios.',
+    implemented: true,
+    color: '#00ff88',
+    glowColor: 'rgba(0,255,136,0.2)',
+    tags: ['Gears', 'Automotive', 'Variable']
+  },
+  {
+    id: 'swashplate',
+    title: 'Swashplate Mechanism',
+    category: 'Advanced Mechanisms',
+    description: 'Translates rotary motion into variable axial piston strokes, famously used in helicopter rotor controls.',
+    implemented: true,
+    color: '#ffd700',
+    glowColor: 'rgba(255,215,0,0.2)',
+    tags: ['Helicopter', 'Axial', 'Pitch']
+  },
+  {
+    id: 'centrifugal-governor',
+    title: 'Centrifugal Governor',
+    category: 'Vibration & Tribology',
+    description: 'A mechanical speed-control feedback loop using heavy spinning masses to throttle an engine.',
+    implemented: true,
+    color: '#ff3366',
+    glowColor: 'rgba(255,51,102,0.2)',
+    tags: ['Control', 'Feedback', 'Steam']
+  },
+  {
+    id: 'journal-bearing',
+    title: 'Hydrodynamic Bearing',
+    category: 'Vibration & Tribology',
+    description: 'Visualizes the high-pressure oil wedge formation that allows heavy spinning shafts to float on a film of fluid.',
+    implemented: true,
+    color: '#00d4ff',
+    glowColor: 'rgba(0,212,255,0.2)',
+    tags: ['Friction', 'Tribology', 'Lubrication']
+  },
+  {
+    id: 'epicyclic-vibration',
+    title: 'Epicyclic Vibration Absorber',
+    category: 'Vibration & Tribology',
