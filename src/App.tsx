@@ -8218,3 +8218,43 @@ export const ControlsPanel: React.FC<ControlsPanelProps> = ({
     }}>
       <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
         <button
+         onClick={() => setIsPlaying(!isPlaying)}
+          style={{
+            width: '44px',
+            height: '44px',
+            borderRadius: '10px',
+            background: isPlaying ? color + '20' : color,
+            border: `1px solid ${color}60`,
+            color: isPlaying ? color : '#000',
+            fontSize: '16px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            transition: 'all 0.15s ease',
+            boxShadow: isPlaying ? `0 0 15px ${color}40` : 'none',
+          }}
+          title={isPlaying ? 'Pause' : 'Play'}
+        >
+          {isPlaying ? '⏸' : '▶'}
+        </button>
+        <button
+          onClick={() => { setIsPlaying(false); onStep(); }}
+          style={{
+            width: '36px',
+            height: '36px',
+            borderRadius: '8px',
+            background: 'transparent',
+            border: '1px solid var(--border-mid)',
+            color: 'var(--text-secondary)',
+            fontSize: '14px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            transition: 'all 0.15s ease',
+          }}
+          title="Step Frame"
+        >
+          ⏭
+        </button>
+      </div>
+      <div style={{ width: '1px', height: '32px', background: 'var(--border-subtle)' }} />
