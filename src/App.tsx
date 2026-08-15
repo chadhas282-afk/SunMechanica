@@ -8138,3 +8138,43 @@ export const LandingScreen: React.FC<LandingScreenProps> = ({ onEnter }) => {
           fontSize: '3.5rem',
           fontWeight: 800,
           color: '#ffffff',
+           marginBottom: '16px',
+          letterSpacing: '0.05em',
+          textShadow: '0 0 20px rgba(255,255,255,0.1)'
+        }}>
+          SunMechanica
+        </h1>
+        <p style={{
+          fontSize: '1.25rem',
+          color: '#94a3b8',
+          marginBottom: '48px',
+          lineHeight: 1.6,
+          maxWidth: '600px',
+          margin: '0 auto 48px auto'
+        }}>
+          Explore 49 dynamic, physics-driven blueprints ranging from kinematic linkages to chaotic thermodynamic cycles.
+        </p>
+        <button
+          onClick={onEnter}
+          style={{
+            background: 'linear-gradient(135deg, #00d4ff 0%, #0077ff 100%)',
+            color: '#ffffff',
+            border: 'none',
+            borderRadius: '12px',
+            padding: '16px 40px',
+            fontSize: '1.125rem',
+            fontWeight: 700,
+            cursor: 'pointer',
+            transition: 'all 0.2s ease',
+            boxShadow: '0 10px 20px rgba(0, 212, 255, 0.3)',
+            textTransform: 'uppercase',
+            letterSpacing: '0.05em'
+          }}
+          onMouseOver={(e) => {
+            e.currentTarget.style.transform = 'translateY(-2px)';
+            e.currentTarget.style.boxShadow = '0 15px 30px rgba(0, 212, 255, 0.4)';
+          }}
+          onMouseOut={(e) => {
+            e.currentTarget.style.transform = 'translateY(0)';
+            e.currentTarget.style.boxShadow = '0 10px 20px rgba(0, 212, 255, 0.3)';
+          }}
