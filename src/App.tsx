@@ -7138,3 +7138,43 @@ export const WankelEngineSim: React.FC<SimulationProps> = ({ angle, load , zoom 
     ctx.strokeStyle = '#1e293b';
     ctx.lineWidth = 1;
     for (let i = 0; i < width; i += 40) {
+       ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(i, height); ctx.stroke();
+    }
+    for (let i = 0; i < height; i += 40) {
+      ctx.beginPath(); ctx.moveTo(0, i); ctx.lineTo(width, i); ctx.stroke();
+    }
+    const toScreen = (x: number, y: number) => [originX + x * scale, originY - y * scale];
+    ctx.beginPath();
+    for (let i = 0; i <= 360; i++) {
+      const theta = (i * Math.PI) / 180;
+      const x = e * Math.cos(3 * theta) + R * Math.cos(theta);
+      const y = e * Math.sin(3 * theta) + R * Math.sin(theta);
+      const [sx, sy] = toScreen(x, y);
+      if (i === 0) ctx.moveTo(sx, sy);
+      else ctx.lineTo(sx, sy);
+    }
+    ctx.closePath();
+    const loadFactor = load / 100;
+    ctx.fillStyle = '#0f172a';
+    ctx.fill();
+    ctx.strokeStyle = '#64748b';
+    ctx.lineWidth = 6;
+    ctx.stroke();
+    ctx.beginPath();
+    for (let i = 0; i <= 360; i++) {
+      const theta = (i * Math.PI) / 180;
+      const x = e * Math.cos(3 * theta) + (R + 0.8) * Math.cos(theta);
+      const y = e * Math.sin(3 * theta) + (R + 0.8) * Math.sin(theta);
+      const [sx, sy] = toScreen(x, y);
+      if (i === 0) ctx.moveTo(sx, sy);
+      else ctx.lineTo(sx, sy);
+    }
+    ctx.strokeStyle = '#1e293b';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+    ctx.save();
+    const [scX, scY] = toScreen(rcX, rcY);
+    ctx.translate(scX, scY);
+    ctx.rotate(rotorAngle);
+    ctx.beginPath();
+    for (let i = 0; i < 3; i++) {
