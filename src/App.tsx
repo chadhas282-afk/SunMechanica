@@ -7898,3 +7898,43 @@ export const encyclopediaData: Concept[] = [
     id: 'mohrs-circle',
     title: "Mohr's Circle",
     category: 'Structural',
+    description: 'An interactive graphic visualizing principal stress states and maximum shear rotation.',
+    implemented: true,
+    color: '#ff3366',
+    glowColor: 'rgba(255,51,102,0.2)',
+    tags: ['Stress', 'Strain', 'Material']
+  },
+  {
+    id: 'shaft-torsion',
+    title: 'Circular Shaft Torsion',
+    category: 'Structural',
+    description: 'Visualizes how a shaft twists and how shear stress peaks at the outer radius.',
+    implemented: true,
+    color: '#00d4ff',
+    glowColor: 'rgba(0,212,255,0.2)',
+    tags: ['Twist', 'Shear', 'Mechanics']
+  },
+  {
+    id: 'rhombic-stirling',
+    title: 'Stirling Engine (Rhombic)',
+    category: 'Thermodynamics',
+    description: 'A complex rhombic drive linkage coordinating displacer and power pistons in a compact space.',
+    implemented: true,
+    color: '#ff6b35',
+    glowColor: 'rgba(255,107,53,0.2)',
+    tags: ['Heat Engine', 'Rhombic', 'Pneumatics']
+  },
+  {
+    id: 'brayton-cycle',
+    title: 'Brayton Cycle',
+    category: 'Thermodynamics',
+    description: 'A continuous flow simulation of an axial gas turbine showing compression, combustion, and expansion.',
+    implemented: true,
+    color: '#ff3366',
+    glowColor: 'rgba(255,51,102,0.2)',
+    tags: ['Jet Engine', 'Turbine', 'Aero']
+  },
+  {
+    id: 'rankine-cycle',
+    title: 'Rankine Cycle Slide Valve',
+    category: 'Thermodynamics',
