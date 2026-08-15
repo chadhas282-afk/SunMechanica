@@ -7458,3 +7458,52 @@ export const encyclopediaData: Concept[] = [
     id: 'harmonic-drive',
     title: 'Harmonic Drive',
     category: 'Advanced Mechanisms',
+    description: 'Ultra-high-ratio gear system based on elastic flex-spline deformation.',
+    implemented: true,
+    color: '#ff3366',
+    glowColor: 'rgba(255,51,102,0.2)',
+    tags: ['Robotics', 'High-Ratio', 'Zero Backlash']
+  },
+  {
+    id: 'venturi-tube',
+    title: 'Venturi Effect',
+    category: 'Fluid Power',
+    description: 'Demonstrates Bernoulli principle with fluid pressure dropping as velocity increases through a constriction.',
+    implemented: true,
+    color: '#00d4ff',
+    glowColor: 'rgba(0,212,255,0.2)',
+    tags: ['Fluid', 'Pressure', 'Bernoulli']
+  },
+  {
+    id: 'i-beam',
+    title: 'I-Beam Stress',
+    category: 'Structural',
+    description: 'Structural steel section optimized for resisting bending and shear stress with maximum material efficiency.',
+    implemented: true,
+    color: '#ff6b35',
+    glowColor: 'rgba(255,107,53,0.2)',
+    tags: ['FEA', 'Stress', 'Steel']
+  },
+  {
+    id: 'stirling-engine',
+    title: 'Stirling Engine',
+    category: 'Thermodynamics',
+    description: 'Closed-cycle regenerative heat engine operating on temperature differentials.',
+    implemented: true,
+    color: '#ff3366',
+    glowColor: 'rgba(255,51,102,0.2)',
+    tags: ['Heat', 'Regenerative', 'External']
+  },
+  {
+    id: 'tuned-mass',
+    title: 'Tuned Mass Damper',
+    category: 'Vibration & Tribology',
+    description: 'Passive vibration control device that counters resonance using a secondary oscillating mass.',
+    implemented: true,
+    color: '#a855f7',
+    glowColor: 'rgba(168,85,247,0.2)',
+    tags: ['Damping', 'Resonance', 'Skyscrapers']
+  },
+  {
+    id: 'wankel-engine',
+    title: 'Wankel Rotary Engine',
