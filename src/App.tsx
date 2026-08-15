@@ -7658,3 +7658,43 @@ export const encyclopediaData: Concept[] = [
     id: 'tesla-turbine',
     title: 'Tesla Bladeless Turbine',
     category: 'Fluid Power',
+     description: 'Uses the boundary layer effect and fluid adhesion to drive parallel disks without traditional fan blades.',
+    implemented: true,
+    color: '#00ff88',
+    glowColor: 'rgba(0,255,136,0.2)',
+    tags: ['Boundary Layer', 'Viscosity', 'Turbine']
+  },
+  {
+    id: 'archimedes-screw',
+    title: 'Archimedes Screw',
+    category: 'Fluid Power',
+    description: 'An ancient, highly efficient low-head fluid lifting mechanism using a rotating helical ramp.',
+    implemented: true,
+    color: '#ff6b35',
+    glowColor: 'rgba(255,107,53,0.2)',
+    tags: ['Lifting', 'Helical', 'Ancient']
+  },
+  {
+    id: 'pratt-truss',
+    title: 'Pratt Truss',
+    category: 'Structural',
+    description: 'A bridge structure where diagonal members are in tension, minimizing the risk of buckling under gravity loads.',
+    implemented: true,
+    color: '#ffd700',
+    glowColor: 'rgba(255,215,0,0.2)',
+    tags: ['Bridges', 'Tension', 'Civil']
+  },
+  {
+    id: 'cantilever-beam',
+    title: 'Cantilever Beam Deflection',
+    category: 'Structural',
+    description: 'Analyzes stress concentration and deflection equations of a beam anchored rigidly at only one end.',
+    implemented: true,
+    color: '#ff6b35',
+    glowColor: 'rgba(255,107,53,0.2)',
+    tags: ['Statics', 'Bending', 'Moment']
+  },
+  {
+    id: 'euler-bernoulli',
+    title: 'Euler-Bernoulli Buckling',
+    category: 'Structural',
