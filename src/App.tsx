@@ -7938,3 +7938,43 @@ export const encyclopediaData: Concept[] = [
     id: 'rankine-cycle',
     title: 'Rankine Cycle Slide Valve',
     category: 'Thermodynamics',
+     description: 'Visualizes how a slide valve switches live steam inlet and exhaust ports on a steam engine.',
+    implemented: true,
+    color: '#00ff88',
+    glowColor: 'rgba(0,255,136,0.2)',
+    tags: ['Steam', 'Valve', 'Rankine']
+  },
+  {
+    id: 'hoberman-sphere',
+    title: 'Expandable Linkages',
+    category: 'Advanced Mechanisms',
+    description: 'Symmetrical scissor-linkages that smoothly expand and contract radially.',
+    implemented: true,
+    color: '#a855f7',
+    glowColor: 'rgba(168,85,247,0.2)',
+    tags: ['Hoberman', 'Scissor', 'Radial']
+  },
+  {
+    id: 'differential-gear',
+    title: 'Differential Gear',
+    category: 'Advanced Mechanisms',
+    description: 'Shows how power splits between two wheels, allowing them to spin at different speeds in a turn.',
+    implemented: true,
+    color: '#ffd700',
+    glowColor: 'rgba(255,215,0,0.2)',
+    tags: ['Automotive', 'Drivetrain', 'Turn']
+  },
+  {
+    id: 'chebyshev-straight',
+    title: 'Chebyshev Linkage',
+    category: 'Advanced Mechanisms',
+    description: 'A crossed four-bar linkage that converts rotational motion into an approximate straight line.',
+    implemented: true,
+    color: '#00d4ff',
+    glowColor: 'rgba(0,212,255,0.2)',
+    tags: ['Straight-Line', 'Crossed', 'Math']
+  },
+  {
+    id: 'sarrus-linkage',
+    title: 'Sarrus Linkage',
+    category: 'Advanced Mechanisms',
