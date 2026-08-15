@@ -8178,3 +8178,43 @@ export const LandingScreen: React.FC<LandingScreenProps> = ({ onEnter }) => {
             e.currentTarget.style.transform = 'translateY(0)';
             e.currentTarget.style.boxShadow = '0 10px 20px rgba(0, 212, 255, 0.3)';
           }}
+           >
+          Enter Catalog
+        </button>
+      </div>
+    </div>
+  );
+};
+interface ControlsPanelProps {
+  rpm: number;
+  setRpm: (v: number) => void;
+  load: number;
+  setLoad: (v: number) => void;
+  isPlaying: boolean;
+  setIsPlaying: (v: boolean) => void;
+  onStep: () => void;
+  color?: string;
+  extraReadouts?: { label: string; value: string }[];
+}
+export const ControlsPanel: React.FC<ControlsPanelProps> = ({
+  rpm, setRpm, load, setLoad, isPlaying, setIsPlaying, onStep, color = '#00d4ff', extraReadouts = []
+}) => {
+  return (
+    <div
+      className="glass-panel controls-panel"
+      style={{
+        position: 'absolute',
+        bottom: '32px',
+        left: '50%',
+        transform: 'translateX(-50%)',
+        borderRadius: '16px',
+      padding: '16px 24px',
+      display: 'flex',
+      gap: '32px',
+      alignItems: 'center',
+      boxShadow: '0 20px 60px rgba(0,0,0,0.8), 0 0 0 1px rgba(255,255,255,0.05)',
+      zIndex: 100,
+      minWidth: '600px',
+    }}>
+      <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+        <button
