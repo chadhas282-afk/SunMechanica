@@ -8258,3 +8258,44 @@ export const ControlsPanel: React.FC<ControlsPanelProps> = ({
         </button>
       </div>
       <div style={{ width: '1px', height: '32px', background: 'var(--border-subtle)' }} />
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', minWidth: '160px' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <span style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', color: 'var(--text-muted)', letterSpacing: '0.1em' }}>SPEED</span>
+          <span style={{ fontFamily: 'var(--font-mono)', fontSize: '13px', color, fontWeight: 700 }}>{rpm} <span style={{ fontSize: '9px', color: 'var(--text-muted)' }}>RPM</span></span>
+        </div>
+        <input
+          type="range"
+          min="5"
+          max="300"
+          value={rpm}
+          onChange={e => setRpm(Number(e.target.value))}
+          style={{
+            background: `linear-gradient(to right, ${color} ${((rpm - 5) / 295) * 100}%, var(--border-mid) ${((rpm - 5) / 295) * 100}%)`,
+          }}
+        />
+      </div>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', minWidth: '160px' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <span style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', color: 'var(--text-muted)', letterSpacing: '0.1em' }}>LOAD</span>
+          <span style={{ fontFamily: 'var(--font-mono)', fontSize: '13px', color: 'var(--orange)', fontWeight: 700 }}>{load}<span style={{ fontSize: '9px', color: 'var(--text-muted)' }}>%</span></span>
+        </div>
+        <input
+          type="range"
+          min="0"
+          max="100"
+          value={load}
+          onChange={e => setLoad(Number(e.target.value))}
+          style={{
+            background: `linear-gradient(to right, ${color} ${load}%, var(--border-mid) ${load}%)`,
+          }}
+        />
+      </div>
+      {extraReadouts.length > 0 && (
+        <>
+          <div style={{ width: '1px', height: '32px', background: 'var(--border-subtle)' }} />
+          <div style={{ display: 'flex', gap: '16px' }}>
+            {extraReadouts.map(r => (
+              <div key={r.label} style={{ textAlign: 'center' }}>
+                <div style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', color: 'var(--text-muted)', letterSpacing: '0.08em', marginBottom: '2px' }}>{r.label}</div>
+                <div style={{ fontFamily: 'var(--font-mono)', fontSize: '14px', color, fontWeight: 600 }}>{r.value}</div>
+              </div>
