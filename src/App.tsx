@@ -8098,3 +8098,43 @@ export const LandingScreen: React.FC<LandingScreenProps> = ({ onEnter }) => {
         }}
       />
       <div className="landing-content" style={{
+        position: 'relative',
+        zIndex: 1,
+        background: 'rgba(15, 23, 42, 0.7)',
+        backdropFilter: 'blur(12px)',
+        border: '1px solid rgba(0, 212, 255, 0.2)',
+        borderRadius: '24px',
+        padding: '60px',
+        textAlign: 'center',
+        maxWidth: '800px',
+        boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5), 0 0 40px rgba(0, 212, 255, 0.1)'
+      }}>
+        <div style={{
+          display: 'inline-block',
+          padding: '8px 16px',
+          background: 'rgba(0, 212, 255, 0.1)',
+          border: '1px solid rgba(0, 212, 255, 0.3)',
+          borderRadius: '20px',
+          color: '#00d4ff',
+          fontSize: '0.875rem',
+          fontWeight: 600,
+          letterSpacing: '0.1em',
+          marginBottom: '24px'
+        }}>
+          INTERACTIVE SIMULATION ENGINE
+        </div>
+        <img 
+          src="/logo.png" 
+          alt="SunMechanica Logo" 
+          style={{ 
+            width: '140px', 
+            height: '140px', 
+            margin: '0 auto 24px auto', 
+            display: 'block',
+            filter: 'drop-shadow(0 0 30px rgba(0, 212, 255, 0.3))'
+          }} 
+        />
+        <h1 className="landing-title" style={{
+          fontSize: '3.5rem',
+          fontWeight: 800,
+          color: '#ffffff',
