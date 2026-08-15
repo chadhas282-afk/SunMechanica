@@ -7178,3 +7178,43 @@ export const WankelEngineSim: React.FC<SimulationProps> = ({ angle, load , zoom 
     ctx.rotate(rotorAngle);
     ctx.beginPath();
     for (let i = 0; i < 3; i++) {
+      const a1 = i * (Math.PI * 2 / 3);
+      const a2 = (i + 1) * (Math.PI * 2 / 3);
+      const p1x = R * Math.cos(a1);
+      const p1y = R * Math.sin(a1);
+      const p2x = R * Math.cos(a2);
+      const p2y = R * Math.sin(a2);
+      const cpAngle = a1 + Math.PI / 3;
+      const cpR = R * 0.65; 
+      const cpx = cpR * Math.cos(cpAngle);
+      const cpy = cpR * Math.sin(cpAngle);
+      if (i === 0) ctx.moveTo(p1x * scale, p1y * scale);
+      ctx.quadraticCurveTo(cpx * scale, cpy * scale, p2x * scale, p2y * scale);
+    }
+    ctx.closePath();
+    const rC = Math.round(236 + loadFactor * 19);
+    const gC = Math.round(72 - loadFactor * 72);
+    const bC = Math.round(153 - loadFactor * 153);
+    ctx.fillStyle = `rgba(${rC}, ${gC}, ${bC}, ${0.15 + loadFactor * 0.2})`;
+    ctx.fill();
+    ctx.strokeStyle = `rgb(${rC}, ${gC}, ${bC})`;
+    ctx.lineWidth = 3 + loadFactor * 2;
+    if (load > 60) {
+      ctx.shadowBlur = load - 60;
+      ctx.shadowColor = `rgb(${rC}, ${gC}, ${bC})`;
+    }
+    ctx.stroke();
+    ctx.shadowBlur = 0;
+    ctx.beginPath();
+    ctx.arc(0, 0, e * 3 * scale, 0, Math.PI * 2);
+    ctx.strokeStyle = '#475569';
+    ctx.lineWidth = 4;
+    ctx.setLineDash([6, 6]);
+    ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.restore();
+    const [originScreenX, originScreenY] = toScreen(0, 0);
+    ctx.beginPath();
+    ctx.arc(originScreenX, originScreenY, e * 2 * scale, 0, Math.PI * 2);
+    ctx.fillStyle = '#1e293b';
+    ctx.fill();
