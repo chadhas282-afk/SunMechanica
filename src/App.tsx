@@ -8058,3 +8058,43 @@ export const LandingScreen: React.FC<LandingScreenProps> = ({ onEnter }) => {
     const animate = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       ctx.strokeStyle = 'rgba(30, 41, 59, 0.4)';
+       ctx.lineWidth = 1;
+      for (let x = 0; x < canvas.width; x += 40) {
+        ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, canvas.height); ctx.stroke();
+      }
+      for (let y = 0; y < canvas.height; y += 40) {
+        ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(canvas.width, y); ctx.stroke();
+      }
+      const t = frame * 0.002;
+      drawGear(canvas.width * 0.1, canvas.height * 0.8, 300, 24, t);
+      drawGear(canvas.width * 0.9, canvas.height * 0.2, 200, 16, -t * 1.5);
+      drawGear(canvas.width * 0.8, canvas.height * 0.9, 400, 32, t * 0.8);
+      frame++;
+      requestAnimationFrame(animate);
+    };
+    animate();
+    return () => window.removeEventListener('resize', resize);
+  }, []);
+  return (
+    <div style={{
+      position: 'relative',
+      width: '100vw',
+      height: '100vh',
+      backgroundColor: '#050d1a',
+      overflow: 'hidden',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center'
+    }}>
+      <canvas
+        ref={canvasRef}
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          zIndex: 0
+        }}
+      />
+      <div className="landing-content" style={{
