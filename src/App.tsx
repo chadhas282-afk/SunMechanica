@@ -7538,3 +7538,43 @@ export const encyclopediaData: Concept[] = [
     id: 'scissor-lift',
     title: 'Scissor Lift Mechanism',
     category: 'Structural',
+    description: 'Pantograph linkage network that uses linked, folding supports in a crisscross X pattern to achieve vertical elevation.',
+    implemented: true,
+    color: '#00ff88',
+    glowColor: 'rgba(0,255,136,0.2)',
+    tags: ['Elevation', 'Pantograph', 'Actuator']
+  },
+  {
+    id: 'watts-linkage',
+    title: "Watt's Linkage",
+    category: 'Motion & Power',
+    description: 'A mechanical linkage invented by James Watt that approximates perfect straight-line motion at its center point.',
+    implemented: true,
+    color: '#ff6b35',
+    glowColor: 'rgba(255,107,53,0.2)',
+    tags: ['Suspension', 'Straight-Line', 'Steam']
+  },
+  {
+    id: 'oldham-coupling',
+    title: 'Oldham Coupling',
+    category: 'Motion & Power',
+    description: 'A method to connect two parallel but offset shafts using an intermediate floating disk with perpendicular tongues.',
+    implemented: true,
+    color: '#a855f7',
+    glowColor: 'rgba(168,85,247,0.2)',
+    tags: ['Coupling', 'Offset', 'Shaft']
+  },
+  {
+    id: 'four-bar-linkage',
+    title: 'Four-Bar Linkage',
+    category: 'Motion & Power',
+    description: 'A classic kinematic chain used to convert rotation into complex oscillation, commonly seen in windshield wipers and pumpjacks.',
+    implemented: true,
+    color: '#00d4ff',
+    glowColor: 'rgba(0,212,255,0.2)',
+    tags: ['Kinematics', 'Windshield Wiper', 'Pumpjack']
+  },
+  {
+    id: 'inverted-pendulum',
+    title: 'Inverted Pendulum',
+    category: 'Advanced Mechanisms',
