@@ -7698,3 +7698,43 @@ export const encyclopediaData: Concept[] = [
     id: 'euler-bernoulli',
     title: 'Euler-Bernoulli Buckling',
     category: 'Structural',
+     description: 'Simulates the catastrophic failure and critical load limits of thin columns under intense axial compression.',
+    implemented: true,
+    color: '#ff3366',
+    glowColor: 'rgba(255,51,102,0.2)',
+    tags: ['Buckling', 'Compression', 'Failure']
+  },
+  {
+    id: 'carnot-cycle',
+    title: 'Carnot Heat Engine',
+    category: 'Thermodynamics',
+    description: 'Visualizes the idealized P-V diagram and thermodynamic limits of a perfectly reversible heat engine.',
+    implemented: true,
+    color: '#ff6b35',
+    glowColor: 'rgba(255,107,53,0.2)',
+    tags: ['Ideal', 'Entropy', 'P-V Diagram']
+  },
+  {
+    id: 'strandbeest',
+    title: "Jansen's Linkage",
+    category: 'Advanced Mechanisms',
+    description: 'A complex multi-bar leg mechanism that perfectly simulates a smooth, organic walking motion.',
+    implemented: true,
+    color: '#a855f7',
+    glowColor: 'rgba(168,85,247,0.2)',
+    tags: ['Walking', 'Kinematics', 'Organic']
+  },
+  {
+    id: 'klann-linkage',
+    title: 'Klann Linkage',
+    category: 'Advanced Mechanisms',
+    description: 'An alternative mechanical walking linkage that produces a stepping motion similar to a spider or crab.',
+    implemented: true,
+    color: '#00d4ff',
+    glowColor: 'rgba(0,212,255,0.2)',
+    tags: ['Walking', 'Arachnid', 'Linkage']
+  },
+  {
+    id: 'cvt-transmission',
+    title: 'CVT Transmission',
+    category: 'Advanced Mechanisms',
