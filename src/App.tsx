@@ -7338,3 +7338,43 @@ export const WattsLinkageSim: React.FC<SimulationProps> = ({ angle, load , zoom 
       ctx.beginPath();
       for (let i = 0; i < traceRef.current.length; i++) {
         const pt = traceRef.current[i];
+        const [sx, sy] = toScreen(pt.x, pt.y);
+        if (i === 0) ctx.moveTo(sx, sy);
+        else ctx.lineTo(sx, sy);
+      }
+      ctx.strokeStyle = 'rgba(255, 107, 53, 0.6)';
+      ctx.lineWidth = 4;
+      ctx.stroke();
+    }
+    const loadFactor = load / 100;
+    const rC = Math.round(255 - loadFactor * 55);
+    const gC = Math.round(107 - loadFactor * 107);
+    const bC = Math.round(53 - loadFactor * 53);
+    const stressColor = `rgb(${rC}, ${gC}, ${bC})`;
+    const glow = load > 50;
+    drawCircle(Ax, Ay, 0.3, '#475569', true);
+    drawCircle(Bx, By, 0.3, '#475569', true);
+    drawLine(Ax, Ay, Cx, Cy, '#3b82f6', 10);
+    drawLine(Bx, By, Dx, Dy, '#3b82f6', 10);
+    if (glow) {
+      ctx.shadowBlur = (load - 50) * 0.4;
+      ctx.shadowColor = stressColor;
+    }
+    drawLine(Cx, Cy, Dx, Dy, stressColor, 8);
+    ctx.shadowBlur = 0;
+    drawCircle(Cx, Cy, 0.25, '#fff', true);
+    drawCircle(Dx, Dy, 0.25, '#fff', true);
+    drawCircle(Px, Py, 0.3, '#fff', true);
+    drawCircle(Px, Py, 0.15, stressColor, true);
+    ctx.fillStyle = 'rgba(8, 15, 30, 0.85)';
+    ctx.fillRect(width - 260, 150, 220, 110);
+    ctx.strokeStyle = 'rgba(255, 107, 53, 0.3)';
+    ctx.strokeRect(width - 260, 150, 220, 110);
+    ctx.font = '10px monospace';
+    ctx.fillStyle = '#ff6b35';
+    ctx.fillText('SYS :: WATTS_LINKAGE', width - 250, 170);
+    ctx.fillStyle = '#fff';
+    ctx.fillText(`CENTER X DEV: ${Math.abs(Px).toFixed(4)}`, width - 250, 195);
+    ctx.fillStyle = '#00ff88';
+    ctx.fillText(`CENTER Y POS: ${Py.toFixed(2)}`, width - 250, 215);
+    ctx.fillStyle = stressColor;
