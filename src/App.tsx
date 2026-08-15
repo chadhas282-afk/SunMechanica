@@ -7818,3 +7818,43 @@ export const encyclopediaData: Concept[] = [
     id: 'toggle-mechanism',
     title: 'Toggle Mechanism',
     category: 'Motion & Power',
+     description: 'A linkage system used to deliver massive peak force with minimal input effort.',
+    implemented: true,
+    color: '#00ff88',
+    glowColor: 'rgba(0,255,136,0.2)',
+    tags: ['Force Multiplier', 'Crusher', 'Linkage']
+  },
+  {
+    id: 'roots-blower',
+    title: 'Roots Blower',
+    category: 'Motion & Power',
+    description: 'A positive displacement lobe pump frequently used as an automotive supercharger.',
+    implemented: true,
+    color: '#ffd700',
+    glowColor: 'rgba(255,215,0,0.2)',
+    tags: ['Supercharger', 'Pneumatic', 'Rotary']
+  },
+  {
+    id: 'elliptical-trammel',
+    title: 'Elliptical Trammel',
+    category: 'Motion & Power',
+    description: 'A mechanism that generates a perfect ellipse path using two sliders in perpendicular slots.',
+    implemented: true,
+    color: '#ff3366',
+    glowColor: 'rgba(255,51,102,0.2)',
+    tags: ['Archimedes', 'Ellipse', 'Slider']
+  },
+  {
+    id: 'centrifugal-impeller',
+    title: 'Centrifugal Impeller Volute',
+    category: 'Fluid Power',
+    description: 'Shows how fluid velocity translates into pressure energy as it spirals out of a volute casing.',
+    implemented: true,
+    color: '#00d4ff',
+    glowColor: 'rgba(0,212,255,0.2)',
+    tags: ['Pump', 'Volute', 'Velocity']
+  },
+  {
+    id: 'pelton-wheel',
+    title: 'Pelton Wheel Turbine',
+    category: 'Fluid Power',
