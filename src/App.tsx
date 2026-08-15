@@ -7858,3 +7858,43 @@ export const encyclopediaData: Concept[] = [
     id: 'pelton-wheel',
     title: 'Pelton Wheel Turbine',
     category: 'Fluid Power',
+    description: 'An impulse turbine where a high-velocity jet hits hemispherical buckets, transferring momentum.',
+    implemented: true,
+    color: '#00ff88',
+    glowColor: 'rgba(0,255,136,0.2)',
+    tags: ['Impulse', 'Hydro', 'Turbine']
+  },
+  {
+    id: 'axial-piston-pump',
+    title: 'Swashplate Piston Pump',
+    category: 'Fluid Power',
+    description: 'Translates swashplate angle into varying fluid displacement and high-pressure delivery.',
+    implemented: true,
+    color: '#ffd700',
+    glowColor: 'rgba(255,215,0,0.2)',
+    tags: ['Hydraulics', 'Piston', 'Swashplate']
+  },
+  {
+    id: 'check-valves',
+    title: 'Check Valves',
+    category: 'Fluid Power',
+    description: 'Visualizes fluid flowing freely in one direction but instantly sealing against backflow.',
+    implemented: true,
+    color: '#ff6b35',
+    glowColor: 'rgba(255,107,53,0.2)',
+    tags: ['One-Way', 'Valve', 'Plumbing']
+  },
+  {
+    id: 'truss-joint-method',
+    title: 'Truss Method of Joints',
+    category: 'Structural',
+    description: 'A visual breakdown of how external forces split into internal tensile/compressive vectors at a node.',
+    implemented: true,
+    color: '#a855f7',
+    glowColor: 'rgba(168,85,247,0.2)',
+    tags: ['Statics', 'Vectors', 'Forces']
+  },
+  {
+    id: 'mohrs-circle',
+    title: "Mohr's Circle",
+    category: 'Structural',
