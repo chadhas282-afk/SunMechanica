@@ -7578,3 +7578,43 @@ export const encyclopediaData: Concept[] = [
     id: 'inverted-pendulum',
     title: 'Inverted Pendulum',
     category: 'Advanced Mechanisms',
+     description: 'An inherently unstable system with its mass above the pivot point, requiring active control forces to maintain balance.',
+    implemented: true,
+    color: '#ff3366',
+    glowColor: 'rgba(255,51,102,0.2)',
+    tags: ['Control Systems', 'Robotics', 'Balance']
+  },
+  {
+    id: 'mass-spring-damper',
+    title: 'Mass-Spring-Damper',
+    category: 'Vibration & Tribology',
+    description: 'The fundamental model for mechanical vibration and suspension systems, demonstrating inertia, stiffness, and energy dissipation.',
+    implemented: true,
+    color: '#00ff88',
+    glowColor: 'rgba(0,255,136,0.2)',
+    tags: ['Vibration', 'Suspension', 'Damping']
+  },
+  {
+    id: 'truss-model',
+    title: 'Truss Model',
+    category: 'Structural',
+    description: 'Simplifies structures into interconnected pin-jointed bars that only carry axial tension or compression forces.',
+    implemented: true,
+    color: '#ffd700',
+    glowColor: 'rgba(255,215,0,0.2)',
+    tags: ['Bridges', 'Statics', 'FEA']
+  },
+  {
+    id: 'scotch-yoke',
+    title: 'Scotch Yoke',
+    category: 'Motion & Power',
+    description: 'Converts rotational motion into perfectly smooth simple harmonic linear motion without the use of a connecting rod.',
+    implemented: true,
+    color: '#00d4ff',
+    glowColor: 'rgba(0,212,255,0.2)',
+    tags: ['Harmonic', 'Linear', 'Slider']
+  },
+  {
+    id: 'external-gear-pump',
+    title: 'External Gear Pump',
+    category: 'Fluid Power',
