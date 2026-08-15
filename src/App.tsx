@@ -7618,3 +7618,43 @@ export const encyclopediaData: Concept[] = [
     id: 'external-gear-pump',
     title: 'External Gear Pump',
     category: 'Fluid Power',
+     description: 'Positive displacement fluid transfer using two interlocking gears to carry fluid around the outer casing.',
+    implemented: true,
+    color: '#00ff88',
+    glowColor: 'rgba(0,255,136,0.2)',
+    tags: ['Hydraulics', 'Displacement', 'Flow']
+  },
+  {
+    id: 'otto-cycle',
+    title: 'Four-Stroke Otto Cycle',
+    category: 'Thermodynamics',
+    description: 'The thermodynamic cycle of most automotive internal combustion engines: Intake, Compression, Power, and Exhaust.',
+    implemented: true,
+    color: '#ff3366',
+    glowColor: 'rgba(255,51,102,0.2)',
+    tags: ['Engine', 'Combustion', 'Automotive']
+  },
+  {
+    id: 'peaucellier-lipkin',
+    title: 'Peaucellier–Lipkin Linkage',
+    category: 'Motion & Power',
+    description: 'The first planar linkage capable of transforming perfect rotary motion into perfect straight-line motion.',
+    implemented: true,
+    color: '#a855f7',
+    glowColor: 'rgba(168,85,247,0.2)',
+    tags: ['Inversion', 'Geometry', 'Straight-Line']
+  },
+  {
+    id: 'sliding-vane-pump',
+    title: 'Sliding Vane Pump',
+    category: 'Fluid Power',
+    description: 'A variable displacement rotary pump featuring sliding vanes that adjust to an eccentric casing.',
+    implemented: true,
+    color: '#00d4ff',
+    glowColor: 'rgba(0,212,255,0.2)',
+    tags: ['Rotary', 'Pneumatic', 'Vanes']
+  },
+  {
+    id: 'tesla-turbine',
+    title: 'Tesla Bladeless Turbine',
+    category: 'Fluid Power',
