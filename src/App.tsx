@@ -8018,3 +8018,43 @@ export const encyclopediaData: Concept[] = [
 interface LandingScreenProps {
   onEnter: () => void;
 }
+export const LandingScreen: React.FC<LandingScreenProps> = ({ onEnter }) => {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+    const resize = () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    };
+    resize();
+    window.addEventListener('resize', resize);
+    let frame = 0;
+    const drawGear = (x: number, y: number, r: number, teeth: number, rot: number) => {
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.rotate(rot);
+      ctx.beginPath();
+      for (let i = 0; i < teeth; i++) {
+        const a1 = (i * Math.PI * 2) / teeth;
+        const a2 = ((i + 0.5) * Math.PI * 2) / teeth;
+        const outer = r;
+        const inner = r * 0.8;
+        if (i === 0) ctx.moveTo(Math.cos(a1) * outer, Math.sin(a1) * outer);
+        else ctx.lineTo(Math.cos(a1) * outer, Math.sin(a1) * outer);
+        ctx.lineTo(Math.cos(a2) * inner, Math.sin(a2) * inner);
+      }
+      ctx.closePath();
+      ctx.strokeStyle = 'rgba(0, 212, 255, 0.05)';
+      ctx.lineWidth = 2;
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.arc(0, 0, r * 0.6, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.restore();
+    };
+    const animate = () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.strokeStyle = 'rgba(30, 41, 59, 0.4)';
