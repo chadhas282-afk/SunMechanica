@@ -7978,3 +7978,43 @@ export const encyclopediaData: Concept[] = [
     id: 'sarrus-linkage',
     title: 'Sarrus Linkage',
     category: 'Advanced Mechanisms',
+     description: 'A spatial mechanism providing perfect straight linear movement using only hinged plates.',
+    implemented: true,
+    color: '#ff6b35',
+    glowColor: 'rgba(255,107,53,0.2)',
+    tags: ['Spatial', 'Linear', 'Hinges']
+  },
+  {
+    id: 'fluid-cavitation',
+    title: 'Fluid Film Cavitation',
+    category: 'Vibration & Tribology',
+    description: 'Shows destructive vapor bubbles forming in low-pressure trailing edges of a hydrodynamic fluid film.',
+    implemented: true,
+    color: '#00ff88',
+    glowColor: 'rgba(0,255,136,0.2)',
+    tags: ['Bubbles', 'Pressure', 'Damage']
+  },
+  {
+    id: 'double-pendulum',
+    title: 'Double Pendulum',
+    category: 'Vibration & Tribology',
+    description: 'Displays highly chaotic, unpredictable path tracking of a non-linear dynamical system.',
+    implemented: true,
+    color: '#ff3366',
+    glowColor: 'rgba(255,51,102,0.2)',
+    tags: ['Chaos', 'Dynamics', 'Unpredictable']
+  },
+  {
+    id: 'leaf-spring',
+    title: 'Leaf Spring Suspension',
+    category: 'Vibration & Tribology',
+    description: 'Shows how stacked steel plates bend and slide against each other to absorb high-impact loads.',
+    implemented: true,
+    color: '#ffd700',
+    glowColor: 'rgba(255,215,0,0.2)',
+    tags: ['Suspension', 'Leaf', 'Truck']
+  }
+];
+interface LandingScreenProps {
+  onEnter: () => void;
+}
