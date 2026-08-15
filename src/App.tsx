@@ -7778,3 +7778,43 @@ export const encyclopediaData: Concept[] = [
     id: 'epicyclic-vibration',
     title: 'Epicyclic Vibration Absorber',
     category: 'Vibration & Tribology',
+    description: 'Uses a centrifugal pendulum balancing system to dynamically absorb torsional vibrations in rotating machinery.',
+    implemented: true,
+    color: '#a855f7',
+    glowColor: 'rgba(168,85,247,0.2)',
+    tags: ['Harmonics', 'Balancing', 'Torsional']
+  },
+  {
+    id: 'hookes-joint',
+    title: "Hooke's Joint (U-Joint)",
+    category: 'Motion & Power',
+    description: 'Demonstrates how rotational speed fluctuates across an angled universal joint.',
+    implemented: true,
+    color: '#00d4ff',
+    glowColor: 'rgba(0,212,255,0.2)',
+    tags: ['Universal', 'Shaft', 'Drivetrain']
+  },
+  {
+    id: 'maltese-cross',
+    title: 'Maltese Cross Mechanism',
+    category: 'Motion & Power',
+    description: 'A variation of intermittent motion using an internal wheel design similar to a Geneva drive.',
+    implemented: true,
+    color: '#a855f7',
+    glowColor: 'rgba(168,85,247,0.2)',
+    tags: ['Intermittent', 'Indexing', 'Rotary']
+  },
+  {
+    id: 'ratchet-pawl',
+    title: 'Ratchet and Pawl',
+    category: 'Motion & Power',
+    description: 'Demonstrates continuous rotary motion in only one direction while preventing reversal.',
+    implemented: true,
+    color: '#ff6b35',
+    glowColor: 'rgba(255,107,53,0.2)',
+    tags: ['One-Way', 'Lock', 'Winch']
+  },
+  {
+    id: 'toggle-mechanism',
+    title: 'Toggle Mechanism',
+    category: 'Motion & Power',
