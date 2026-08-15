@@ -7298,3 +7298,43 @@ export const WattsLinkageSim: React.FC<SimulationProps> = ({ angle, load , zoom 
     const drawLine = (x1: number, y1: number, x2: number, y2: number, color: string, w: number) => {
       ctx.beginPath();
       const [sx1, sy1] = toScreen(x1, y1);
+      const [sx2, sy2] = toScreen(x2, y2);
+      ctx.moveTo(sx1, sy1); ctx.lineTo(sx2, sy2);
+      ctx.strokeStyle = color; ctx.lineWidth = w; ctx.stroke();
+    };
+    const drawCircle = (x: number, y: number, r: number, color: string, fill = false) => {
+      ctx.beginPath();
+      const [sx, sy] = toScreen(x, y);
+      ctx.arc(sx, sy, r * scale, 0, 2 * Math.PI);
+      ctx.strokeStyle = color; ctx.lineWidth = 2; ctx.stroke();
+      if (fill) { ctx.fillStyle = color; ctx.fill(); }
+    };
+    const d = 3.5;
+    const Ax = 0; const Ay = d;
+    const Bx = 0; const By = -d;
+    const L = 4.0; 
+    const K = 7.0; 
+    const maxTheta = Math.PI / 4; 
+    const theta = maxTheta * Math.sin(angle);
+    const Cx = Ax - L * Math.cos(theta);
+    const Cy = Ay + L * Math.sin(theta);
+    const distCB = Math.hypot(Bx - Cx, By - Cy);
+    let Dx = 0; let Dy = 0;
+    if (distCB <= K + L && distCB >= Math.abs(K - L)) {
+      const a = (K * K - L * L + distCB * distCB) / (2 * distCB);
+      const h = Math.sqrt(K * K - a * a);
+      const P2x = Cx + a * (Bx - Cx) / distCB;
+      const P2y = Cy + a * (By - Cy) / distCB;
+      Dx = P2x + h * (By - Cy) / distCB;
+      Dy = P2y - h * (Bx - Cx) / distCB;
+    } else {
+      Dx = Bx + L; Dy = By;
+    }
+    const Px = (Cx + Dx) / 2;
+    const Py = (Cy + Dy) / 2;
+    traceRef.current.push({ x: Px, y: Py });
+    if (traceRef.current.length > 200) traceRef.current.shift();
+    if (traceRef.current.length > 1) {
+      ctx.beginPath();
+      for (let i = 0; i < traceRef.current.length; i++) {
+        const pt = traceRef.current[i];
