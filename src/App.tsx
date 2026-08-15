@@ -7098,3 +7098,43 @@ export const VenturiTubeSim: React.FC<SimulationProps> = ({ angle, load , zoom =
     ctx.fillText('SYS :: VENTURI_DYNAMICS', 40, 170);
     ctx.fillStyle = '#fff';
     ctx.fillText(`P_INLET  : ${p1.toFixed(1)} kPa`, 40, 195);
+    ctx.fillStyle = '#00ff88';
+    ctx.fillText(`P_CHOKE  : ${p2.toFixed(1)} kPa`, 40, 215);
+    ctx.fillStyle = '#ff6b35';
+    ctx.fillText(`FLOW RATE: ${(baseFlowRate*10).toFixed(1)} L/s`, 40, 235);
+  }, [angle, load]);
+  return (
+    <div style={{ width: '100%', height: '100%' }}>
+      <canvas ref={canvasRef} style={{ width: '100%', height: '100%', display: 'block' }} />
+    </div>
+  );
+};
+export const WankelEngineSim: React.FC<SimulationProps> = ({ angle, load , zoom = 1 }) => {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+    const dpr = window.devicePixelRatio || 1;
+    const rect = canvas.getBoundingClientRect();
+    canvas.width = rect.width * dpr;
+    canvas.height = rect.height * dpr;
+    ctx.scale(dpr, dpr);
+    const width = rect.width;
+    const height = rect.height;
+    ctx.clearRect(0, 0, width, height);
+    const scale = (Math.min(width, height) / 8) * zoom; 
+    const originX = width * 0.5;
+    const originY = height * 0.5;
+    const e = 0.6; 
+    const R = 3.8; 
+    const shaftAngle = -angle; 
+    const rotorAngle = shaftAngle / 3;
+    const rcX = e * Math.cos(shaftAngle);
+    const rcY = e * Math.sin(shaftAngle);
+    ctx.fillStyle = '#050d1a';
+    ctx.fillRect(0, 0, width, height);
+    ctx.strokeStyle = '#1e293b';
+    ctx.lineWidth = 1;
+    for (let i = 0; i < width; i += 40) {
