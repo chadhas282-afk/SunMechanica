@@ -8438,3 +8438,43 @@ export const Dashboard: React.FC<DashboardProps> = ({ onSelectConcept, onGoHome 
   );
 };
 const ConceptCard: React.FC<{ concept: Concept; index: number; onSelect: (id: string) => void }> = ({ concept, index, onSelect }) => {
+  const [hovered, setHovered] = React.useState(false);
+  return (
+    <div
+      onClick={() => concept.implemented && onSelect(concept.id)}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      style={{
+        background: hovered && concept.implemented
+          ? `linear-gradient(135deg, var(--bg-card-hover) 0%, ${concept.glowColor.replace('0.2', '0.05')} 100%)`
+          : 'var(--bg-card)',
+        border: `1px solid ${hovered && concept.implemented ? concept.color + '50' : 'var(--border-subtle)'}`,
+        borderRadius: '12px',
+        padding: '24px',
+        cursor: concept.implemented ? 'pointer' : 'default',
+        opacity: concept.implemented ? 1 : 0.45,
+        transition: 'all 0.25s ease',
+        transform: hovered && concept.implemented ? 'translateY(-2px)' : 'translateY(0)',
+        boxShadow: hovered && concept.implemented
+          ? `0 8px 40px ${concept.glowColor.replace('0.2', '0.3')}, 0 0 0 1px ${concept.color}20`
+          : '0 2px 8px rgba(0,0,0,0.3)',
+        position: 'relative',
+        overflow: 'hidden',
+        animation: `fade-in-up 0.3s ease ${index * 0.04}s both`,
+      }}
+    >
+      {concept.implemented && (
+        <>
+          <div style={{ position: 'absolute', top: 0, left: 0, width: '12px', height: '12px', borderTop: `2px solid ${concept.color}`, borderLeft: `2px solid ${concept.color}`, borderRadius: '12px 0 0 0', opacity: hovered ? 1 : 0.5, transition: 'opacity 0.2s' }} />
+          <div style={{ position: 'absolute', bottom: 0, right: 0, width: '12px', height: '12px', borderBottom: `2px solid ${concept.color}`, borderRight: `2px solid ${concept.color}`, borderRadius: '0 0 12px 0', opacity: hovered ? 1 : 0.5, transition: 'opacity 0.2s' }} />
+        </>
+      )}
+      <div style={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        marginBottom: '16px',
+      }}>
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
