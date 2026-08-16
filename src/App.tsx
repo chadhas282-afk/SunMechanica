@@ -8758,3 +8758,42 @@ export const MechanismDetail: React.FC<MechanismDetailProps> = ({ concept, onBac
         flexDirection: 'column',
         gap: '8px',
         zIndex: 20
+         }}>
+        <button
+          onClick={() => setZoom(z => Math.min(z + 0.25, 5))}
+          className="glass-panel"
+          style={{ width: '40px', height: '40px', borderRadius: '8px', color: 'white', fontSize: '20px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+        >
+          +
+        </button>
+        <div className="glass-panel" style={{ width: '40px', height: '40px', borderRadius: '8px', color: 'var(--text-secondary)', fontSize: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: 'var(--font-mono)' }}>
+          {Math.round(zoom * 100)}%
+        </div>
+        <button
+          onClick={() => setZoom(z => Math.max(z - 0.25, 0.1))}
+          className="glass-panel"
+          style={{ width: '40px', height: '40px', borderRadius: '8px', color: 'white', fontSize: '24px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+        >
+          −
+        </button>
+      </div>
+      <div 
+        style={{ width: '100%', height: '100%' }}
+        onWheel={(e) => setZoom(z => Math.min(Math.max(0.1, z - e.deltaY * 0.002), 5))}
+      >
+        {SimComponent ? (
+          <SimComponent angle={angle} load={load} zoom={zoom} />
+        ) : (
+          <div style={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            height: '100%',
+            gap: '12px',
+          }}>
+            <div style={{ fontSize: '40px' }}>⚙</div>
+            <div style={{ fontFamily: 'var(--font-mono)', color: 'var(--text-muted)', fontSize: '14px' }}>
+              Simulation not yet implemented
+            </div>
+          </div>
