@@ -708,7 +708,7 @@ export const CarnotCycleSim: React.FC<SimulationProps> = ({ angle, load , zoom =
       V = V3 + t * (V4 - V3);
       T = TC;
       P = T / V;
-       } else {
+    } else {
       phaseName = "ADIABATIC COMPRESSION";
       const t = (cyclePhase - 0.75) / 0.25;
       V = V4 + t * (V1 - V4);
@@ -768,7 +768,7 @@ export const CarnotCycleSim: React.FC<SimulationProps> = ({ angle, load , zoom =
       ctx.fillStyle = '#3b82f6';
       ctx.beginPath(); ctx.moveTo(cylX + pWidth/2, cylY + pHeight + 40); ctx.lineTo(cylX + pWidth/2 - 10, cylY + pHeight + 20); ctx.lineTo(cylX + pWidth/2 + 10, cylY + pHeight + 20); ctx.fill();
       ctx.fillText("Q out (T_C)", cylX + pWidth/2 + 20, cylY + pHeight + 35);
-       }
+    }
     ctx.fillStyle = 'rgba(8, 15, 30, 0.85)';
     ctx.fillRect(30, 150, 240, 110);
     ctx.strokeStyle = 'rgba(255, 107, 53, 0.3)';
@@ -918,7 +918,7 @@ export const CentrifugalImpellerSim: React.FC<SimulationProps> = ({ angle, load,
         r: Math.random() * 0.5,
         t: Math.random() * 2 * Math.PI,
         speed: 0.1 + Math.random() * 0.1
-        });
+      });
     }
     const nextParticles = [];
     for (const p of particlesRef.current) {
@@ -948,7 +948,7 @@ export const CentrifugalImpellerSim: React.FC<SimulationProps> = ({ angle, load,
       const th = Math.PI/2 - 0.2 + (i/100) * 2 * Math.PI;
       const rad = voluteBase + (i/100) * voluteGrow;
       const [px, py] = toScreen(rad * Math.cos(th), rad * Math.sin(th));
-       ctx.lineTo(px, py);
+      ctx.lineTo(px, py);
     }
     const disX_right = voluteBase + voluteGrow;
     const disY_right = 6.0;
@@ -1068,7 +1068,7 @@ export const ChebyshevStraightLineSim: React.FC<SimulationProps> = ({ angle, loa
     }
     const loadFactor = load / 100;
     const offset = 0.5 + (loadFactor - 0.5) * 0.4; 
-     const P = [
+    const P = [
       D[0] + (C[0] - D[0]) * offset,
       D[1] + (C[1] - D[1]) * offset
     ];
@@ -1158,7 +1158,7 @@ export const CheckValvesSim: React.FC<SimulationProps> = ({ angle, load, zoom = 
         x: baseVel > 0 ? -8 : 8,
         y: (Math.random() - 0.5) * 1.5,
         id: Math.random()
-         });
+      });
       particlesRef.current.push({
         x: baseVel > 0 ? -8 : 8,
         y: (Math.random() - 0.5) * 1.5 - 4,
@@ -1188,7 +1188,7 @@ export const CheckValvesSim: React.FC<SimulationProps> = ({ angle, load, zoom = 
     drawPipe(0.0);
     drawPipe(-4.0);
     ctx.fillStyle = isOpen ? '#00d4ff' : '#ff3366';
-     for (const p of particlesRef.current) {
+    for (const p of particlesRef.current) {
       const [px, py] = toScreen(p.x, p.y);
       ctx.beginPath(); ctx.arc(px, py, 0.08 * scale, 0, 2*Math.PI); ctx.fill();
     }
@@ -1218,7 +1218,7 @@ export const CheckValvesSim: React.FC<SimulationProps> = ({ angle, load, zoom = 
     ctx.rotate(swingAngle);
     ctx.fillStyle = '#94a3b8';
     ctx.fillRect(0, 0, 0.2*scale, 2.0*scale);
-     ctx.strokeStyle = stressColor; ctx.lineWidth = 3 * zoom;
+    ctx.strokeStyle = stressColor; ctx.lineWidth = 3 * zoom;
     if (!isOpen && load > 10) { ctx.shadowBlur = 10; ctx.shadowColor = stressColor; }
     ctx.strokeRect(0, 0, 0.2*scale, 2.0*scale); ctx.shadowBlur = 0;
     ctx.beginPath(); ctx.arc(0, 0, 0.15*scale, 0, 2*Math.PI); ctx.fillStyle = '#fff'; ctx.fill();
@@ -1298,7 +1298,7 @@ export const CrankshaftSim: React.FC<SimulationProps> = ({ angle, load , zoom = 
     ctx.fillRect(0, 0, width, height);
     ctx.strokeStyle = '#1e293b';
     ctx.lineWidth = 1;
-     for (let i = 0; i < width; i += 40) {
+    for (let i = 0; i < width; i += 40) {
       ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(i, height); ctx.stroke();
     }
     for (let i = 0; i < height; i += 40) {
@@ -1358,7 +1358,7 @@ export const CrankshaftSim: React.FC<SimulationProps> = ({ angle, load , zoom = 
     ctx.fillText(`ANGLE  : ${normAngle.toFixed(1)}°`, width - 250, 195);
     ctx.fillStyle = '#00ff88';
     ctx.fillText(`STROKE : ${(pistonX - (R + L - R)).toFixed(2)}`, width - 250, 215);
-     ctx.fillStyle = '#ff6b35';
+    ctx.fillStyle = '#ff6b35';
     ctx.fillText(`LOAD   : ${load}%`, width - 250, 235);
   }, [angle, load]);
   return (
@@ -1388,7 +1388,7 @@ export const DifferentialGearSim: React.FC<SimulationProps> = ({ angle, load, zo
     ctx.fillStyle = '#050d1a'; ctx.fillRect(0, 0, width, height);
     ctx.strokeStyle = '#1e293b'; ctx.lineWidth = 1;
     for (let i = 0; i < width; i += 40) { ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(i, height); ctx.stroke(); }
-     for (let i = 0; i < height; i += 40) { ctx.beginPath(); ctx.moveTo(0, i); ctx.lineTo(width, i); ctx.stroke(); }
+    for (let i = 0; i < height; i += 40) { ctx.beginPath(); ctx.moveTo(0, i); ctx.lineTo(width, i); ctx.stroke(); }
     const toScreen = (x: number, y: number) => [originX + x * scale, originY - y * scale];
     const drawLine = (x1: number, y1: number, x2: number, y2: number, color: string, w: number) => {
       ctx.beginPath();
@@ -1418,7 +1418,7 @@ export const DifferentialGearSim: React.FC<SimulationProps> = ({ angle, load, zo
         const rOuter = r * scale;
         const rInner = (r - 0.2) * scale;
         if (i===0) ctx.moveTo(rOuter * Math.cos(th), rOuter * Math.sin(th));
-         else ctx.lineTo(rOuter * Math.cos(th), rOuter * Math.sin(th));
+        else ctx.lineTo(rOuter * Math.cos(th), rOuter * Math.sin(th));
         ctx.lineTo(rInner * Math.cos(nextTh), rInner * Math.sin(nextTh));
       }
       ctx.closePath();
@@ -1588,7 +1588,7 @@ export const DoublePendulumSim: React.FC<SimulationProps> = ({ angle, load, zoom
         else ctx.lineTo(px, py);
       }
       ctx.strokeStyle = `rgba(255, 51, 102, ${0.4 + loadFactor*0.6})`;
-       ctx.lineWidth = 2 * zoom; ctx.stroke();
+      ctx.lineWidth = 2 * zoom; ctx.stroke();
     }
     const [px, py] = toScreen(0, 0);
     ctx.beginPath(); ctx.arc(px, py, 0.4 * scale, 0, 2*Math.PI);
@@ -1678,7 +1678,7 @@ export const EllipticalTrammelSim: React.FC<SimulationProps> = ({ angle, load, z
     const stressColor = '#ff3366';
     traceRef.current.push({ x: Cx, y: Cy });
     if (traceRef.current.length > 300) traceRef.current.shift();
-     if (traceRef.current.length > 1) {
+    if (traceRef.current.length > 1) {
       ctx.beginPath();
       for (let i = 0; i < traceRef.current.length; i++) {
         const pt = traceRef.current[i];
@@ -1768,7 +1768,7 @@ export const EpicyclicVibrationSim: React.FC<SimulationProps> = ({ angle, load ,
     ctx.fillStyle = '#0f172a'; ctx.fill();
     ctx.strokeStyle = '#475569'; ctx.lineWidth = 6; ctx.stroke();
     ctx.beginPath(); ctx.moveTo(-R_mount*scale, 0); ctx.lineTo(R_mount*scale, 0); ctx.stroke();
-     ctx.beginPath(); ctx.moveTo(0, -R_mount*scale); ctx.lineTo(0, R_mount*scale); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(0, -R_mount*scale); ctx.lineTo(0, R_mount*scale); ctx.stroke();
     ctx.beginPath(); ctx.arc(0, 0, 0.5 * scale, 0, 2*Math.PI); ctx.fillStyle = '#1e293b'; ctx.fill(); ctx.stroke();
     const rC = Math.round(168 + loadFactor * 87);
     const stressColor = `rgb(${rC}, 85, 247)`;
@@ -1798,7 +1798,7 @@ export const EpicyclicVibrationSim: React.FC<SimulationProps> = ({ angle, load ,
     const graphY = 150;
     traceRef.current.push({ t: angle, carrier: vibrationAmp * Math.sin(angle * freq), pend: pendulumSwing });
     if (traceRef.current.length > 100) traceRef.current.shift();
-     ctx.fillStyle = 'rgba(8, 15, 30, 0.85)';
+    ctx.fillStyle = 'rgba(8, 15, 30, 0.85)';
     ctx.fillRect(graphX - 20, graphY - 100, 200, 200);
     ctx.strokeStyle = '#475569'; ctx.strokeRect(graphX - 20, graphY - 100, 200, 200);
     ctx.beginPath(); ctx.moveTo(graphX - 20, graphY); ctx.lineTo(graphX + 180, graphY); ctx.strokeStyle = '#334155'; ctx.stroke();
@@ -1828,7 +1828,7 @@ export const EpicyclicVibrationSim: React.FC<SimulationProps> = ({ angle, load ,
 };
 export const EscapementSim: React.FC<SimulationProps> = ({ angle, load , zoom = 1 }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-   useEffect(() => {
+  useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
@@ -1947,7 +1947,7 @@ export const EscapementSim: React.FC<SimulationProps> = ({ angle, load , zoom = 
       }
       ctx.restore();
     };
-     drawPallet(-spanAngle, true); 
+    drawPallet(-spanAngle, true); 
     drawPallet(spanAngle, false); 
     ctx.beginPath();
     ctx.moveTo(0, 0);
@@ -2038,7 +2038,7 @@ export const EulerBucklingSim: React.FC<SimulationProps> = ({ angle, load , zoom
     const loadFactor = load / 100;
     const rC = Math.round(148 + loadFactor * 107);
     const gC = Math.round(163 - loadFactor * 163);
-     const bC = Math.round(184 - loadFactor * 184);
+    const bC = Math.round(184 - loadFactor * 184);
     const stressColor = `rgb(${rC}, ${gC}, ${bC})`;
     ctx.beginPath();
     topPoints.forEach((pt, i) => {
@@ -2218,7 +2218,7 @@ export const ExternalGearPumpSim: React.FC<SimulationProps> = ({ angle, load , z
         const px = tr * scale * Math.cos(a);
         const py = tr * scale * Math.sin(a);
         if (i === 0) ctx.moveTo(px, py);
-         else ctx.lineTo(px, py);
+        else ctx.lineTo(px, py);
       }
       ctx.closePath();
       ctx.fillStyle = '#1e293b';
@@ -2328,7 +2328,7 @@ export const FluidFilmCavitationSim: React.FC<SimulationProps> = ({ angle, load,
       ctx.lineTo(nextJSurfX, nextJSurfY);
       ctx.closePath();
       ctx.fillStyle = pColor; ctx.fill();
-      }
+    }
     ctx.restore();
     if (load > 30) {
       for(let i=0; i<loadFactor * 5; i++) {
@@ -2388,7 +2388,7 @@ export const FluidFilmCavitationSim: React.FC<SimulationProps> = ({ angle, load,
       ctx.lineTo(fx - 0.3*scale, fy + 1*scale + fMag*scale - 0.4*scale);
       ctx.lineTo(fx + 0.3*scale, fy + 1*scale + fMag*scale - 0.4*scale);
       ctx.fillStyle = '#ff3366'; ctx.fill();
-      }
+    }
     ctx.fillStyle = 'rgba(8, 15, 30, 0.85)';
     ctx.fillRect(30, 150, 250, 110);
     ctx.strokeStyle = 'rgba(0, 212, 255, 0.3)';
@@ -2448,7 +2448,7 @@ export const FourBarLinkageSim: React.FC<SimulationProps> = ({ angle, load , zoo
       if (fill) { ctx.fillStyle = color; ctx.fill(); }
     };
     const a = 2.0; 
-     const b = 6.0; 
+    const b = 6.0; 
     const c = 5.0; 
     const d = 5.5; 
     const Ax = 0; const Ay = 0;
@@ -2478,7 +2478,7 @@ export const FourBarLinkageSim: React.FC<SimulationProps> = ({ angle, load , zoo
         const [sx, sy] = toScreen(pt.x, pt.y);
         if (i === 0) ctx.moveTo(sx, sy);
         else ctx.lineTo(sx, sy);
-        }
+      }
       ctx.strokeStyle = 'rgba(0, 212, 255, 0.4)';
       ctx.lineWidth = 3;
       ctx.stroke();
@@ -2508,7 +2508,7 @@ export const FourBarLinkageSim: React.FC<SimulationProps> = ({ angle, load , zoo
     ctx.fillStyle = '#00d4ff';
     ctx.fillText('SYS :: FOUR_BAR_LINKAGE', width - 250, 170);
     ctx.fillStyle = '#fff';
-     const outAngle = Math.atan2(Cy - Dy, Cx - Dx);
+    const outAngle = Math.atan2(Cy - Dy, Cx - Dx);
     const normOut = ((outAngle * 180 / Math.PI) % 360 + 360) % 360;
     ctx.fillText(`OUTPUT ANG : ${normOut.toFixed(1)}°`, width - 250, 195);
     ctx.fillStyle = '#00ff88';
@@ -2628,7 +2628,7 @@ export const GenevaDriveSim: React.FC<SimulationProps> = ({ angle, load , zoom =
     ctx.lineTo(R * scale, 0);
     ctx.strokeStyle = '#60a5fa';
     ctx.lineWidth = Math.max(6, scale * 0.2);
-     ctx.stroke();
+    ctx.stroke();
     ctx.beginPath();
     ctx.arc(R * scale, 0, 0.18 * scale, 0, 2 * Math.PI);
     ctx.fillStyle = isEngaged ? (load > 60 ? '#fca5a5' : '#fff') : '#00d4ff';
@@ -2718,7 +2718,7 @@ export const HarmonicDriveSim: React.FC<SimulationProps> = ({ angle, load , zoom
         const a = (i / (numTeeth * 4)) * Math.PI * 2;
         const toothPhase = i % 4;
         const baseR = radiusFunc(a);
-         const teethDepth = 0.08;
+        const teethDepth = 0.08;
         let r = baseR;
         if (internal) {
           if (toothPhase === 1 || toothPhase === 2) r = baseR - teethDepth;
@@ -2748,7 +2748,7 @@ export const HarmonicDriveSim: React.FC<SimulationProps> = ({ angle, load , zoom
       '#0ea5e9',
       true,
       'rgba(14, 165, 233, 0.1)'
-      );
+    );
     const flexSplineShape = (theta: number) => {
       const globalTheta = theta + outputAngle;
       const relToWaveGen = globalTheta - angle;
@@ -2948,7 +2948,7 @@ export const HookesJointSim: React.FC<SimulationProps> = ({ angle, load, zoom = 
       const transformed = pts.map(p => {
         let px = p.x; let py = p.y; let pz = p.z;
         if (!isInput) {
-           px = -px;
+          px = -px;
           const nx = px * Math.cos(shaftAngle) - py * Math.sin(shaftAngle);
           const ny = px * Math.sin(shaftAngle) + py * Math.cos(shaftAngle);
           return {x: nx, y: ny, z: pz};
@@ -2978,7 +2978,7 @@ export const HookesJointSim: React.FC<SimulationProps> = ({ angle, load, zoom = 
       const cr = yokeRadius;
       const c1 = {x: 0, y: cr * Math.cos(alpha), z: cr * Math.sin(alpha)};
       const c2 = {x: 0, y: -cr * Math.cos(alpha), z: -cr * Math.sin(alpha)};
-       const out_rot = gamma + Math.PI/2;
+      const out_rot = gamma + Math.PI/2;
       const c3_pre = {x: 0, y: cr * Math.cos(out_rot), z: cr * Math.sin(out_rot)};
       const c4_pre = {x: 0, y: -cr * Math.cos(out_rot), z: -cr * Math.sin(out_rot)};
       const c3 = {
@@ -3038,7 +3038,7 @@ export const HookesJointSim: React.FC<SimulationProps> = ({ angle, load, zoom = 
     ctx.font = '10px monospace';
     ctx.fillStyle = '#fff'; ctx.fillText('SPEED RATIO (OUT/IN)', graphX, graphY - 80);
     ctx.fillStyle = '#00d4ff'; ctx.fillText(`RATIO: ${speedRatio.toFixed(3)}`, graphX, graphY + 80);
-     ctx.fillStyle = '#ffb703'; ctx.fillText(`DEFLECTION: ${(beta * 180 / Math.PI).toFixed(1)}°`, graphX, graphY + 60);
+    ctx.fillStyle = '#ffb703'; ctx.fillText(`DEFLECTION: ${(beta * 180 / Math.PI).toFixed(1)}°`, graphX, graphY + 60);
   }, [angle, load, zoom]);
   return <div style={{ width: '100%', height: '100%' }}><canvas ref={canvasRef} style={{ width: '100%', height: '100%', display: 'block' }} /></div>;
 };
@@ -3068,7 +3068,7 @@ export const IBeamStressSim: React.FC<SimulationProps> = ({ angle, load , zoom =
       const nx = (x + L/2) / L;
       return maxDeflection * Math.sin(nx * Math.PI);
     };
-     ctx.fillStyle = '#050d1a';
+    ctx.fillStyle = '#050d1a';
     ctx.fillRect(0, 0, width, height);
     ctx.strokeStyle = '#1e293b';
     ctx.lineWidth = 1;
@@ -3098,7 +3098,7 @@ export const IBeamStressSim: React.FC<SimulationProps> = ({ angle, load , zoom =
     for (let i = 0; i < segments; i++) {
       const x1 = -L/2 + i * dx;
       const x2 = x1 + dx;
-       const y1_mid = getDeflection(x1);
+      const y1_mid = getDeflection(x1);
       const y2_mid = getDeflection(x2);
       const [sx1, sy1_mid] = toScreen(x1, y1_mid);
       const [sx2, sy2_mid] = toScreen(x2, y2_mid);
@@ -3158,7 +3158,7 @@ export const IBeamStressSim: React.FC<SimulationProps> = ({ angle, load , zoom =
     ctx.lineTo(fx - 10, fyBase - 15 * arrowDir);
     ctx.lineTo(fx + 10, fyBase - 15 * arrowDir);
     ctx.fillStyle = '#f97316';
-     ctx.fill();
+    ctx.fill();
     ctx.fillStyle = 'rgba(8, 15, 30, 0.85)';
     ctx.fillRect(width - 260, 150, 220, 110);
     ctx.strokeStyle = 'rgba(249, 115, 22, 0.3)';
@@ -3248,7 +3248,7 @@ export const InvertedPendulumSim: React.FC<SimulationProps> = ({ angle, load , z
     ctx.beginPath();
     ctx.moveTo(cx, cy);
     const [px, py] = toScreen(bobX, bobY);
-     ctx.lineTo(px, py);
+    ctx.lineTo(px, py);
     ctx.strokeStyle = stressColor;
     ctx.lineWidth = 8;
     if (effort > 0.5) {
@@ -3458,7 +3458,7 @@ export const KlannLinkageSim: React.FC<SimulationProps> = ({ angle, load , zoom 
     const gC = Math.round(212 - loadFactor * 100);
     const stressColor = `rgb(${rC}, ${gC}, 255)`;
     if (traceRef.current.length > 1) {
-       ctx.beginPath();
+      ctx.beginPath();
       for (let i = 0; i < traceRef.current.length; i++) {
         const pt = traceRef.current[i];
         const [sx, sy] = toScreen(pt.x, pt.y);
@@ -3499,7 +3499,7 @@ export const LeafSpringSim: React.FC<SimulationProps> = ({ angle, load, zoom = 1
     ctx.strokeStyle = '#1e293b'; ctx.lineWidth = 1;
     for (let i = 0; i < width; i += 40) { ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(i, height); ctx.stroke(); }
     for (let i = 0; i < height; i += 40) { ctx.beginPath(); ctx.moveTo(0, i); ctx.lineTo(width, i); ctx.stroke(); }
-     const toScreen = (x: number, y: number) => [originX + x * scale, originY - y * scale];
+    const toScreen = (x: number, y: number) => [originX + x * scale, originY - y * scale];
     const drawLine = (x1: number, y1: number, x2: number, y2: number, color: string, w: number) => {
       ctx.beginPath();
       const [sx1, sy1] = toScreen(x1, y1); const [sx2, sy2] = toScreen(x2, y2);
@@ -3659,7 +3659,7 @@ export const MalteseCrossSim: React.FC<SimulationProps> = ({ angle, load, zoom =
     ctx.strokeStyle = '#475569'; ctx.lineWidth = 12 * zoom; ctx.stroke();
     const pinX = driveX + R * Math.cos(theta);
     const pinY = driveY + R * Math.sin(theta);
-     const [px, py] = toScreen(pinX, pinY);
+    const [px, py] = toScreen(pinX, pinY);
     ctx.beginPath(); ctx.arc(px, py, 0.4 * scale, 0, 2*Math.PI);
     ctx.fillStyle = stressColor; ctx.fill();
     ctx.save();
@@ -3777,8 +3777,8 @@ export const MassSpringDamperSim: React.FC<SimulationProps> = ({ angle, load , z
     ctx.stroke();
     const damperX = 1.5;
     const [dcX1, dcY1] = toScreen(damperX - 0.6, baseY);
-    const [dcX2, dcY2] = toScreen(damperX + 0.6, baseY + springLen * 0.6)
-     ctx.fillStyle = 'rgba(148, 163, 184, 0.2)';
+    const [dcX2, dcY2] = toScreen(damperX + 0.6, baseY + springLen * 0.6);
+    ctx.fillStyle = 'rgba(148, 163, 184, 0.2)';
     ctx.fillRect(dcX1, dcY1, dcX2 - dcX1, dcY2 - dcY1);
     ctx.strokeStyle = '#94a3b8';
     ctx.lineWidth = 3;
@@ -4058,7 +4058,7 @@ export const OldhamCouplingSim: React.FC<SimulationProps> = ({ angle, load , zoo
     ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)';
     ctx.lineWidth = 2;
     ctx.setLineDash([5, 5]);
-     ctx.stroke();
+    ctx.stroke();
     ctx.setLineDash([]);
     drawCircle(inX, inY, 0.15, '#fff', true);
     drawCircle(outX, outY, 0.15, '#fff', true);
@@ -4178,7 +4178,7 @@ export const OttoCycleSim: React.FC<SimulationProps> = ({ angle, load , zoom = 1
       ctx.fill();
       ctx.shadowBlur = 0;
     }
-     ctx.strokeStyle = '#475569';
+    ctx.strokeStyle = '#475569';
     ctx.lineWidth = 6;
     ctx.beginPath();
     const [cxL2, cyB2] = toScreen(-cylWidth/2, bdcY - 1);
@@ -4218,7 +4218,7 @@ export const OttoCycleSim: React.FC<SimulationProps> = ({ angle, load , zoom = 1
       ctx.shadowColor = stressColor;
       ctx.stroke();
       ctx.shadowBlur = 0;
-      }
+    }
     drawCircle(pistonX, pistonY - 0.4, 0.3, '#fff', true);
     drawLine(0, 0, pinX, pinY, '#475569', 16);
     drawCircle(0, 0, R*0.6, '#1e293b', true);
@@ -4298,7 +4298,7 @@ export const PeaucellierLipkinSim: React.FC<SimulationProps> = ({ angle, load , 
       const h = Math.sqrt(L*L - alpha*alpha);
       const P2x = Ox + alpha * (Bx - Ox) / distOB;
       const P2y = Oy + alpha * (By - Oy) / distOB;
-       Cx = P2x + h * (By - Oy) / distOB;
+      Cx = P2x + h * (By - Oy) / distOB;
       Cy = P2y - h * (Bx - Ox) / distOB;
       Dx = P2x - h * (By - Oy) / distOB;
       Dy = P2y + h * (Bx - Ox) / distOB;
@@ -4378,7 +4378,7 @@ export const PeltonWheelSim: React.FC<SimulationProps> = ({ angle, load, zoom = 
           vy: 0,
           active: true
         });
-        }
+      }
     }
     const activeParticles = [];
     for (const p of particlesRef.current) {
@@ -4458,7 +4458,7 @@ export const PeltonWheelSim: React.FC<SimulationProps> = ({ angle, load, zoom = 
     ctx.restore();
     ctx.fillStyle = 'rgba(8, 15, 30, 0.85)';
     ctx.fillRect(30, 150, 240, 110);
-     ctx.strokeStyle = 'rgba(0, 255, 136, 0.3)';
+    ctx.strokeStyle = 'rgba(0, 255, 136, 0.3)';
     ctx.strokeRect(30, 150, 240, 110);
     const power = (loadFactor * 100 * jetVelocity * 5).toFixed(1);
     ctx.font = '10px monospace';
@@ -4698,7 +4698,7 @@ export const PrattTrussSim: React.FC<SimulationProps> = ({ angle, load , zoom = 
       ctx.moveTo(sx1, sy1); ctx.lineTo(sx2, sy2);
       ctx.strokeStyle = color; 
       const lineW = 6 + Math.abs(actStress) * 6;
-       ctx.lineWidth = lineW;
+      ctx.lineWidth = lineW;
       if (Math.abs(actStress) > 0.5) {
         ctx.shadowBlur = Math.abs(actStress) * 15;
         ctx.shadowColor = color;
@@ -4738,7 +4738,7 @@ export const QuickReturnSim: React.FC<SimulationProps> = ({ angle, load , zoom =
     const originY = height * 0.7; 
     const pivotX = 0;
     const pivotY = 0;
-     const crankCenterY = 2.5; 
+    const crankCenterY = 2.5; 
     const R = 1.2; 
     const pinX = R * Math.cos(angle);
     const pinY = crankCenterY + R * Math.sin(angle);
@@ -4858,7 +4858,7 @@ export const RackPinionSim: React.FC<SimulationProps> = ({ angle, load , zoom = 
   const canvasRef = useRef<HTMLCanvasElement>(null);
   useEffect(() => {
     const canvas = canvasRef.current;
-     if (!canvas) return;
+    if (!canvas) return;
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
     const dpr = window.devicePixelRatio || 1;
@@ -4938,7 +4938,7 @@ export const RackPinionSim: React.FC<SimulationProps> = ({ angle, load , zoom = 
       const a = (i / (numTeeth * 4)) * Math.PI * 2;
       const toothPhase = i % 4;
       let r = pitchRadius;
-       if (toothPhase === 1) r = pitchRadius + teethDepth * 0.5;
+      if (toothPhase === 1) r = pitchRadius + teethDepth * 0.5;
       if (toothPhase === 2) r = pitchRadius + teethDepth * 0.5;
       if (toothPhase === 3) r = pitchRadius - teethDepth * 0.5;
       if (toothPhase === 0) r = pitchRadius - teethDepth * 0.5;
@@ -5018,7 +5018,7 @@ export const RankineCycleSim: React.FC<SimulationProps> = ({ angle, load, zoom =
     if (!ctx) return;
     const dpr = window.devicePixelRatio || 1;
     const rect = canvas.getBoundingClientRect();
-     canvas.width = rect.width * dpr;
+    canvas.width = rect.width * dpr;
     canvas.height = rect.height * dpr;
     ctx.scale(dpr, dpr);
     const width = rect.width;
@@ -5338,7 +5338,7 @@ export const RhombicStirlingSim: React.FC<SimulationProps> = ({ angle, load, zoo
     drawLine(-c, 0, Ax, Ay, '#ffb703', 8);
     drawLine(c, 0, Bx, By, '#ffb703', 8);
     const rodColor = '#cbd5e1';
-     drawLine(Ax, Ay, 0, Uy, rodColor, 6);
+    drawLine(Ax, Ay, 0, Uy, rodColor, 6);
     drawLine(Bx, By, 0, Uy, rodColor, 6);
     drawLine(Ax, Ay, 0, Dy, rodColor, 6);
     drawLine(Bx, By, 0, Dy, rodColor, 6);
@@ -5378,7 +5378,7 @@ export const RootsBlowerSim: React.FC<SimulationProps> = ({ angle, load, zoom = 
     const width = rect.width;
     const height = rect.height;
     ctx.clearRect(0, 0, width, height);
-     const scale = (Math.min(width, height) / 16) * zoom; 
+    const scale = (Math.min(width, height) / 16) * zoom; 
     const originX = width * 0.5;
     const originY = height * 0.5;
     ctx.fillStyle = '#050d1a'; ctx.fillRect(0, 0, width, height);
@@ -5418,7 +5418,7 @@ export const RootsBlowerSim: React.FC<SimulationProps> = ({ angle, load, zoom = 
       const numPoints = 180;
       for(let i=0; i<=numPoints; i++) {
         const t = (i / numPoints) * 2 * Math.PI;
-         const R_tip = d/2 + 0.5; 
+        const R_tip = d/2 + 0.5; 
         const e = 0.4;
         const k = 2.5; 
         const r = R_tip * (1 - e * Math.pow(Math.abs(Math.sin(t)), k));
@@ -5458,7 +5458,7 @@ export const RootsBlowerSim: React.FC<SimulationProps> = ({ angle, load, zoom = 
     ctx.font = '10px monospace';
     ctx.fillStyle = '#ffd700'; ctx.fillText('SYS :: ROOTS_BLOWER', 40, 170);
     ctx.fillStyle = '#3b82f6'; ctx.fillText(`ROTOR 1 ANG : ${(angle * 180 / Math.PI % 360).toFixed(0)}°`, 40, 195);
-     ctx.fillStyle = '#00d4ff'; ctx.fillText(`ROTOR 2 ANG : ${((-angle + Math.PI/2) * 180 / Math.PI % 360).toFixed(0)}°`, 40, 215);
+    ctx.fillStyle = '#00d4ff'; ctx.fillText(`ROTOR 2 ANG : ${((-angle + Math.PI/2) * 180 / Math.PI % 360).toFixed(0)}°`, 40, 215);
     ctx.fillStyle = stressColor; 
     ctx.fillText(`BOOST PRESS : ${(loadFactor * 14.7).toFixed(1)} PSI`, 40, 235);
   }, [angle, load, zoom]);
@@ -5538,7 +5538,7 @@ export const SarrusLinkageSim: React.FC<SimulationProps> = ({ angle, load, zoom 
     drawPoly3D([
       [-armW, -w2, 0], [armW, -w2, 0],
       [armW, -w2 - foldY, Z/2], [-armW, -w2 - foldY, Z/2]
-       ], 'rgba(0, 212, 255, 0.4)', '#00d4ff', 2);
+    ], 'rgba(0, 212, 255, 0.4)', '#00d4ff', 2);
     drawPoly3D([
       [-armW, -w2 - foldY, Z/2], [armW, -w2 - foldY, Z/2],
       [armW, -w2, Z], [-armW, -w2, Z]
@@ -5698,7 +5698,7 @@ export const ScotchYokeSim: React.FC<SimulationProps> = ({ angle, load , zoom = 
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
-     const ctx = canvas.getContext('2d');
+    const ctx = canvas.getContext('2d');
     if (!ctx) return;
     const dpr = window.devicePixelRatio || 1;
     const rect = canvas.getBoundingClientRect();
@@ -5798,7 +5798,7 @@ export const ScotchYokeSim: React.FC<SimulationProps> = ({ angle, load , zoom = 
     ctx.moveTo(graphX, graphY);
     ctx.lineTo(graphX + 4 * scale, graphY);
     ctx.strokeStyle = 'rgba(255,255,255,0.2)';
-     ctx.lineWidth = 2;
+    ctx.lineWidth = 2;
     ctx.stroke();
     if (traceRef.current.length > 1) {
       ctx.beginPath();
@@ -5918,7 +5918,7 @@ export const ShaftTorsionSim: React.FC<SimulationProps> = ({ angle, load, zoom =
           } else {
             started = false;
           }
-           }
+        }
         ctx.strokeStyle = front ? '#3b82f6' : 'rgba(59, 130, 246, 0.2)';
         ctx.stroke();
       }
@@ -5958,7 +5958,7 @@ export const ShaftTorsionSim: React.FC<SimulationProps> = ({ angle, load, zoom =
       if (Math.abs(r) < 0.1) continue;
       const sh = (r / R) * maxShear * sign;
       const [ax, ay] = gx(r, 0);
-       const [ax2, ay2] = gx(r, sh);
+      const [ax2, ay2] = gx(r, sh);
       ctx.beginPath(); ctx.moveTo(ax, ay); ctx.lineTo(ax2, ay2);
       ctx.strokeStyle = '#ffb703'; ctx.stroke();
       const ahDir = sh > 0 ? 1 : -1;
@@ -6038,7 +6038,7 @@ export const SlidingVanePumpSim: React.FC<SimulationProps> = ({ angle, load , zo
       const vy1 = -Rr * scale * Math.sin(alpha); 
       const vx2 = r_ext * scale * Math.cos(alpha);
       const vy2 = -r_ext * scale * Math.sin(alpha);
-       ctx.beginPath();
+      ctx.beginPath();
       ctx.moveTo(vx1, vy1);
       ctx.lineTo(vx2, vy2);
       ctx.strokeStyle = stressColor;
@@ -6199,7 +6199,7 @@ export const StirlingEngineSim: React.FC<SimulationProps> = ({ angle, load , zoo
     <div style={{ width: '100%', height: '100%' }}>
       <canvas ref={canvasRef} style={{ width: '100%', height: '100%', display: 'block' }} />
     </div>
-    );
+  );
 };
 export const StrandbeestSim: React.FC<SimulationProps> = ({ angle, load , zoom = 1 }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -6238,7 +6238,7 @@ export const StrandbeestSim: React.FC<SimulationProps> = ({ angle, load , zoom =
     };
     const intersect = (p1: number[], r1: number, p2: number[], r2: number, dir: number) => {
       const dx = p2[0] - p1[0], dy = p2[1] - p1[1];
-       const d = Math.hypot(dx, dy);
+      const d = Math.hypot(dx, dy);
       if (d > r1 + r2 || d < Math.abs(r1 - r2) || d === 0) return [0, 0]; 
       const a = (r1*r1 - r2*r2 + d*d) / (2*d);
       const h = Math.sqrt(Math.max(0, r1*r1 - a*a));
@@ -6298,7 +6298,7 @@ export const SwashplateSim: React.FC<SimulationProps> = ({ angle, load , zoom = 
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
-     if (!ctx) return;
+    if (!ctx) return;
     const dpr = window.devicePixelRatio || 1;
     const rect = canvas.getBoundingClientRect();
     canvas.width = rect.width * dpr;
@@ -6418,7 +6418,7 @@ export const TeslaTurbineSim: React.FC<SimulationProps> = ({ angle, load , zoom 
       ctx.arc(sx, sy, r * scale, 0, 2 * Math.PI);
       ctx.strokeStyle = color; ctx.lineWidth = 2; ctx.stroke();
       if (fill) { ctx.fillStyle = color; ctx.fill(); }
-      };
+    };
     const R = 4.0; 
     ctx.fillStyle = '#0f172a';
     ctx.beginPath();
@@ -6818,7 +6818,7 @@ export const TrussModelSim: React.FC<SimulationProps> = ({ angle, load , zoom = 
       ctx.fillStyle = '#ef4444';
       ctx.fill();
     }
-     ctx.fillStyle = 'rgba(8, 15, 30, 0.85)';
+    ctx.fillStyle = 'rgba(8, 15, 30, 0.85)';
     ctx.fillRect(30, 150, 240, 110);
     ctx.strokeStyle = 'rgba(255, 215, 0, 0.3)';
     ctx.strokeRect(30, 150, 240, 110);
@@ -6938,7 +6938,7 @@ export const TunedMassDamperSim: React.FC<SimulationProps> = ({ angle, load , zo
     const pendulumLen = 2.0;
     const pendulumAngle = tmdDeflection;
     const px = pendulumLen * scale * Math.sin(pendulumAngle);
-     const py = 15 + pendulumLen * scale * Math.cos(pendulumAngle);
+    const py = 15 + pendulumLen * scale * Math.cos(pendulumAngle);
     ctx.beginPath();
     ctx.moveTo(0, 15);
     ctx.lineTo(px, py);
@@ -7058,7 +7058,7 @@ export const VenturiTubeSim: React.FC<SimulationProps> = ({ angle, load , zoom =
       ctx.strokeStyle = color;
       ctx.lineWidth = 2;
       ctx.stroke();
-       });
+    });
     ctx.globalCompositeOperation = 'source-over';
     ctx.beginPath();
     for (let x = -L; x <= L; x += 0.1) {
@@ -7138,7 +7138,7 @@ export const WankelEngineSim: React.FC<SimulationProps> = ({ angle, load , zoom 
     ctx.strokeStyle = '#1e293b';
     ctx.lineWidth = 1;
     for (let i = 0; i < width; i += 40) {
-       ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(i, height); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(i, height); ctx.stroke();
     }
     for (let i = 0; i < height; i += 40) {
       ctx.beginPath(); ctx.moveTo(0, i); ctx.lineTo(width, i); ctx.stroke();
@@ -7258,7 +7258,7 @@ export const WankelEngineSim: React.FC<SimulationProps> = ({ angle, load , zoom 
     ctx.fillText(`ROTOR ANGLE     : ${normRotor.toFixed(1)}°`, 40, 215);
     ctx.fillStyle = '#00d4ff';
     ctx.fillText(`GEAR RATIO      : 3:1`, 40, 235);
-    }, [angle, load]);
+  }, [angle, load]);
   return (
     <div style={{ width: '100%', height: '100%' }}>
       <canvas ref={canvasRef} style={{ width: '100%', height: '100%', display: 'block' }} />
@@ -7378,7 +7378,7 @@ export const WattsLinkageSim: React.FC<SimulationProps> = ({ angle, load , zoom 
     ctx.fillStyle = '#00ff88';
     ctx.fillText(`CENTER Y POS: ${Py.toFixed(2)}`, width - 250, 215);
     ctx.fillStyle = stressColor;
-     ctx.fillText(`LOAD STRESS : ${load}%`, width - 250, 235);
+    ctx.fillText(`LOAD STRESS : ${load}%`, width - 250, 235);
   }, [angle, load]);
   return (
     <div style={{ width: '100%', height: '100%' }}>
@@ -7418,7 +7418,7 @@ export const encyclopediaData: Concept[] = [
     id: 'cam-follower',
     title: 'Cam & Follower',
     category: 'Motion & Power',
-     description: 'Transforms continuous rotation into a specific, programmable linear motion profile using shaped cam lobes.',
+    description: 'Transforms continuous rotation into a specific, programmable linear motion profile using shaped cam lobes.',
     implemented: true,
     color: '#ff6b35',
     glowColor: 'rgba(255,107,53,0.2)',
@@ -7507,7 +7507,7 @@ export const encyclopediaData: Concept[] = [
   {
     id: 'wankel-engine',
     title: 'Wankel Rotary Engine',
-     category: 'Thermodynamics',
+    category: 'Thermodynamics',
     description: 'Internal combustion engine using an eccentric rotary design to convert pressure into rotating motion.',
     implemented: true,
     color: '#ff3366',
@@ -7578,7 +7578,7 @@ export const encyclopediaData: Concept[] = [
     id: 'inverted-pendulum',
     title: 'Inverted Pendulum',
     category: 'Advanced Mechanisms',
-     description: 'An inherently unstable system with its mass above the pivot point, requiring active control forces to maintain balance.',
+    description: 'An inherently unstable system with its mass above the pivot point, requiring active control forces to maintain balance.',
     implemented: true,
     color: '#ff3366',
     glowColor: 'rgba(255,51,102,0.2)',
@@ -7618,7 +7618,7 @@ export const encyclopediaData: Concept[] = [
     id: 'external-gear-pump',
     title: 'External Gear Pump',
     category: 'Fluid Power',
-     description: 'Positive displacement fluid transfer using two interlocking gears to carry fluid around the outer casing.',
+    description: 'Positive displacement fluid transfer using two interlocking gears to carry fluid around the outer casing.',
     implemented: true,
     color: '#00ff88',
     glowColor: 'rgba(0,255,136,0.2)',
@@ -7658,7 +7658,7 @@ export const encyclopediaData: Concept[] = [
     id: 'tesla-turbine',
     title: 'Tesla Bladeless Turbine',
     category: 'Fluid Power',
-     description: 'Uses the boundary layer effect and fluid adhesion to drive parallel disks without traditional fan blades.',
+    description: 'Uses the boundary layer effect and fluid adhesion to drive parallel disks without traditional fan blades.',
     implemented: true,
     color: '#00ff88',
     glowColor: 'rgba(0,255,136,0.2)',
@@ -7698,7 +7698,7 @@ export const encyclopediaData: Concept[] = [
     id: 'euler-bernoulli',
     title: 'Euler-Bernoulli Buckling',
     category: 'Structural',
-     description: 'Simulates the catastrophic failure and critical load limits of thin columns under intense axial compression.',
+    description: 'Simulates the catastrophic failure and critical load limits of thin columns under intense axial compression.',
     implemented: true,
     color: '#ff3366',
     glowColor: 'rgba(255,51,102,0.2)',
@@ -7818,7 +7818,7 @@ export const encyclopediaData: Concept[] = [
     id: 'toggle-mechanism',
     title: 'Toggle Mechanism',
     category: 'Motion & Power',
-     description: 'A linkage system used to deliver massive peak force with minimal input effort.',
+    description: 'A linkage system used to deliver massive peak force with minimal input effort.',
     implemented: true,
     color: '#00ff88',
     glowColor: 'rgba(0,255,136,0.2)',
@@ -7938,7 +7938,7 @@ export const encyclopediaData: Concept[] = [
     id: 'rankine-cycle',
     title: 'Rankine Cycle Slide Valve',
     category: 'Thermodynamics',
-     description: 'Visualizes how a slide valve switches live steam inlet and exhaust ports on a steam engine.',
+    description: 'Visualizes how a slide valve switches live steam inlet and exhaust ports on a steam engine.',
     implemented: true,
     color: '#00ff88',
     glowColor: 'rgba(0,255,136,0.2)',
@@ -7978,7 +7978,7 @@ export const encyclopediaData: Concept[] = [
     id: 'sarrus-linkage',
     title: 'Sarrus Linkage',
     category: 'Advanced Mechanisms',
-     description: 'A spatial mechanism providing perfect straight linear movement using only hinged plates.',
+    description: 'A spatial mechanism providing perfect straight linear movement using only hinged plates.',
     implemented: true,
     color: '#ff6b35',
     glowColor: 'rgba(255,107,53,0.2)',
@@ -8058,7 +8058,7 @@ export const LandingScreen: React.FC<LandingScreenProps> = ({ onEnter }) => {
     const animate = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       ctx.strokeStyle = 'rgba(30, 41, 59, 0.4)';
-       ctx.lineWidth = 1;
+      ctx.lineWidth = 1;
       for (let x = 0; x < canvas.width; x += 40) {
         ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, canvas.height); ctx.stroke();
       }
@@ -8138,7 +8138,7 @@ export const LandingScreen: React.FC<LandingScreenProps> = ({ onEnter }) => {
           fontSize: '3.5rem',
           fontWeight: 800,
           color: '#ffffff',
-           marginBottom: '16px',
+          marginBottom: '16px',
           letterSpacing: '0.05em',
           textShadow: '0 0 20px rgba(255,255,255,0.1)'
         }}>
@@ -8178,7 +8178,7 @@ export const LandingScreen: React.FC<LandingScreenProps> = ({ onEnter }) => {
             e.currentTarget.style.transform = 'translateY(0)';
             e.currentTarget.style.boxShadow = '0 10px 20px rgba(0, 212, 255, 0.3)';
           }}
-           >
+        >
           Enter Catalog
         </button>
       </div>
@@ -8218,7 +8218,7 @@ export const ControlsPanel: React.FC<ControlsPanelProps> = ({
     }}>
       <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
         <button
-         onClick={() => setIsPlaying(!isPlaying)}
+          onClick={() => setIsPlaying(!isPlaying)}
           style={{
             width: '44px',
             height: '44px',
@@ -8299,7 +8299,7 @@ export const ControlsPanel: React.FC<ControlsPanelProps> = ({
                 <div style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', color: 'var(--text-muted)', letterSpacing: '0.08em', marginBottom: '2px' }}>{r.label}</div>
                 <div style={{ fontFamily: 'var(--font-mono)', fontSize: '14px', color, fontWeight: 600 }}>{r.value}</div>
               </div>
-               ))}
+            ))}
           </div>
         </>
       )}
@@ -8758,7 +8758,7 @@ export const MechanismDetail: React.FC<MechanismDetailProps> = ({ concept, onBac
         flexDirection: 'column',
         gap: '8px',
         zIndex: 20
-         }}>
+      }}>
         <button
           onClick={() => setZoom(z => Math.min(z + 0.25, 5))}
           className="glass-panel"
@@ -8797,7 +8797,7 @@ export const MechanismDetail: React.FC<MechanismDetailProps> = ({ concept, onBac
               Simulation not yet implemented
             </div>
           </div>
-           )}
+        )}
       </div>
       <ControlsPanel
         rpm={rpm}
@@ -8838,3 +8838,47 @@ function App() {
               if (concept?.implemented) {
                 setSelectedConceptId(id);
                 setCurrentScreen('loading');
+                setTimeout(() => setCurrentScreen('output'), 4000);
+              }
+            }}
+            onGoHome={() => setCurrentScreen('landing')}
+          />
+        </>
+      )}
+      {currentScreen === 'loading' && (
+        <div style={{
+          position: 'absolute', top: 0, left: 0, right: 0, bottom: 0,
+          background: 'var(--bg-void)',
+          display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+          zIndex: 1000
+        }}>
+          <div style={{ position: 'relative', width: '160px', height: '160px', marginBottom: '32px' }}>
+            <img src="/logo.png" alt="Logo background" style={{ position: 'absolute', width: '100%', height: '100%', opacity: 0.1, filter: 'grayscale(100%)' }} />
+            <img src="/logo.png" alt="Logo fill" style={{ 
+              position: 'absolute', width: '100%', height: '100%', 
+              animation: 'fill-up 4s cubic-bezier(0.4, 0, 0.2, 1) forwards',
+              filter: 'drop-shadow(0 0 30px rgba(0, 212, 255, 0.5))'
+            }} />
+          </div>
+          <h2 style={{
+            fontFamily: 'var(--font-mono)',
+            fontSize: '18px',
+            color: 'var(--cyan)',
+            letterSpacing: '0.2em',
+            animation: 'pulse 1s infinite'
+          }}>SUN IS BUILDING...</h2>
+        </div>
+      )}
+      {currentScreen === 'output' && selectedConcept && (
+        <MechanismDetail
+          concept={selectedConcept}
+          onBack={() => {
+            setSelectedConceptId(null);
+            setCurrentScreen('catalog');
+          }}
+        />
+      )}
+    </div>
+  );
+}
+export default App;
