@@ -8638,3 +8638,43 @@ export const MechanismDetail: React.FC<MechanismDetailProps> = ({ concept, onBac
       lastTimeRef.current = undefined;
       return;
     }
+    const animate = (time: number) => {
+      if (lastTimeRef.current !== undefined) {
+        const delta = time - lastTimeRef.current;
+        setAngle(prev => prev + (rpm * Math.PI / 30000) * delta);
+      }
+      lastTimeRef.current = time;
+      requestRef.current = requestAnimationFrame(animate);
+    };
+    requestRef.current = requestAnimationFrame(animate);
+    return () => {
+      if (requestRef.current) cancelAnimationFrame(requestRef.current);
+    };
+  }, [isPlaying, rpm]);
+  const SimComponent = SIM_MAP[concept.id];
+  return (
+    <div style={{
+      position: 'relative',
+      width: '100%',
+      height: '100vh',
+      overflow: 'hidden',
+    }}>
+      <div style={{
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        zIndex: 20,
+        display: 'flex',
+        alignItems: 'center',
+        gap: '16px',
+        padding: '16px 24px',
+        background: 'linear-gradient(180deg, rgba(8,15,30,0.95) 0%, rgba(8,15,30,0) 100%)',
+      }}>
+        <button
+          onClick={onBack}
+          style={{
+            width: '36px',
+            height: '36px',
+            borderRadius: '8px',
+            background: 'rgba(255,255,255,0.06)',
