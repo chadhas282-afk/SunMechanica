@@ -8718,3 +8718,43 @@ export const MechanismDetail: React.FC<MechanismDetailProps> = ({ concept, onBac
               color: concept.color,
               background: concept.glowColor,
               border: `1px solid ${concept.color}40`,
+              padding: '3px 8px',
+              borderRadius: '4px',
+            }}>
+              {tag}
+            </span>
+          ))}
+        </div>
+        <div style={{ flex: 1 }} />
+        <div 
+          className="glass-panel"
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px',
+            fontFamily: 'var(--font-mono)',
+            fontSize: '11px',
+            color: isPlaying ? '#00ff88' : 'var(--text-muted)',
+            padding: '6px 12px',
+            borderRadius: '6px',
+          }}
+        >
+          <div style={{
+            width: '6px',
+            height: '6px',
+            borderRadius: '50%',
+            background: isPlaying ? '#00ff88' : 'var(--text-muted)',
+            boxShadow: isPlaying ? '0 0 6px #00ff88' : 'none',
+            animation: isPlaying ? 'pulse-glow 1s infinite' : 'none',
+          }} />
+          {isPlaying ? 'SIMULATION RUNNING' : 'PAUSED'}
+        </div>
+      </div>
+      <div style={{
+        position: 'absolute',
+        right: '32px',
+        bottom: '120px',
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '8px',
+        zIndex: 20
