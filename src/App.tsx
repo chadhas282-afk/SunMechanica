@@ -8678,3 +8678,43 @@ export const MechanismDetail: React.FC<MechanismDetailProps> = ({ concept, onBac
             height: '36px',
             borderRadius: '8px',
             background: 'rgba(255,255,255,0.06)',
+            border: '1px solid var(--border-mid)',
+            color: 'var(--text-secondary)',
+            fontSize: '16px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            transition: 'all 0.15s ease',
+          }}
+          onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.12)'; e.currentTarget.style.color = 'white'; }}
+          onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.06)'; e.currentTarget.style.color = 'var(--text-secondary)'; }}
+        >
+          ←
+        </button>
+        <div>
+          <div style={{
+            fontFamily: 'var(--font-mono)',
+            fontSize: '10px',
+            color: concept.color,
+            letterSpacing: '0.15em',
+            marginBottom: '2px',
+          }}>
+            {concept.category.toUpperCase()} / {concept.id.toUpperCase()}
+          </div>
+          <h2 style={{
+            fontSize: '20px',
+            fontWeight: 700,
+            color: 'var(--text-primary)',
+            margin: 0,
+          }}>
+            {concept.title}
+          </h2>
+        </div>
+        <div style={{ display: 'flex', gap: '6px', marginLeft: '16px' }}>
+          {concept.tags.map(tag => (
+            <span key={tag} style={{
+              fontFamily: 'var(--font-mono)',
+              fontSize: '10px',
+              color: concept.color,
+              background: concept.glowColor,
+              border: `1px solid ${concept.color}40`,
