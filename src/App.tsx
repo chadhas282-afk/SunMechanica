@@ -8398,3 +8398,43 @@ export const Dashboard: React.FC<DashboardProps> = ({ onSelectConcept, onGoHome 
           Click any active module below to launch a live simulation.
         </p>
       </div>
+      <div style={{
+        display: 'flex',
+        gap: '16px',
+        marginBottom: '48px',
+      }}>
+        {[
+          { label: 'Total Modules', value: encyclopediaData.length, color: 'var(--cyan)' },
+          { label: 'Live Simulations', value: encyclopediaData.filter(c => c.implemented).length, color: 'var(--green)' },
+          { label: 'Categories', value: 6, color: 'var(--purple)' },
+          { label: 'Physics Models', value: 5, color: 'var(--orange)' },
+        ].map(stat => (
+          <div key={stat.label} style={{
+            flex: 1,
+            background: 'var(--bg-card)',
+            border: '1px solid var(--border-subtle)',
+            borderRadius: '10px',
+            padding: '16px 20px',
+          }}>
+            <div style={{ fontFamily: 'var(--font-mono)', fontSize: '28px', fontWeight: 700, color: stat.color, lineHeight: 1 }}>
+              {stat.value}
+            </div>
+            <div style={{ fontFamily: 'var(--font-sans)', fontSize: '11px', color: 'var(--text-muted)', marginTop: '4px' }}>
+              {stat.label}
+            </div>
+          </div>
+        ))}
+      </div>
+      <div className="concept-card-grid" style={{
+        display: 'grid',
+        gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
+        gap: '16px',
+      }}>
+        {encyclopediaData.map((concept, i) => (
+          <ConceptCard key={concept.id} concept={concept} index={i} onSelect={onSelectConcept} />
+        ))}
+      </div>
+    </div>
+  );
+};
+const ConceptCard: React.FC<{ concept: Concept; index: number; onSelect: (id: string) => void }> = ({ concept, index, onSelect }) => {
