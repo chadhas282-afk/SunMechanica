@@ -8797,3 +8797,44 @@ export const MechanismDetail: React.FC<MechanismDetailProps> = ({ concept, onBac
               Simulation not yet implemented
             </div>
           </div>
+           )}
+      </div>
+      <ControlsPanel
+        rpm={rpm}
+        setRpm={setRpm}
+        load={load}
+        setLoad={setLoad}
+        isPlaying={isPlaying}
+        setIsPlaying={setIsPlaying}
+        onStep={handleStep}
+        color={concept.color}
+      />
+    </div>
+  );
+};
+type ScreenState = 'landing' | 'catalog' | 'loading' | 'output';
+function App() {
+  const [currentScreen, setCurrentScreen] = useState<ScreenState>('landing');
+  const [selectedConceptId, setSelectedConceptId] = useState<string | null>(null);
+  const selectedConcept = selectedConceptId
+    ? encyclopediaData.find(c => c.id === selectedConceptId) ?? null
+    : null;
+  return (
+    <div style={{
+      display: 'flex',
+      width: '100vw',
+      height: '100vh',
+      overflow: 'hidden',
+      background: 'var(--bg-void)',
+    }}>
+      {currentScreen === 'landing' && (
+        <LandingScreen onEnter={() => setCurrentScreen('catalog')} />
+      )}
+      {currentScreen === 'catalog' && (
+        <>
+          <Dashboard 
+            onSelectConcept={(id) => {
+              const concept = encyclopediaData.find(c => c.id === id);
+              if (concept?.implemented) {
+                setSelectedConceptId(id);
+                setCurrentScreen('loading');
