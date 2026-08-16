@@ -8518,3 +8518,43 @@ const ConceptCard: React.FC<{ concept: Concept; index: number; onSelect: (id: st
         {concept.tags.map(tag => (
           <span key={tag} style={{
             fontFamily: 'var(--font-mono)',
+            fontSize: '10px',
+            color: 'var(--text-muted)',
+            background: 'var(--bg-panel)',
+            border: '1px solid var(--border-subtle)',
+            padding: '2px 8px',
+            borderRadius: '4px',
+          }}>
+            {tag}
+          </span>
+        ))}
+      </div>
+      {concept.implemented && (
+        <div style={{
+          position: 'absolute',
+          bottom: '24px',
+          right: '24px',
+          width: '32px',
+          height: '32px',
+          borderRadius: '50%',
+          background: concept.glowColor,
+          border: `1px solid ${concept.color}40`,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          opacity: hovered ? 1 : 0,
+          transform: hovered ? 'scale(1)' : 'scale(0.8)',
+          transition: 'all 0.2s ease',
+          color: concept.color,
+          fontSize: '16px',
+        }}>
+          →
+        </div>
+      )}
+    </div>
+  );
+};
+interface MechanismDetailProps {
+  concept: Concept;
+  onBack: () => void;
+}
