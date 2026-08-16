@@ -8478,3 +8478,43 @@ const ConceptCard: React.FC<{ concept: Concept; index: number; onSelect: (id: st
         <div style={{
           display: 'flex',
           alignItems: 'center',
+          gap: '6px',
+          fontFamily: 'var(--font-mono)',
+          fontSize: '10px',
+          color: concept.implemented ? concept.color : 'var(--text-muted)',
+          background: concept.implemented ? concept.glowColor : 'var(--border-subtle)',
+          padding: '3px 8px',
+          borderRadius: '4px',
+        }}>
+          <div style={{
+            width: '5px', height: '5px', borderRadius: '50%',
+            background: concept.implemented ? concept.color : 'var(--text-muted)',
+            boxShadow: concept.implemented ? `0 0 4px ${concept.color}` : 'none',
+          }} />
+          {concept.implemented ? 'SIM READY' : 'COMING SOON'}
+        </div>
+        <div style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', color: 'var(--text-muted)' }}>
+          {concept.category}
+        </div>
+      </div>
+      <h3 style={{
+        fontSize: '20px',
+        fontWeight: 700,
+        color: 'var(--text-primary)',
+        marginBottom: '8px',
+        lineHeight: 1.2,
+      }}>
+        {concept.title}
+      </h3>
+      <p style={{
+        fontSize: '13px',
+        color: 'var(--text-secondary)',
+        lineHeight: 1.6,
+        marginBottom: '16px',
+      }}>
+        {concept.description}
+      </p>
+      <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
+        {concept.tags.map(tag => (
+          <span key={tag} style={{
+            fontFamily: 'var(--font-mono)',
