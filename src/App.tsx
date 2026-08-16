@@ -8598,3 +8598,43 @@ const SIM_MAP: Record<string, React.FC<{ angle: number; load: number; zoom?: num
   'journal-bearing': JournalBearingSim,
   'epicyclic-vibration': EpicyclicVibrationSim,
   'hookes-joint': HookesJointSim,
+  'maltese-cross': MalteseCrossSim,
+  'ratchet-pawl': RatchetPawlSim,
+  'toggle-mechanism': ToggleMechanismSim,
+  'roots-blower': RootsBlowerSim,
+  'elliptical-trammel': EllipticalTrammelSim,
+  'centrifugal-impeller': CentrifugalImpellerSim,
+  'pelton-wheel': PeltonWheelSim,
+  'axial-piston-pump': AxialPistonPumpSim,
+  'check-valves': CheckValvesSim,
+  'truss-joint-method': TrussJointMethodSim,
+  'mohrs-circle': MohrsCircleSim,
+  'shaft-torsion': ShaftTorsionSim,
+  'rhombic-stirling': RhombicStirlingSim,
+  'brayton-cycle': BraytonCycleSim,
+  'rankine-cycle': RankineCycleSim,
+  'hoberman-sphere': HobermanSphereSim,
+  'differential-gear': DifferentialGearSim,
+  'chebyshev-straight': ChebyshevStraightLineSim,
+  'sarrus-linkage': SarrusLinkageSim,
+  'fluid-cavitation': FluidFilmCavitationSim,
+  'double-pendulum': DoublePendulumSim,
+  'leaf-spring': LeafSpringSim,
+};
+export const MechanismDetail: React.FC<MechanismDetailProps> = ({ concept, onBack }) => {
+  const [rpm, setRpm] = useState(60);
+  const [load, setLoad] = useState(40);
+  const [isPlaying, setIsPlaying] = useState(true);
+  const [zoom, setZoom] = useState(1);
+  const [angle, setAngle] = useState(0);
+  const requestRef = useRef<number | undefined>(undefined);
+  const lastTimeRef = useRef<number | undefined>(undefined);
+  const handleStep = () => {
+    setAngle(prev => prev + Math.PI / 18);
+  };
+  useEffect(() => {
+    if (!isPlaying) {
+      if (requestRef.current) cancelAnimationFrame(requestRef.current);
+      lastTimeRef.current = undefined;
+      return;
+    }
